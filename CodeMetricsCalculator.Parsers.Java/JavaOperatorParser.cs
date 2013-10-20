@@ -1,10 +1,12 @@
 ﻿using System;
+using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java
 {
-    public class JavaOperatorParser : JavaCodeParser<OperatorParsingResult>
+    public class JavaOperatorParser : JavaCodeParser<JavaExpression, OperatorParsingResult>,
+                                      IOperatorParser<JavaExpression>
     {
-        public override OperatorParsingResult Parse(JavaCode code)
+        public override OperatorParsingResult Parse(JavaExpression code)
         {
             if (code == null)
                 throw new ArgumentNullException("code");
@@ -13,9 +15,11 @@ namespace CodeMetricsCalculator.Parsers.Java
             string source = code.NormolizedSource;
             foreach (JavaOperator javaOperator in JavaOperator.Operators)
             {
-                parsingResult.Add(javaOperator, javaOperator.ParsingRegex.Matches(source).Count);
+                var parsingRegex = RegexBuildingHelper.BuildForOperator(javaOperator);
+                var operatorCount = parsingRegex.Matches(source).Count;
+                if (operatorCount != 0)
+                    parsingResult.Add(javaOperator, operatorCount);
             }
-
             return parsingResult;
         }
     }

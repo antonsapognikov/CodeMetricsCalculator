@@ -39,11 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JavaCode.cs" />
+    <Compile Include="CodeInfo\JavaCode.cs" />
+    <Compile Include="CodeInfo\JavaExpression.cs" />
     <Compile Include="JavaCodeParser.cs" />
-    <Compile Include="JavaOperator.cs" />
+    <Compile Include="CodeInfo\JavaOperand.cs" />
+    <Compile Include="JavaOperandParser.cs" />
+    <Compile Include="CodeInfo\JavaOperator.cs" />
     <Compile Include="JavaOperatorParser.cs" />
-    <Compile Include="OperatorParsingResult.cs" />
     <Compile Include="Operators\ArithmeticOperator.cs" />
     <Compile Include="Operators\AssignmentOperator.cs" />
     <Compile Include="Operators\BitwiseOperator.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Operators\RelationalOperator.cs" />
     <Compile Include="Operators\UnaryOperator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegexBuildingHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeMetricsCalculator.Parsers\CodeMetricsCalculator.Parsers.csproj">

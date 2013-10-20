@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using CodeMetricsCalculator.Parsers.CodeInfo;
+using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java.Operators
 {
@@ -8,12 +10,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
     internal class BitwiseOperator : JavaOperator
     {
         public BitwiseOperator(string operatorString)
-            : base(operatorString, new Regex(string.Format(@"[^{0}]{0}[^{0}=]", operatorString), RegexOptions.Compiled))
-        {
-        }
-
-        public BitwiseOperator(string operatorString, Regex regex)
-            : base(operatorString, regex)
+            : base(operatorString, OperationType.Binary, OperatorSyntax.Infix)
         {
         }
     }

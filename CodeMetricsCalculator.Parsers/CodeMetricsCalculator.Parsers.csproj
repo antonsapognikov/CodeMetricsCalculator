@@ -39,10 +39,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code.cs" />
-    <Compile Include="ICode.cs" />
+    <Compile Include="CodeInfo\Code.cs" />
+    <Compile Include="CodeInfo\IClassInfo.cs" />
+    <Compile Include="CodeInfo\ICodeInfo.cs" />
+    <Compile Include="CodeInfo\IExpressionInfo.cs" />
+    <Compile Include="CodeInfo\IMethodBodyInfo.cs" />
     <Compile Include="ICodeParser.cs" />
-    <Compile Include="IOperator.cs" />
+    <Compile Include="CodeInfo\IFieldInfo.cs" />
+    <Compile Include="CodeInfo\IMethodInfo.cs" />
+    <Compile Include="CodeInfo\IOperandInfo.cs" />
+    <Compile Include="IOperandParser.cs" />
+    <Compile Include="OperandParsingResult.cs" />
+    <Compile Include="CodeInfo\IOperatorInfo.cs" />
+    <Compile Include="IOperatorParser.cs" />
+    <Compile Include="OperatorParsingResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
