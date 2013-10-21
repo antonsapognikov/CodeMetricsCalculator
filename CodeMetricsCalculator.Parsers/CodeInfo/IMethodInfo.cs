@@ -2,7 +2,7 @@
 
 namespace CodeMetricsCalculator.Parsers.CodeInfo
 {
-    public interface IMethodInfo : ICodeInfo
+    public interface IMethodInfo : IMemberInfo
     {
         IClassInfo Class { get; }
 

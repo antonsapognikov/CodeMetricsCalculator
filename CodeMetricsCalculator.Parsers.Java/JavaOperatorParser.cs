@@ -12,7 +12,7 @@ namespace CodeMetricsCalculator.Parsers.Java
                 throw new ArgumentNullException("code");
 
             var parsingResult = new OperatorParsingResult();
-            string source = code.NormolizedSource;
+            string source = code.NormalizedSource;
             foreach (JavaOperator javaOperator in JavaOperator.Operators)
             {
                 var parsingRegex = RegexBuildingHelper.BuildForOperator(javaOperator);

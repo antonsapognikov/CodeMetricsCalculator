@@ -7,7 +7,7 @@ using CodeMetricsCalculator.Parsers.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers
 {
-    public interface IOperatorParser<in TCode> : ICodeParser<TCode, OperatorParsingResult> where TCode : ICodeInfo
+    public interface IOperatorParser<in TCode> : ICodeParser<TCode, OperatorParsingResult> where TCode : IMemberInfo
     {
     }
 }

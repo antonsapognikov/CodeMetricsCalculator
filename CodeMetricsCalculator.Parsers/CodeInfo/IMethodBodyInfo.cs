@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeMetricsCalculator.Parsers.CodeInfo
 {
-    public interface IMethodBodyInfo : ICodeInfo
+    public interface IMethodBodyInfo : IMemberInfo
     {
         IMethodInfo Method { get; }
 

@@ -2,7 +2,7 @@
 
 namespace CodeMetricsCalculator.Parsers
 {
-    public interface ICodeParser<in TCode, out TParsingResult> where TCode : ICodeInfo
+    public interface ICodeParser<in TCode, out TParsingResult> where TCode : IMemberInfo
     {
         TParsingResult Parse(TCode code);
     }

@@ -17,7 +17,7 @@ namespace CodeMetricsCalculator.Parsers.Java
             //чтобы не спутать с бинарными операторами -= и т.п.
 
             //эскейпим символы слешами
-            var operatorString = Regex.Escape(operatorInfo.Name);//operatorInfo.Name.Aggregate(string.Empty, (current, ch) => current + ("\\" + ch));
+            var operatorString = Regex.Escape(operatorInfo.Name);
 
             //todo: тут надо серьёзно подумать
             if (operatorInfo.OperationType == OperationType.Ternary) //тернарный оператор в java только один

@@ -1,6 +1,6 @@
 ﻿namespace CodeMetricsCalculator.Parsers.CodeInfo
 {
-    public interface IOperandInfo : ICodeInfo
+    public interface IOperandInfo : IMemberInfo
     {
         string Name { get; }
     }

@@ -23,7 +23,7 @@ namespace CodeMetricsCalculator
             Console.WriteLine(source);
             Console.WriteLine();
             Console.WriteLine("Normolized source:");
-            Console.WriteLine(javaExpression.NormolizedSource);
+            Console.WriteLine(javaExpression.NormalizedSource);
             Console.WriteLine();
             Console.WriteLine("Operators: ");
             foreach (var operatorInfo in operators)

@@ -27,7 +27,7 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
         Infix
     }
 
-    public interface IOperatorInfo : ICodeInfo
+    public interface IOperatorInfo : IMemberInfo
     {
         string Name { get; }
 

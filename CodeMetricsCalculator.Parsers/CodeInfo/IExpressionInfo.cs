@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CodeMetricsCalculator.Parsers.CodeInfo
 {
     //todo: придумать что-то лучше Typle
-    public interface IExpressionInfo : ICodeInfo
+    public interface IExpressionInfo : IMemberInfo
     {
         IReadOnlyCollection<Tuple<IOperatorInfo, int>> GetOperators();
 

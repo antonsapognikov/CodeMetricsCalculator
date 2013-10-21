@@ -39,9 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeInfo\Code.cs" />
+    <Compile Include="CodeInfo\MemberInfo.cs" />
     <Compile Include="CodeInfo\IClassInfo.cs" />
-    <Compile Include="CodeInfo\ICodeInfo.cs" />
+    <Compile Include="CodeInfo\IMemberInfo.cs" />
     <Compile Include="CodeInfo\IExpressionInfo.cs" />
     <Compile Include="CodeInfo\IMethodBodyInfo.cs" />
     <Compile Include="ICodeParser.cs" />

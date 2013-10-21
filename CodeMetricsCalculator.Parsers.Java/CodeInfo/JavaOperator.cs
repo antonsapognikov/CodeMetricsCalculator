@@ -95,7 +95,7 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
 
         public string Name
         {
-            get { return NormolizedSource; }
+            get { return NormalizedSource; }
         }
 
         public OperationType OperationType
