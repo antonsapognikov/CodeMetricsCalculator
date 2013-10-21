@@ -14,19 +14,22 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         {
         }
 
-        public IReadOnlyCollection<Tuple<IOperatorInfo, int>> GetOperators()
+        public IReadOnlyDictionary<IOperatorInfo, int> GetOperators()
         {
-            //todo: возможно кэшировать результаты; не создавать парсер явно, а получать его откуда-то
             var parsingResults = new JavaOperatorParser().Parse(this);
-            var operators = parsingResults.Select(pair => new Tuple<IOperatorInfo, int>(pair.Key, pair.Value)).ToList();
-            return new ReadOnlyCollection<Tuple<IOperatorInfo, int>>(operators);
+            var operators =
+                parsingResults.ToDictionary<KeyValuePair<JavaOperator, int>, IOperatorInfo, int>(
+                    parsingResult => parsingResult.Key, parsingResult => parsingResult.Value);
+            return new ReadOnlyDictionary<IOperatorInfo, int>(operators);
         }
 
-        public IReadOnlyCollection<Tuple<IOperandInfo, int>> GetOperands()
+        public IReadOnlyDictionary<IOperandInfo, int> GetOperands()
         {
             var parsingResults = new JavaOperandParser().Parse(this);
-            var operands = parsingResults.Select(pair => new Tuple<IOperandInfo, int>(pair.Key, pair.Value)).ToList();
-            return new ReadOnlyCollection<Tuple<IOperandInfo, int>>(operands);
+            var operands =
+                parsingResults.ToDictionary<KeyValuePair<JavaOperand, int>, IOperandInfo, int>(
+                    parsingResult => parsingResult.Key, parsingResult => parsingResult.Value);
+            return new ReadOnlyDictionary<IOperandInfo, int>(operands);
         }
     }
 }

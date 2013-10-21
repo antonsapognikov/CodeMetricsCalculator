@@ -7,10 +7,10 @@ using CodeMetricsCalculator.Parsers.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers
 {
-    public interface IOperandParser<in TParsingCode, TOperandInfo> :
-        ICodeParser<TParsingCode, OperandParsingResult<TOperandInfo>>
+    public interface IMethodBodyParser<in TParsingCode, out TMethodBodyInfo> :
+        ICodeParser<TParsingCode, TMethodBodyInfo>
         where TParsingCode : IMemberInfo
-        where TOperandInfo : IOperandInfo
+        where TMethodBodyInfo : IMethodBodyInfo
     {
     }
 }

@@ -10,7 +10,9 @@ namespace CodeMetricsCalculator.Parsers
     /// <summary>
     ///     The number of repetitions of the given operand.
     /// </summary>
-    public class OperandParsingResult : Dictionary<IOperandInfo, int>
+    public class OperandParsingResult<TOperandInfo> : 
+        Dictionary<TOperandInfo, int> 
+        where TOperandInfo : IOperandInfo
     {
     }
 }

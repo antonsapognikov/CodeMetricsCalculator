@@ -7,7 +7,7 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
     {
         private readonly string _name;
 
-        public JavaOperand(string originalSource, string name) : base(originalSource)
+        public JavaOperand(string name, string originalSource) : base(originalSource)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Operand name cannot be null or WhiteSpace.");

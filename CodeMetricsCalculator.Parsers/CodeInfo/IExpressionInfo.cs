@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace CodeMetricsCalculator.Parsers.CodeInfo
 {
-    //todo: придумать что-то лучше Typle
     public interface IExpressionInfo : IMemberInfo
     {
-        IReadOnlyCollection<Tuple<IOperatorInfo, int>> GetOperators();
+        IReadOnlyDictionary<IOperatorInfo, int> GetOperators();
 
-        IReadOnlyCollection<Tuple<IOperandInfo, int>> GetOperands();
+        IReadOnlyDictionary<IOperandInfo, int> GetOperands();
     }
 }

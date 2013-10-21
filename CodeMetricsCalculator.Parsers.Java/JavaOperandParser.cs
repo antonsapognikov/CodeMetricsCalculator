@@ -7,10 +7,10 @@ using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java
 {
-    public class JavaOperandParser : JavaCodeParser<JavaExpression, OperandParsingResult>,
-                                     IOperandParser<JavaExpression>
+    public class JavaOperandParser : JavaCodeParser<JavaExpression, OperandParsingResult<JavaOperand>>,
+                                     IOperandParser<JavaExpression, JavaOperand>
     {
-        public override OperandParsingResult Parse(JavaExpression code)
+        public override OperandParsingResult<JavaOperand> Parse(JavaExpression code)
         {
             if (code == null)
                 throw new ArgumentNullException("code");

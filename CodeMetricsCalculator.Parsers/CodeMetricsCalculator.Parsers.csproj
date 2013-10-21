@@ -44,10 +44,16 @@
     <Compile Include="CodeInfo\IMemberInfo.cs" />
     <Compile Include="CodeInfo\IExpressionInfo.cs" />
     <Compile Include="CodeInfo\IMethodBodyInfo.cs" />
+    <Compile Include="Exceptions\ParsingException.cs" />
+    <Compile Include="IClassParser.cs" />
     <Compile Include="ICodeParser.cs" />
     <Compile Include="CodeInfo\IFieldInfo.cs" />
     <Compile Include="CodeInfo\IMethodInfo.cs" />
     <Compile Include="CodeInfo\IOperandInfo.cs" />
+    <Compile Include="IExpressionParser.cs" />
+    <Compile Include="IFieldParser.cs" />
+    <Compile Include="IMethodBodyParser.cs" />
+    <Compile Include="IMethodParser.cs" />
     <Compile Include="IOperandParser.cs" />
     <Compile Include="OperandParsingResult.cs" />
     <Compile Include="CodeInfo\IOperatorInfo.cs" />
