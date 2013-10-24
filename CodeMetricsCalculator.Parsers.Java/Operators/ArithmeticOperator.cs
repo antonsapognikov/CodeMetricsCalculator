@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using CodeMetricsCalculator.Parsers.CodeInfo;
+using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java.Operators
 {
@@ -7,16 +9,9 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
     /// </summary>
     internal class ArithmeticOperator : JavaOperator
     {
-        //todo: как-то ограничить, чтобы и слева, и справа от операторы были операнды, 
-        //todo: иначе это будет унарный оператор
         public ArithmeticOperator(string operatorString)
-            : base(operatorString, new Regex(string.Format(@"[^{0}]\{0}[^{0}=]", operatorString), RegexOptions.Compiled)
-                )
-        {
-        }
-
-        public ArithmeticOperator(string operatorString, Regex regex)
-            : base(operatorString, regex)
+            : base(operatorString, OperationType.Binary, OperatorSyntax.Infix)
+                
         {
         }
     }

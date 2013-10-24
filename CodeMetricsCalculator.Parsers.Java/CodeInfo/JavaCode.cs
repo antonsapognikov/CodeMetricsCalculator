@@ -1,6 +1,8 @@
-﻿namespace CodeMetricsCalculator.Parsers.Java
+﻿using CodeMetricsCalculator.Parsers.CodeInfo;
+
+namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
 {
-    public class JavaCode : Code
+    public class JavaCode : MemberInfo
     {
         public JavaCode(string originalSource)
             : base(originalSource)

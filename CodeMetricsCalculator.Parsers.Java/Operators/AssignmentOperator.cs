@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using CodeMetricsCalculator.Parsers.CodeInfo;
+using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java.Operators
 {
@@ -7,9 +9,8 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         private const string OperatorString = "=";
 
         public AssignmentOperator()
-            : base(OperatorString, new Regex(string.Format(@"[^{0}]{0}[^{0}]", OperatorString), RegexOptions.Compiled))
+            : base(OperatorString, OperationType.Binary, OperatorSyntax.Infix)
         {
-            //todo: как-то ограничить, чтобы и слева, и справа от операторы были операнды
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using CodeMetricsCalculator.Parsers.CodeInfo;
+using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java.Operators
 {
@@ -9,14 +11,8 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
 #pragma warning restore 1570
     internal class RelationalOperator : JavaOperator
     {
-        //todo: регулярка уныла
         public RelationalOperator(string operatorString)
-            : base(operatorString, new Regex(string.Format(@"[^{0}]{0}[^{0}=]", operatorString), RegexOptions.Compiled))
-        {
-        }
-
-        public RelationalOperator(string operatorString, Regex regex)
-            : base(operatorString, regex)
+            : base(operatorString, OperationType.Binary, OperatorSyntax.Infix)
         {
         }
     }

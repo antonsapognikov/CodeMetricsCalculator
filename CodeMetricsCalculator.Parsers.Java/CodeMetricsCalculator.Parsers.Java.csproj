@@ -39,11 +39,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JavaCode.cs" />
+    <Compile Include="CodeInfo\JavaClass.cs" />
+    <Compile Include="CodeInfo\JavaCode.cs" />
+    <Compile Include="CodeInfo\JavaExpression.cs" />
+    <Compile Include="CodeInfo\JavaField.cs" />
+    <Compile Include="CodeInfo\JavaMethod.cs" />
+    <Compile Include="CodeInfo\JavaMethodBody.cs" />
+    <Compile Include="JavaClassParser.cs" />
     <Compile Include="JavaCodeParser.cs" />
-    <Compile Include="JavaOperator.cs" />
+    <Compile Include="CodeInfo\JavaOperand.cs" />
+    <Compile Include="JavaExpressionParser.cs" />
+    <Compile Include="JavaFieldParser.cs" />
+    <Compile Include="JavaMethodBodyParser.cs" />
+    <Compile Include="JavaMethodParser.cs" />
+    <Compile Include="JavaOperandParser.cs" />
+    <Compile Include="CodeInfo\JavaOperator.cs" />
     <Compile Include="JavaOperatorParser.cs" />
-    <Compile Include="OperatorParsingResult.cs" />
     <Compile Include="Operators\ArithmeticOperator.cs" />
     <Compile Include="Operators\AssignmentOperator.cs" />
     <Compile Include="Operators\BitwiseOperator.cs" />
