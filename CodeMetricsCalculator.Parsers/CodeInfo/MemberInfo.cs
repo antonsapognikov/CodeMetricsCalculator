@@ -5,7 +5,7 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
     public abstract class MemberInfo : IMemberInfo
     {
         private readonly string _originalSource;
-        private string _normolizedSource;
+        private string _normalizedSource;
 
         protected MemberInfo(string originalSource)
         {
@@ -22,10 +22,10 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
 
         public string NormalizedSource
         {
-            get { return _normolizedSource ?? (_normolizedSource = NormolizeSource(_originalSource)); }
+            get { return _normalizedSource ?? (_normalizedSource = NormalizeSource(_originalSource)); }
         }
 
-        protected abstract string NormolizeSource(string originalSource);
+        protected abstract string NormalizeSource(string originalSource);
         
         public override string ToString()
         {
