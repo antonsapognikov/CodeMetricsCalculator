@@ -8,6 +8,8 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
 
         string Name { get; }
 
+        IReadOnlyCollection<IMethodParameterInfo> Parameters { get; }
+
         IMethodBodyInfo GetBody();
     }
 }
