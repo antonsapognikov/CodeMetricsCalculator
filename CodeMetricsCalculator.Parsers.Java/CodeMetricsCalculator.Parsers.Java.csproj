@@ -45,6 +45,8 @@
     <Compile Include="CodeInfo\JavaField.cs" />
     <Compile Include="CodeInfo\JavaMethod.cs" />
     <Compile Include="CodeInfo\JavaMethodBody.cs" />
+    <Compile Include="CodeInfo\JavaMethodParameter.cs" />
+    <Compile Include="CodeInfo\JavaVariable.cs" />
     <Compile Include="JavaClassParser.cs" />
     <Compile Include="JavaCodeParser.cs" />
     <Compile Include="CodeInfo\JavaOperand.cs" />
