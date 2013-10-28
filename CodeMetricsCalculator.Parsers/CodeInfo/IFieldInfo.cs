@@ -1,9 +1,7 @@
 ﻿namespace CodeMetricsCalculator.Parsers.CodeInfo
 {
-    public interface IFieldInfo : IMemberInfo
+    public interface IFieldInfo : IVariableInfo
     {
         IClassInfo Class { get; }
-
-        string Name { get; }
     }
 }

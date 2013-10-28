@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeInfo\IMethodParameterInfo.cs" />
+    <Compile Include="CodeInfo\IVariableInfo.cs" />
     <Compile Include="CodeInfo\MemberInfo.cs" />
     <Compile Include="CodeInfo\IClassInfo.cs" />
     <Compile Include="CodeInfo\IMemberInfo.cs" />
