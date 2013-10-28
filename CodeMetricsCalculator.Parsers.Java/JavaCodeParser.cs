@@ -17,18 +17,18 @@ namespace CodeMetricsCalculator.Parsers.Java
             while (bracketsCounter != 0)
             {
                 var openingBracketIndex = source.IndexOf(openingBracket, lastBracketIndex + 1, StringComparison.Ordinal);
-                var closeingBracketIndex = source.IndexOf(closingBracket, lastBracketIndex + 1, StringComparison.Ordinal);
-                if (closeingBracketIndex == -1) //не нашли закрывающую скобку 
+                var closingBracketIndex = source.IndexOf(closingBracket, lastBracketIndex + 1, StringComparison.Ordinal);
+                if (closingBracketIndex == -1) //не нашли закрывающую скобку 
                     return -1;
 
-                if (openingBracketIndex < closeingBracketIndex)
+                if (openingBracketIndex < closingBracketIndex && openingBracketIndex != -1)
                 {
                     lastBracketIndex = openingBracketIndex;
                     bracketsCounter++;
                 }
                 else
                 {
-                    lastBracketIndex = closeingBracketIndex;
+                    lastBracketIndex = closingBracketIndex;
                     bracketsCounter--;
                 }
             }

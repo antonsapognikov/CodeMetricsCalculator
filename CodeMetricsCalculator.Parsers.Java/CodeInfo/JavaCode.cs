@@ -9,9 +9,10 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         {
         }
 
-        protected override string NormolizeSource(string originalSource)
+        protected override string NormalizeSource(string originalSource)
         {
-            //todo: удалить закомментированный код, очистить строковые литералы, удалить лишние пробелы и т.п.
+            //todo: удалить закомментированный код, очистить строковые литералы, 
+            //todo: удалить лишние пробелы, пустые строки и т.п.
             return originalSource;
         }
     }
