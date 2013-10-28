@@ -1,6 +1,6 @@
 
 public class Math2 {
-        public static int charToInt(char c) {
+        public static int charToInt(char c, int notUsed) {
                 return Integer.valueOf(Character.toString(c));
         }
         
