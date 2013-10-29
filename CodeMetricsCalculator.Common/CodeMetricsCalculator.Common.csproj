@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B8E996A4-D603-4E25-B958-B72A4DD0A4AF}</ProjectGuid>
+    <ProjectGuid>{28FE0829-FD72-4B65-81B4-B4020556121C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeMetricsCalculator.Parsers.Java</RootNamespace>
-    <AssemblyName>CodeMetricsCalculator.Parsers.Java</AssemblyName>
+    <RootNamespace>CodeMetricsCalculator.Common</RootNamespace>
+    <AssemblyName>CodeMetricsCalculator.Common</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,44 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeInfo\JavaClass.cs" />
-    <Compile Include="CodeInfo\JavaCode.cs" />
-    <Compile Include="CodeInfo\JavaExpression.cs" />
-    <Compile Include="CodeInfo\JavaField.cs" />
-    <Compile Include="CodeInfo\JavaMethod.cs" />
-    <Compile Include="CodeInfo\JavaMethodBody.cs" />
-    <Compile Include="CodeInfo\JavaMethodParameter.cs" />
-    <Compile Include="CodeInfo\JavaVariable.cs" />
-    <Compile Include="JavaClassParser.cs" />
-    <Compile Include="JavaCodeParser.cs" />
-    <Compile Include="CodeInfo\JavaOperand.cs" />
-    <Compile Include="JavaExpressionParser.cs" />
-    <Compile Include="JavaFieldParser.cs" />
-    <Compile Include="JavaMethodBodyParser.cs" />
-    <Compile Include="JavaMethodParser.cs" />
-    <Compile Include="JavaOperandParser.cs" />
-    <Compile Include="CodeInfo\JavaOperator.cs" />
-    <Compile Include="JavaOperatorParser.cs" />
-    <Compile Include="Operators\ArithmeticOperator.cs" />
-    <Compile Include="Operators\AssignmentOperator.cs" />
-    <Compile Include="Operators\BitwiseOperator.cs" />
-    <Compile Include="Operators\BlockOperator.cs" />
-    <Compile Include="Operators\CommonOperator.cs" />
-    <Compile Include="Operators\ConditionalOperator.cs" />
-    <Compile Include="Operators\PrimaryOperator.cs" />
-    <Compile Include="Operators\RelationalOperator.cs" />
-    <Compile Include="Operators\UnaryOperator.cs" />
+    <Compile Include="Utils\CollectionUtils.cs" />
+    <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CodeMetricsCalculator.Common\CodeMetricsCalculator.Common.csproj">
-      <Project>{28fe0829-fd72-4b65-81b4-b4020556121c}</Project>
-      <Name>CodeMetricsCalculator.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CodeMetricsCalculator.Parsers\CodeMetricsCalculator.Parsers.csproj">
-      <Project>{43EB3CC2-4A53-4D45-8BD0-59C88E64458D}</Project>
-      <Name>CodeMetricsCalculator.Parsers</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
