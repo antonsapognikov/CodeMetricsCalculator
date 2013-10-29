@@ -14,7 +14,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
             AllOperators = new List<BlockOperator>
             {
                 While,
-                DoWhile,
+                Do,
                 For,
                 If,
                 IfElse,
@@ -34,10 +34,10 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         }
 
         public static readonly BlockOperator While = new BlockOperator("while (...) {...}");
-        public static readonly BlockOperator DoWhile = new BlockOperator("do {...} while(...);");
+        public static readonly BlockOperator Do = new BlockOperator("do {...}");
         public static readonly BlockOperator For = new BlockOperator("for (...;...;...) {...}");
         public static readonly BlockOperator If = new BlockOperator("if (...) {...}");
-        public static readonly BlockOperator IfElse = new BlockOperator("if (...) {...} else {...}");
+        public static readonly BlockOperator Else = new BlockOperator("else {...}");
         public static readonly BlockOperator Switch = new BlockOperator("switch (...) {...}");
     }
 }
