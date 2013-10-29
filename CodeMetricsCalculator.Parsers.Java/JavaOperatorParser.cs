@@ -60,6 +60,10 @@ namespace CodeMetricsCalculator.Parsers.Java
                     return BuildRegexForKeyword("else");
                 if (blockOperator == BlockOperator.Switch)
                     return BuildRegexForKeyword("switch");
+                if (blockOperator == BlockOperator.Case)
+                    return BuildRegexForKeyword("case");
+                if (blockOperator == BlockOperator.Default)
+                    return BuildRegexForKeyword("default");
                 //...
 
                 throw new NotImplementedException();
@@ -82,7 +86,7 @@ namespace CodeMetricsCalculator.Parsers.Java
 
         private static Regex BuildRegexForKeyword(string keyword)
         {
-            return new Regex(@"[ ;:{}]" + keyword + @"[ ;:{}]", RegexOptions.Compiled);
+            return new Regex(@"[ ;{}]" + keyword + @"[() ;:{}]", RegexOptions.Compiled);
         }
     }
 }
