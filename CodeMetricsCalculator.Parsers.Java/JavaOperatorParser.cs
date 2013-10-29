@@ -48,10 +48,18 @@ namespace CodeMetricsCalculator.Parsers.Java
                 var blockOperator = operatorInfo as BlockOperator;
                 Debug.Assert(blockOperator != null);
 
-                if (blockOperator == BlockOperator.DoWhile)
-                    throw new NotImplementedException();
+                if (blockOperator == BlockOperator.Do)
+                    return BuildRegexForKeyword("do");
+                if (blockOperator == BlockOperator.While)
+                    return BuildRegexForKeyword("while");
                 if (blockOperator == BlockOperator.For)
-                    throw new NotImplementedException();
+                    return BuildRegexForKeyword("for");
+                if (blockOperator == BlockOperator.If)
+                    return BuildRegexForKeyword("if");
+                if (blockOperator == BlockOperator.Else)
+                    return BuildRegexForKeyword("else");
+                if (blockOperator == BlockOperator.Switch)
+                    return BuildRegexForKeyword("switch");
                 //...
 
                 throw new NotImplementedException();
@@ -70,6 +78,11 @@ namespace CodeMetricsCalculator.Parsers.Java
             }
 
             throw new NotSupportedException(); //не должны сюда придти
+        }
+
+        private static Regex BuildRegexForKeyword(string keyword)
+        {
+            return new Regex(@"[ ;:{}]" + keyword + @"[ ;:{}]", RegexOptions.Compiled);
         }
     }
 }
