@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java.Operators
@@ -18,7 +14,8 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
                 For,
                 If,
                 IfElse,
-                Switch
+                Switch,
+                Case
             };
         }
 
@@ -39,5 +36,6 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         public static readonly BlockOperator If = new BlockOperator("if (...) {...}");
         public static readonly BlockOperator IfElse = new BlockOperator("if (...) {...} else {...}");
         public static readonly BlockOperator Switch = new BlockOperator("switch (...) {...}");
+        public static readonly BlockOperator Case = new BlockOperator("case x: {...}");
     }
 }
