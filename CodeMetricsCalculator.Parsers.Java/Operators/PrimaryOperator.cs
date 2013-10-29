@@ -16,7 +16,11 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
                 PostDecrement,
                 CreateObject,
                 CreateArray,
-                Instanceof
+                Instanceof,
+                Return,
+                Continue,
+                Break,
+                GoTo
             };
         }
         
@@ -39,5 +43,9 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         public static readonly PrimaryOperator CreateObject = new PrimaryOperator("new T(...)");
         public static readonly PrimaryOperator CreateArray = new PrimaryOperator("new T[...]");
         public static readonly PrimaryOperator Instanceof = new PrimaryOperator("instanceof(T)");
+        public static readonly PrimaryOperator Return = new PrimaryOperator("return");
+        public static readonly PrimaryOperator Continue = new PrimaryOperator("continue");
+        public static readonly PrimaryOperator Break = new PrimaryOperator("break");
+        public static readonly PrimaryOperator GoTo = new PrimaryOperator("goto");
     }
 }
