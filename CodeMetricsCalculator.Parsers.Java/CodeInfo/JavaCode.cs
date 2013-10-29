@@ -38,5 +38,10 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             normalizedSource = Regex.Replace(normalizedSource, MultilineCommentPattern, string.Empty);
             return normalizedSource;
         }
+
+        protected string DecodeLiteral(Guid guid)
+        {
+            return _stringLiterals[guid];
+        }
     }
 }
