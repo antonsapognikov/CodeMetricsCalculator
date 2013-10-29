@@ -60,8 +60,10 @@
     <Compile Include="Operators\ArithmeticOperator.cs" />
     <Compile Include="Operators\AssignmentOperator.cs" />
     <Compile Include="Operators\BitwiseOperator.cs" />
+    <Compile Include="Operators\BlockOperator.cs" />
+    <Compile Include="Operators\CommonOperator.cs" />
     <Compile Include="Operators\ConditionalOperator.cs" />
-    <Compile Include="Operators\InstanceofOperator.cs" />
+    <Compile Include="Operators\PrimaryOperator.cs" />
     <Compile Include="Operators\RelationalOperator.cs" />
     <Compile Include="Operators\UnaryOperator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

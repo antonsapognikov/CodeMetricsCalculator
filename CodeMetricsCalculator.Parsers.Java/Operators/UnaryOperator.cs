@@ -1,17 +1,33 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java.Operators
 {
     /// <summary>
-    ///     Unary Java operator (+, -, ++, --, !).
+    ///     Unary Java operator (+, -, ++, --, !, ~).
     /// </summary>
-    internal class UnaryOperator : JavaOperator
+    internal class UnaryOperator : CommonOperator
     {
-        public UnaryOperator(string operatorString, OperatorSyntax operatorSyntax)
-            : base(operatorString, OperationType.Unary, operatorSyntax)
+        private static readonly List<UnaryOperator> AllOperators = new List<UnaryOperator>
         {
+            new UnaryOperator("+"),
+            new UnaryOperator("-"),
+            new UnaryOperator("++"),
+            new UnaryOperator("--"),
+            new UnaryOperator("!"),
+            new UnaryOperator("~")
+        };
+
+        public UnaryOperator(string operatorString)
+            : base(operatorString, OperationType.Unary, OperatorSyntax.Prefix)
+        {
+        }
+
+        public static IReadOnlyCollection<UnaryOperator> All
+        {
+            get { return AllOperators.AsReadOnly(); }
         }
     }
 }

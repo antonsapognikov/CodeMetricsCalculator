@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java.CodeInfo;
+using CodeMetricsCalculator.Parsers.Java.Operators;
 
 namespace CodeMetricsCalculator.Parsers.Java
 {
@@ -27,18 +29,47 @@ namespace CodeMetricsCalculator.Parsers.Java
 
         private static Regex BuildRegexForOperator(JavaOperator operatorInfo)
         {
-            //слева от оператор что угодно, кроме него самого; справа от него что угодно, кроме него самого и знака '=',
-            //чтобы не спутать с бинарными операторами -= и т.п.
+            if (operatorInfo.IsPrimary)
+            {
+                var primaryOperator = operatorInfo as PrimaryOperator;
+                Debug.Assert(primaryOperator != null);
 
-            //эскейпим символы слешами
-            var operatorString = Regex.Escape(operatorInfo.Name);
+                if (primaryOperator == PrimaryOperator.CreateArray)
+                    throw new NotImplementedException();
+                if (primaryOperator == PrimaryOperator.CreateObject)
+                    throw new NotImplementedException();
+                //...
+                    
+                throw new NotImplementedException();
+            }
 
-            //todo: тут надо серьёзно подумать
-            if (operatorInfo.OperationType == OperationType.Ternary) //тернарный оператор в java только один
-                return new Regex(@"\?.+:", RegexOptions.Compiled);
+            if (operatorInfo.IsBlock)
+            {
+                var blockOperator = operatorInfo as BlockOperator;
+                Debug.Assert(blockOperator != null);
 
-            //todo: надо как-то различать префиксные и постфиксные, унарные и бинарные операторы
-            return new Regex(string.Format(@"[^{0}]{0}[^{0}=]", operatorString), RegexOptions.Compiled);
+                if (blockOperator == BlockOperator.DoWhile)
+                    throw new NotImplementedException();
+                if (blockOperator == BlockOperator.For)
+                    throw new NotImplementedException();
+                //...
+
+                throw new NotImplementedException();
+            }
+
+            if (operatorInfo is CommonOperator)
+            {
+                var commonOperator = operatorInfo as CommonOperator;
+                var operatorString = Regex.Escape(operatorInfo.Name);
+
+                if (commonOperator.OperationType == OperationType.Ternary)
+                    return new Regex(@"\?.+:", RegexOptions.Compiled);
+
+                //todo: надо как-то различать префиксные и постфиксные, унарные и бинарные операторы
+                return new Regex(string.Format(@"[^{0}]{0}[^{0}=]", operatorString), RegexOptions.Compiled);
+            }
+
+            throw new NotSupportedException(); //не должны сюда придти
         }
     }
 }

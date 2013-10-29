@@ -31,8 +31,14 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
     {
         string Name { get; }
 
-        OperationType OperationType { get; }
+        /// <summary>
+        /// Блочный ли оператор. Например: if (...) {...}
+        /// </summary>
+        bool IsBlock { get; }
 
-        OperatorSyntax Syntax { get; }
+        /// <summary>
+        /// Первичный ли оператор. Например: instanceof, new T(...), x(...)
+        /// </summary>
+        bool IsPrimary { get; }
     }
 }

@@ -17,7 +17,6 @@ namespace CodeMetricsCalculator
             var classesSource = Resource.TestJavaCode;
             var classesCode = new JavaCode(classesSource);
             var classes = new JavaClassParser().Parse(classesCode);
-
             Console.WriteLine("Classes: ");
             foreach (var classInfo in classes)
             {
