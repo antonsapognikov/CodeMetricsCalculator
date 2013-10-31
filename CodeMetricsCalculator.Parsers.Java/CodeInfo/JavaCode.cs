@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Common.Utils;
 using CodeMetricsCalculator.Parsers.CodeInfo;
@@ -36,9 +37,15 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             normalizedSource = Regex.Replace(normalizedSource, _inlineCommentPattern, Environment.NewLine);
             //Removing multiline comments...
             normalizedSource = Regex.Replace(normalizedSource, MultilineCommentPattern, string.Empty);
+            //Removing empty lines and trim
+            normalizedSource = normalizedSource
+                .Split(new [] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim(' ', '\t'))
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Aggregate((s1, s2) => s1 + Environment.NewLine + s2);
             return normalizedSource;
         }
-
+        
         protected string DecodeLiteral(Guid guid)
         {
             return _stringLiterals[guid];
