@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java.Operators;
@@ -22,14 +23,16 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         
         private static readonly List<JavaOperator> AllOperators;
 
-        private readonly bool _isBlock;
-        private readonly bool _isPrimary;
+        private readonly string _keyword;
 
-        protected JavaOperator(string operatorString, bool isBlock, bool isPrimary)
+        protected JavaOperator(string operatorString) : this(operatorString, null)
+        {
+        }
+
+        protected JavaOperator(string operatorString, string keyword)
             : base(operatorString)
         {
-            _isBlock = isBlock;
-            _isPrimary = isPrimary;
+            _keyword = keyword;
         }
 
         public static IReadOnlyCollection<JavaOperator> Operators
@@ -42,14 +45,23 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             get { return NormalizedSource; }
         }
 
-        public bool IsBlock
+        public bool IsKeywordBased
         {
-            get { return _isBlock; }
+            get { return _keyword != null; }
         }
 
-        public bool IsPrimary
+        /// <summary>
+        /// Operator keyword
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Cannot get keyword for not keyword based operator.</exception>
+        public string Keyword
         {
-            get { return _isPrimary; }
+            get
+            {
+                if (!IsKeywordBased)
+                    throw new InvalidOperationException("Cannot get keyword for not keyword based operator.");
+                return _keyword;
+            }
         }
     }
 }

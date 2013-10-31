@@ -14,7 +14,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         private readonly OperatorSyntax _syntax;
 
         protected CommonOperator(string operatorString, OperationType operationType, OperatorSyntax syntax)
-            : base(operatorString, false, false)
+            : base(operatorString)
         {
             _operationType = operationType;
             _syntax = syntax;

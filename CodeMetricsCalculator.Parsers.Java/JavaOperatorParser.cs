@@ -29,44 +29,25 @@ namespace CodeMetricsCalculator.Parsers.Java
 
         private static Regex BuildRegexForOperator(JavaOperator operatorInfo)
         {
-            if (operatorInfo.IsPrimary)
+            if (operatorInfo is PrimaryOperator)
             {
                 var primaryOperator = operatorInfo as PrimaryOperator;
-                Debug.Assert(primaryOperator != null);
-
-                if (primaryOperator == PrimaryOperator.CreateArray)
+                if (primaryOperator.IsKeywordBased)
+                {
+                    return BuildRegexForKeyword(primaryOperator.Keyword);
+                }
+                else
+                {
                     throw new NotImplementedException();
-                if (primaryOperator == PrimaryOperator.CreateObject)
-                    throw new NotImplementedException();
-                //...
+                }
                     
-                throw new NotImplementedException();
             }
 
-            if (operatorInfo.IsBlock)
+            if (operatorInfo is BlockOperator)
             {
                 var blockOperator = operatorInfo as BlockOperator;
-                Debug.Assert(blockOperator != null);
 
-                if (blockOperator == BlockOperator.Do)
-                    return BuildRegexForKeyword("do");
-                if (blockOperator == BlockOperator.While)
-                    return BuildRegexForKeyword("while");
-                if (blockOperator == BlockOperator.For)
-                    return BuildRegexForKeyword("for");
-                if (blockOperator == BlockOperator.If)
-                    return BuildRegexForKeyword("if");
-                if (blockOperator == BlockOperator.Else)
-                    return BuildRegexForKeyword("else");
-                if (blockOperator == BlockOperator.Switch)
-                    return BuildRegexForKeyword("switch");
-                if (blockOperator == BlockOperator.Case)
-                    return BuildRegexForKeyword("case");
-                if (blockOperator == BlockOperator.Default)
-                    return BuildRegexForKeyword("default");
-                //...
-
-                throw new NotImplementedException();
+                return BuildRegexForKeyword(blockOperator.Keyword);
             }
 
             if (operatorInfo is CommonOperator)
