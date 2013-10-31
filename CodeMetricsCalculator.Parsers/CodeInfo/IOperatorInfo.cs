@@ -30,15 +30,5 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
     public interface IOperatorInfo : IMemberInfo
     {
         string Name { get; }
-
-        /// <summary>
-        /// Блочный ли оператор. Например: if (...) {...}
-        /// </summary>
-        bool IsBlock { get; }
-
-        /// <summary>
-        /// Первичный ли оператор. Например: instanceof, new T(...), x(...)
-        /// </summary>
-        bool IsPrimary { get; }
     }
 }
