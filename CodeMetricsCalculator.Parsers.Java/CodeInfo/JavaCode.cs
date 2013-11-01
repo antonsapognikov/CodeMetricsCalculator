@@ -9,10 +9,10 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
 {
     public class JavaCode : MemberInfo
     {
-        private const string StringLiteralPattern = "\"[^\"]*\"";
-        private const string MultilineCommentPattern = "/\\*[^\\*/]*\\*/";       
+        private const string StringLiteralPattern = "\"[^\"]*\""; 
+        private const string MultilineCommentPattern = "/\\*[^\\*/]*\\*/";  //todo: need fix      
         private readonly string _inlineCommentPattern = string.Format("//[^{0}]*{0}", Environment.NewLine);
-
+        private const string SpacesAndTabsPattern = @"[ \t]+";
         private readonly Dictionary<Guid, string> _stringLiterals = new Dictionary<Guid, string>(); 
 
         public JavaCode(string originalSource)
@@ -33,6 +33,8 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
                     _stringLiterals.Add(guid, match.Value);
                     return guid.ToString().Quotes();
                 });
+            //Removing excess spaces and tabs
+            normalizedSource = Regex.Replace(normalizedSource, SpacesAndTabsPattern, " ");
             //Removing inline comments...
             normalizedSource = Regex.Replace(normalizedSource, _inlineCommentPattern, Environment.NewLine);
             //Removing multiline comments...
