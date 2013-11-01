@@ -7,8 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using CodeMetricsCalculator.Common.UI.ViewModel;
-﻿using System.Windows.Input;
 using CodeMetricsCalculator.Common.UI.ViewModel.Base;
 using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java;
@@ -20,8 +18,8 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
     public class MainWindowViewModel : UIViewModel
     {
         private string _fileName;
-        private string _log;
         private string _result;
+        private StringBuilder _log;
         private IReadOnlyCollection<IClassInfo> _classes;
         private ICommand _openFileCommand;
 
@@ -37,16 +35,6 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             }
         }
 
-        public string Log
-        {
-            get { return _log; }
-            set
-            {
-                _log = value;
-                OnPropertyChanged(() => Log);
-            }
-        }
-
         public string Result
         {
             get { return _result; }
@@ -54,6 +42,16 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             {
                 _result = value;
                 OnPropertyChanged(() => Result);
+            }
+        }
+
+        public StringBuilder Log
+        {
+            get { return _log; }
+            set
+            {
+                _log = value;
+                OnPropertyChanged(() => Log);
             }
         }
 
@@ -65,7 +63,15 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
         public MainWindowViewModel()
         {
             //Test values
-            Log = "Waiting for file...";
+            AppendLineToLog("Waiting for file...");
+        }
+
+        private void AppendLineToLog(string value)
+        {
+            if (_log == null)
+                _log = new StringBuilder();
+            _log.AppendLine(value ?? string.Empty);
+            OnPropertyChanged(() => Log);
         }
 
         private void OnCreateFile()
@@ -84,19 +90,19 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             try
             {
                 string source;
-                Log = "Reading file...";
+                AppendLineToLog("Reading file...");
                 using (var sr = new StreamReader(File.OpenRead(FileName)))
                 {
                     source = await sr.ReadToEndAsync();
                 }
                 var code = new JavaCode(source);
-                Log = "Parsing classes...";
+                AppendLineToLog("Parsing classes...");
                 var parseClassesTask = new Task<IReadOnlyCollection<IClassInfo>>(() => new JavaClassParser().Parse(code));
                 parseClassesTask.Start();
                 _classes = await parseClassesTask;
-                Log = string.Format("Parsed {0} classes.", _classes.Count);
+                AppendLineToLog(string.Format("Parsed {0} classes.", _classes.Count));
 
-                Log = "Parsing expressions...";
+                AppendLineToLog("Parsing expressions...");
                 var parseExpressionsTask = new Task<List<IExpressionInfo>>(() => _classes.Select(@class => @class.GetMethods())
                  .Aggregate(AggregateMethods)
                  .Select(info => info.GetBody())
@@ -105,7 +111,7 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                      AggregateExpressions).ToList());
                 parseExpressionsTask.Start();
                 var expressions = await parseExpressionsTask;
-                Log = string.Format("Parsed {0} expressions.", expressions.Count);
+                AppendLineToLog(string.Format("Parsed {0} expressions.", expressions.Count));
                 var sb = new StringBuilder();
                 sb.AppendLine("All expressions: ");
                 foreach (var expressionInfo in expressions)
@@ -117,7 +123,7 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             }
             catch (Exception e)
             {
-                Log = e.Message;
+                AppendLineToLog(e.Message);
             }
         }
 
