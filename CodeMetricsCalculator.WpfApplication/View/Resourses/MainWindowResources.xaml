@@ -6,7 +6,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Height" Value="25" />
         <Setter Property="FontSize" Value="15" />
-        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
         <Setter Property="Margin" Value="{StaticResource ControlMargin}" />
     </Style>
     
