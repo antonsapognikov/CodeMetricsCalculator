@@ -28,9 +28,18 @@
         <Setter Property="Margin" Value="{StaticResource ControlMargin}" />
     </Style>
     
-    <Style x:Key="BorderStyle" TargetType="Border">
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="Black" />
-        <Setter Property="Margin" Value="{StaticResource ControlMargin}" />
+    <Style x:Key="GridSplitterStyle" TargetType="GridSplitter">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="ResizeDirection" Value="Rows" />
+        <Setter Property="ResizeBehavior" Value="PreviousAndNext" />
+        <Setter Property="Height" Value="2" />
+        <Setter Property="Background" Value="Black" />
+    </Style>
+    
+    <Style x:Key="ScrollViewerStyle" TargetType="ScrollViewer">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
     </Style>
 </ResourceDictionary>
