@@ -103,6 +103,14 @@
       <Project>{fb149eb2-5355-490a-9994-0cd088778e76}</Project>
       <Name>CodeMetricsCalculator.Common.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CodeMetricsCalculator.Parsers.Java\CodeMetricsCalculator.Parsers.Java.csproj">
+      <Project>{B8E996A4-D603-4E25-B958-B72A4DD0A4AF}</Project>
+      <Name>CodeMetricsCalculator.Parsers.Java</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeMetricsCalculator.Parsers\CodeMetricsCalculator.Parsers.csproj">
+      <Project>{43EB3CC2-4A53-4D45-8BD0-59C88E64458D}</Project>
+      <Name>CodeMetricsCalculator.Parsers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
