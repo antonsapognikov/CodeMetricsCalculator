@@ -30,5 +30,7 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
     public interface IOperatorInfo : IMemberInfo
     {
         string Name { get; }
+
+        Pattern Pattern { get; }
     }
 }
