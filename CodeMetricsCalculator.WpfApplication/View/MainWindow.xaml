@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:base="clr-namespace:CodeMetricsCalculator.Common.UI.View.Base;assembly=CodeMetricsCalculator.Common.UI"
         xmlns:viewModel="clr-namespace:CodeMetricsCalculator.WpfApplication.ViewModel"
-        Title="MainWindow" Width="600" Height="600" ResizeMode="NoResize">
+        Title="Code Metrics Calculator" Width="600" Height="600" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary Source="Resourses/MainWindowResources.xaml" />
     </Window.Resources>
