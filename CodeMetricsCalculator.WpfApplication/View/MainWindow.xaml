@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:base="clr-namespace:CodeMetricsCalculator.Common.UI.View.Base;assembly=CodeMetricsCalculator.Common.UI"
         xmlns:viewModel="clr-namespace:CodeMetricsCalculator.WpfApplication.ViewModel"
-        xmlns:converters="clr-namespace:CodeMetricsCalculator.Common.UI.Converters;assembly=CodeMetricsCalculator.Common.UI"
-        Title="MainWindow" Width="600" ResizeMode="NoResize" SizeToContent="Height">
+        Title="MainWindow" Width="600" Height="400" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary Source="Resourses/MainWindowResources.xaml" />
     </Window.Resources>
@@ -14,8 +13,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" MinHeight="25" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" MinHeight="25" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"  Style="{StaticResource TextBlockStyle}" Text="Step 1: Select file path." />
         <Grid Grid.Row="1">
@@ -34,9 +34,26 @@
                 <RadioButton GroupName="Metrics" Content="Chepin" />
             </ItemsControl>
         </Grid>
-        <TextBlock Grid.Row="4" Style="{StaticResource MultilineTextBlockStyle}" Text="{Binding Path=Log}" 
-                   Visibility="{Binding Path=IsLogVisible, Converter={x:Static converters:BoolToVisibilityConverter.InstanceCollapsed}}" />
-        <TextBlock Grid.Row="5" Style="{StaticResource MultilineTextBlockStyle}" Text="{Binding Path=Result}" 
-                   Visibility="{Binding Path=IsResultVisible, Converter={x:Static converters:BoolToVisibilityConverter.InstanceCollapsed}}" />
+        <ScrollViewer Grid.Row="4" Style="{StaticResource ScrollViewerStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Style="{StaticResource TextBlockStyle}" Text="Result:" />
+                <TextBlock Grid.Row="1" Style="{StaticResource MultilineTextBlockStyle}" Text="{Binding Path=Result}" />
+            </Grid>
+        </ScrollViewer>
+        <GridSplitter Grid.Row="5" Style="{StaticResource GridSplitterStyle}" />
+        <ScrollViewer Grid.Row="6" Style="{StaticResource ScrollViewerStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Style="{StaticResource TextBlockStyle}" Text="Log:" />
+                <TextBlock Grid.Row="1" Style="{StaticResource MultilineTextBlockStyle}" Text="{Binding Path=Log}" />
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </base:BaseWindow>

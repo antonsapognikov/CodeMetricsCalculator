@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CodeMetricsCalculator.Common.UI.ViewModel;
+﻿using System.Windows.Input;
 using CodeMetricsCalculator.Common.UI.ViewModel.Base;
 using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java;
@@ -17,8 +19,6 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
 {
     public class MainWindowViewModel : UIViewModel
     {
-        private bool _isLogVisible;
-        private bool _isResultVisible;
         private string _fileName;
         private string _log;
         private string _result;
@@ -26,26 +26,6 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
         private ICommand _openFileCommand;
 
         private const string JavaSourceFilter = "Java source files (*.java)|*.java|All files (*.*)|*.*";
-
-        public bool IsLogVisible
-        {
-            get { return _isLogVisible; }
-            set
-            {
-                _isLogVisible = value;
-                OnPropertyChanged(() => IsLogVisible);
-            }
-        }
-
-        public bool IsResultVisible
-        {
-            get { return _isResultVisible; }
-            set
-            {
-                _isResultVisible = value;
-                OnPropertyChanged(() => IsResultVisible);
-            }
-        }
 
         public string FileName
         {
@@ -86,7 +66,6 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
         {
             //Test values
             Log = "Waiting for file...";
-            IsLogVisible = true;
         }
 
         private void OnCreateFile()
@@ -111,7 +90,6 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                     source = await sr.ReadToEndAsync();
                 }
                 var code = new JavaCode(source);
-                IsResultVisible = true;
                 Log = "Parsing classes...";
                 var parseClassesTask = new Task<IReadOnlyCollection<IClassInfo>>(() => new JavaClassParser().Parse(code));
                 parseClassesTask.Start();
