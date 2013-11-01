@@ -1,4 +1,47 @@
 
+/**
+ * Посетитель рассчитывающий стоимость
+ */
+public class PricingVisitor implements EquipmentVisitor {
+	
+	/**
+	 * Полная цена всего 
+	 */
+	private int total;
+	
+	
+	/**
+	 * Прибавляем полную стоимость карты
+	 * @see visitor.EquipmentVisitor#VisitCard(visitor.Card)
+	 */
+	public void VisitCard(Card c) {
+		total += c.getNetPrice();
+	}
+
+	/**
+	 * Здесь же, поскольку это системник, содержащий
+	 * большое количество внутренних частей - применяем скидку
+	 * @see visitor.EquipmentVisitor#VisitChassis(visitor.Chassis)
+	 */
+	public void VisitChassis(Chassis ch) {
+		total += ch.getDisountPrice();
+	}
+
+	/**
+	 * Прибавляем полную стоимость флоппика
+	 * @see visitor.EquipmentVisitor#VisitFloppyDisk(FloppyDisk)
+	 */
+	public void VisitFloppyDisk(FloppyDisk d) {
+		total += d.getNetPrice();
+	}
+
+	public int getTotal() {
+		return total;
+	}
+	
+}
+
+
 public class Math2 {
         public static int charToInt(char c, int notUsed) {
                 return Integer.valueOf(Character.toString(c));
