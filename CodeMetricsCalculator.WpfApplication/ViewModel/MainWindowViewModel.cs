@@ -125,7 +125,7 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 {
                     sb.AppendLine(expressionInfo.NormalizedSource);
                     var parseOperatorsTask =
-                        new Task<IReadOnlyDictionary<IOperatorInfo, int>>(() => expressionInfo.GetOperators());
+                        new Task<IReadOnlyDictionary<IOperatorInfo, int>>(expressionInfo.GetOperators);
                     parseOperatorsTask.Start();
                     var operators = await parseOperatorsTask;
                     sb.AppendLine("Operators:");
