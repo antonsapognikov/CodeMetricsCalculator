@@ -11,7 +11,7 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
     public class JavaCode : MemberInfo
     {
         private const string StringLiteralPattern = "\"[^\"]*\""; 
-        private const string MultilineCommentPattern = "/\\*[^\\*/]*\\*/";  //todo: need fix      
+        private const string MultilineCommentPattern = "/\\*([^\\*]|(\\*+[^\\*/]))*\\*+/";      
         private readonly string _inlineCommentPattern = string.Format("//[^{0}]*{0}", Environment.NewLine);
         private const string SpacesAndTabsPattern = @"[ \t]+";
         private readonly Dictionary<Guid, string> _stringLiterals = new Dictionary<Guid, string>(); 
