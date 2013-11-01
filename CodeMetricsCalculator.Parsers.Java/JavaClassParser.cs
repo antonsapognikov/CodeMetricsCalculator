@@ -15,8 +15,10 @@ namespace CodeMetricsCalculator.Parsers.Java
     {
         static JavaClassParser()
         {
-            //todo add generic class support
-            ClassNameRegex = new Regex(@"class +([a-zA-Z][a-zA-Z1-9<>]+) +{", RegexOptions.Compiled);
+            ClassNameRegex = new Regex(@"class +([a-zA-Z][a-zA-Z1-9<>]+) *" +
+                                       @"(extends [a-zA-Z][a-zA-Z1-9<,> ]+)? *" +
+                                       @"(implements [a-zA-Z][a-zA-Z1-9<,> ]+)? *{",
+                RegexOptions.Compiled);
         }
 
         private static readonly Regex ClassNameRegex;
