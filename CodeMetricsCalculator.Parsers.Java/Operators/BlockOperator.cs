@@ -9,30 +9,24 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
     {
         public const string OpeningBlockBracket = "{";
         public const string ClosingBlockBracket = "}";
-
-        static BlockOperator()
+        
+        private static readonly List<BlockOperator> AllOperators = new List<BlockOperator>
         {
-            AllOperators = new List<BlockOperator>
-            {
-                While,
-                Do,
-                For,
-                If,
-                Else,
-                Switch,
-                Case,
-                Default
-            };
-        }
+            new BlockOperator("while (...) {...}", false),
+            new BlockOperator("do {...} while (...)", false),
+            new BlockOperator("for (...;...;...) {...}", false),
+            new BlockOperator("if (...) {...}", false),
+            new BlockOperator("else {...}", false),
+            new BlockOperator("switch (...) {...}", true),
+            new BlockOperator("case " + Pattern.Identifier + " : {...}", false),
+            new BlockOperator("default: {...}", false)
+        };
 
-        private static readonly List<BlockOperator> AllOperators;
         private readonly bool _bracketsRequired;
 
-        public BlockOperator(string operatorString, string keyword, bool bracketsRequired)
-            : base(operatorString, keyword)
+        public BlockOperator(string pattern, bool bracketsRequired)
+            : base(new Pattern(pattern, bracketsRequired))
         {
-            Contract.Requires<ArgumentNullException>(keyword != null, "keyword");
-
             _bracketsRequired = bracketsRequired;
         }
 
@@ -45,14 +39,5 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         {
             get { return _bracketsRequired; }
         }
-
-        public static readonly BlockOperator While = new BlockOperator("while (...) {...}", "while", false);
-        public static readonly BlockOperator Do = new BlockOperator("do {...}", "do", false);
-        public static readonly BlockOperator For = new BlockOperator("for (...;...;...) {...}", "for", false);
-        public static readonly BlockOperator If = new BlockOperator("if (...) {...}", "if", false);
-        public static readonly BlockOperator Else = new BlockOperator("else {...}", "else", false);
-        public static readonly BlockOperator Switch = new BlockOperator("switch (...) {...}", "switch", true);
-        public static readonly BlockOperator Case = new BlockOperator("case x: {...}", "case", false);
-        public static readonly BlockOperator Default = new BlockOperator("default: {...}", "default", false);
     }
 }

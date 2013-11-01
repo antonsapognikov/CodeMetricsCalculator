@@ -12,16 +12,18 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
     {
         private static readonly List<UnaryOperator> AllOperators = new List<UnaryOperator>
         {
-            new UnaryOperator("+"),
-            new UnaryOperator("-"),
-            new UnaryOperator("++"),
-            new UnaryOperator("--"),
-            new UnaryOperator("!"),
-            new UnaryOperator("~")
+            new UnaryOperator("+", OperatorSyntax.Prefix),
+            new UnaryOperator("-", OperatorSyntax.Prefix),
+            new UnaryOperator("++", OperatorSyntax.Prefix),
+            new UnaryOperator("--", OperatorSyntax.Prefix),
+            new UnaryOperator("++", OperatorSyntax.Postfix),
+            new UnaryOperator("--", OperatorSyntax.Postfix),
+            new UnaryOperator("!", OperatorSyntax.Prefix),
+            new UnaryOperator("~", OperatorSyntax.Prefix)
         };
 
-        public UnaryOperator(string operatorString)
-            : base(operatorString, OperationType.Unary, OperatorSyntax.Prefix)
+        public UnaryOperator(string operatorString, OperatorSyntax syntax)
+            : base(operatorString, OperationType.Unary, syntax)
         {
         }
 

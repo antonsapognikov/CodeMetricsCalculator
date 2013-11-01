@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         private readonly OperatorSyntax _syntax;
 
         protected CommonOperator(string operatorString, OperationType operationType, OperatorSyntax syntax)
-            : base(operatorString)
+            : base(GeneratePattern(operatorString, operationType, syntax))
         {
             _operationType = operationType;
             _syntax = syntax;
@@ -28,6 +29,21 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         public OperatorSyntax Syntax
         {
             get { return _syntax; }
+        }
+
+        private static Pattern GeneratePattern(string operatorString, OperationType operationType, OperatorSyntax syntax)
+        {
+            Contract.Requires<ArgumentNullException>(operatorString != null, "operatorString");
+
+            if (operationType == OperationType.Unary)
+            {
+                return syntax == OperatorSyntax.Prefix
+                    ? new Pattern(operatorString + Pattern.Identifier)
+                    : new Pattern(Pattern.Identifier + operatorString);
+            }
+            if (operationType == OperationType.Binary)
+                return new Pattern(Pattern.Identifier + " " + operatorString + " " + Pattern.Identifier);
+            return new Pattern(@" ? " + Pattern.Identifier + " : " + Pattern.Identifier);
         }
     }
 }

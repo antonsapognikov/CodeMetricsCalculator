@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Parsers.CodeInfo;
@@ -29,45 +30,7 @@ namespace CodeMetricsCalculator.Parsers.Java
 
         private static Regex BuildRegexForOperator(JavaOperator operatorInfo)
         {
-            if (operatorInfo is PrimaryOperator)
-            {
-                var primaryOperator = operatorInfo as PrimaryOperator;
-                if (primaryOperator.IsKeywordBased)
-                {
-                    return BuildRegexForKeyword(primaryOperator.Keyword);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-                    
-            }
-
-            if (operatorInfo is BlockOperator)
-            {
-                var blockOperator = operatorInfo as BlockOperator;
-
-                return BuildRegexForKeyword(blockOperator.Keyword);
-            }
-
-            if (operatorInfo is CommonOperator)
-            {
-                var commonOperator = operatorInfo as CommonOperator;
-                var operatorString = Regex.Escape(operatorInfo.Name);
-
-                if (commonOperator.OperationType == OperationType.Ternary)
-                    return new Regex(@"\?.+:", RegexOptions.Compiled);
-
-                //todo: надо как-то различать префиксные и постфиксные, унарные и бинарные операторы
-                return new Regex(string.Format(@"[^{0}]{0}[^{0}=]", operatorString), RegexOptions.Compiled);
-            }
-
-            throw new NotSupportedException(); //не должны сюда придти
-        }
-
-        private static Regex BuildRegexForKeyword(string keyword)
-        {
-            return new Regex(@"[ ;{}]" + keyword + @"[() ;:{}]", RegexOptions.Compiled);
+            return operatorInfo.Pattern.ToRegex();
         }
     }
 }

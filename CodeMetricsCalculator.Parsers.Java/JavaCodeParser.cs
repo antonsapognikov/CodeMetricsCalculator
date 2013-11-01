@@ -1,14 +1,13 @@
 ﻿using System;
-using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java
 {
-    public abstract class JavaCodeParser<TJavaMember, TParsingResult> : ICodeParser<TJavaMember, TParsingResult>
-        where TJavaMember : JavaCode
+    public abstract class JavaCodeParser
     {
-        public abstract TParsingResult Parse(TJavaMember code);
-
+        protected const string IdentifierPattern = @"[a-zA-Z1-9_]+";
+        protected const string ArgumentsPattern = "[\"'a-zA-Z1-9,_ ]+";
+        
         protected int FindClosingBracketIndex(string source, string openingBracket, string closingBracket,
                                               int startOpeningBracketIndex)
         {
@@ -34,5 +33,11 @@ namespace CodeMetricsCalculator.Parsers.Java
             }
             return lastBracketIndex;
         }
+    }
+
+    public abstract class JavaCodeParser<TJavaMember, TParsingResult> : JavaCodeParser, ICodeParser<TJavaMember, TParsingResult>
+        where TJavaMember : JavaCode
+    {
+        public abstract TParsingResult Parse(TJavaMember code);
     }
 }
