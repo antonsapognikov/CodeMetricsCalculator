@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMetricsCalculator.Parse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMetricsCalculator.Common", "CodeMetricsCalculator.Common\CodeMetricsCalculator.Common.csproj", "{28FE0829-FD72-4B65-81B4-B4020556121C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMetricsCalculator.WpfApplication", "CodeMetricsCalculator.WpfApplication\CodeMetricsCalculator.WpfApplication.csproj", "{19FDD3E9-A6CF-4531-B532-F7C8FA88B22C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMetricsCalculator.Common.UI", "CodeMetricsCalculator.Common.UI\CodeMetricsCalculator.Common.UI.csproj", "{FB149EB2-5355-490A-9994-0CD088778E76}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +35,14 @@ Global
 		{28FE0829-FD72-4B65-81B4-B4020556121C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28FE0829-FD72-4B65-81B4-B4020556121C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28FE0829-FD72-4B65-81B4-B4020556121C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19FDD3E9-A6CF-4531-B532-F7C8FA88B22C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19FDD3E9-A6CF-4531-B532-F7C8FA88B22C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19FDD3E9-A6CF-4531-B532-F7C8FA88B22C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19FDD3E9-A6CF-4531-B532-F7C8FA88B22C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB149EB2-5355-490A-9994-0CD088778E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB149EB2-5355-490A-9994-0CD088778E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB149EB2-5355-490A-9994-0CD088778E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB149EB2-5355-490A-9994-0CD088778E76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
