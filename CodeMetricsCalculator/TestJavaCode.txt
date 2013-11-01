@@ -9,6 +9,9 @@ public class PricingVisitor implements EquipmentVisitor {
 	 */
 	private int total;
 	
+	private int partial = 5;
+	private int count=5;
+	private string text = "sfdd";
 	
 	/**
 	 * Прибавляем полную стоимость карты

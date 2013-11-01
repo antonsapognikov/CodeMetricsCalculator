@@ -16,8 +16,8 @@ namespace CodeMetricsCalculator.Parsers.Java
         IMethodParser<JavaClass, JavaMethod>
     {
         //{return type} {method name} ({parameter})
-        private const string MethodRegexString = @"[a-zA-Z][a-zA-Z1-9<>]+ +([a-zA-Z][a-zA-Z1-9]+) *" +
-                                                 @"\(([a-zA-Z1-9<> ,\[\]]*)\) *{";
+        private const string MethodRegexString = @"[a-zA-Z][a-zA-Z0-9<>]+ +([a-zA-Z][a-zA-Z0-9]+) *" +
+                                                 @"\(([a-zA-Z0-9<> ,\[\]]*)\) *{";
 
         static JavaMethodParser()
         {

@@ -74,6 +74,18 @@ namespace CodeMetricsCalculator
                     classInfo.Name,
                     Environment.NewLine,
                     classInfo.NormalizedSource);
+            var fields = classInfo.GetFields();
+            if (!fields.Any())
+                Console.WriteLine("There is no fields");
+            else
+            {
+                Console.WriteLine("Fileds:");
+                foreach (var fieldInfo in fields)
+                {
+                    PrintField(fieldInfo);
+                }
+            }
+
             var methods = classInfo.GetMethods();
             if (!methods.Any())
                 Console.WriteLine("There is no methods");
@@ -86,6 +98,11 @@ namespace CodeMetricsCalculator
                     Console.WriteLine("***************************");
                 }
             }
+        }
+
+        private static void PrintField(IFieldInfo fieldInfo)
+        {
+            Console.WriteLine("{0} - {1}", fieldInfo.Name, fieldInfo.NormalizedSource);
         }
 
         private static void PrintMethod(IMethodInfo methodInfo)

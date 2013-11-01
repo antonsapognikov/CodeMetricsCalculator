@@ -12,7 +12,7 @@ namespace CodeMetricsCalculator.Parsers.Java
     public static class PatternToRegexExtension
     {
         private const string IdentifierRegex = @"[a-zA-Z0-9\(\)_]+";
-        private const string ArgsRegex = @"['a-zA-Z0-9,_\(\) \r\n " + "\"]*";
+        private const string ArgsRegex = @"['a-zA-Z0-9,_\(\)\. \r\n " + "\"]*";
         private const string ParamsRegex = "[\"'a-zA-Z0-9,<>_ \r\n]*";
 
         public static Regex ToRegex(this Pattern pattern)

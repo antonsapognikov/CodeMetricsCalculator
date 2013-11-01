@@ -11,6 +11,7 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
     public class JavaClass : JavaCode, IClassInfo
     {
         private readonly string _name;
+        private IReadOnlyCollection<IMethodInfo> _methods;
 
         public JavaClass(string name, string originalSource) : base(originalSource)
         {
@@ -33,8 +34,7 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
 
         public IReadOnlyCollection<IMethodInfo> GetMethods()
         {
-            var parsingResults = new JavaMethodParser().Parse(this);
-            return parsingResults;
+            return _methods ?? (_methods = new JavaMethodParser().Parse(this));
         }
     }
 }
