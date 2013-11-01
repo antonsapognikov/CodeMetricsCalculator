@@ -94,7 +94,6 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 var parseClassesTask = new Task<IReadOnlyCollection<IClassInfo>>(() => new JavaClassParser().Parse(code));
                 parseClassesTask.Start();
                 _classes = await parseClassesTask;
-                //Result = _classes.Select(@class => @class.Name).Aggregate((s, s1) => s + Environment.NewLine + s1);
                 Log = string.Format("Parsed {0} classes.", _classes.Count);
 
                 Log = "Parsing expressions...";
@@ -112,6 +111,7 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 foreach (var expressionInfo in expressions)
                 {
                     sb.AppendLine(expressionInfo.NormalizedSource);
+                    sb.AppendLine("------------");
                 }
                 Result = sb.ToString();
             }
