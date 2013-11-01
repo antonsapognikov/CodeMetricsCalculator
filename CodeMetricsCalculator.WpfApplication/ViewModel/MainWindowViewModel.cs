@@ -120,11 +120,22 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 AppendLineToLog(string.Format("Parsed {0} expressions.", expressions.Count));
                 var sb = new StringBuilder();
                 sb.AppendLine("All expressions: ");
+                AppendLineToLog("Parsing operators...");
                 foreach (var expressionInfo in expressions)
                 {
                     sb.AppendLine(expressionInfo.NormalizedSource);
+                    var parseOperatorsTask =
+                        new Task<IReadOnlyDictionary<IOperatorInfo, int>>(() => expressionInfo.GetOperators());
+                    parseOperatorsTask.Start();
+                    var operators = await parseOperatorsTask;
+                    sb.AppendLine("Operators:");
+                    foreach (var op in operators)
+                    {
+                        sb.AppendLine(string.Format("{0} - {1} - {2}", op.Key.GetType().Name, op.Key.Name, op.Value));
+                    }
                     sb.AppendLine("------------");
                 }
+                AppendLineToLog("Operators parsed.");
                 Result = sb.ToString();
             }
             catch (Exception e)
