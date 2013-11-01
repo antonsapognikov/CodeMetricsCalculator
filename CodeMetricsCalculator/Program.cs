@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Parsers;
 using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java;
@@ -16,7 +19,28 @@ namespace CodeMetricsCalculator
         {
             var classesSource = Resource.TestJavaCode;
             var classesCode = new JavaCode(classesSource);
+            var normalized = classesCode.NormalizedSource;
             var classes = new JavaClassParser().Parse(classesCode);
+            var expressions = classes.Select(@class => @class.GetMethods())
+                .Aggregate(AggregateMethods)
+                .Select(info => info.GetBody())
+                .Select(info => info.GetExpressions())
+                .Aggregate(
+                    AggregateExpressions).ToList();
+            Console.WriteLine("All expressions: ");
+            foreach (var expressionInfo in expressions)
+            {
+                Console.WriteLine(expressionInfo.NormalizedSource);
+                Console.WriteLine("Operators:");
+                foreach (var operatorInfo in expressionInfo.GetOperators())
+                {
+                    PrintOperator(operatorInfo.Key, operatorInfo.Value);
+                }
+                Console.WriteLine("-------------------");
+                //PrintExpression(expressionInfo);
+            }
+            Console.WriteLine("Press any key to print classes and their members.");
+            Console.ReadKey();
             Console.WriteLine("Classes: ");
             foreach (var classInfo in classes)
             {
@@ -25,6 +49,23 @@ namespace CodeMetricsCalculator
             }
 
             Console.ReadKey();
+        }
+
+        private static IReadOnlyCollection<IExpressionInfo> AggregateExpressions(IReadOnlyCollection<IExpressionInfo> readOnlyCollection, IReadOnlyCollection<IExpressionInfo> expressionInfos)
+        {
+            var list = new List<IExpressionInfo>();
+            list.AddRange(readOnlyCollection);
+            list.AddRange(expressionInfos);
+            return new ReadOnlyCollection<IExpressionInfo>(list);
+        }
+
+        private static IReadOnlyCollection<IMethodInfo> AggregateMethods(IReadOnlyCollection<IMethodInfo> readOnlyCollection,
+            IReadOnlyCollection<IMethodInfo> onlyCollection)
+        {
+            var list = new List<IMethodInfo>();
+            list.AddRange(readOnlyCollection);
+            list.AddRange(onlyCollection);
+            return new ReadOnlyCollection<IMethodInfo>(list);
         }
 
         private static void PrintClass(IClassInfo classInfo)
@@ -74,8 +115,8 @@ namespace CodeMetricsCalculator
 
         private static void PrintMethodBody(IMethodBodyInfo methodBodyInfo)
         {
-            Console.WriteLine("MethodBody: {0}\t\t{1}", Environment.NewLine, methodBodyInfo.NormalizedSource);
-            /*
+            Console.WriteLine("MethodBody: {0}{1}", Environment.NewLine, methodBodyInfo.NormalizedSource);
+            
             var expressions = methodBodyInfo.GetExpressions();
             if (!expressions.Any())
                 Console.WriteLine("There is no expressions");
@@ -86,12 +127,12 @@ namespace CodeMetricsCalculator
                 {
                     PrintExpression(expressionInfo);
                 }
-            }*/
+            }
         }
 
         private static void PrintExpression(IExpressionInfo expressionInfo)
         {
-            Console.WriteLine("\t*{0}\t\t{1}", Environment.NewLine, expressionInfo.NormalizedSource);
+            Console.WriteLine("\t*{0}{1}", Environment.NewLine, expressionInfo.NormalizedSource);
             var operators = expressionInfo.GetOperators();
             if (!operators.Any())
                 Console.WriteLine("There is no operators");
@@ -100,14 +141,14 @@ namespace CodeMetricsCalculator
                 Console.WriteLine("Operators:");
                 foreach (var operatorInfo in operators)
                 {
-                    PrintOperator(operatorInfo.Key);
+                    PrintOperator(operatorInfo.Key, operatorInfo.Value);
                 }
             }
         }
 
-        private static void PrintOperator(IOperatorInfo operatorInfo)
+        private static void PrintOperator(IOperatorInfo operatorInfo, int count)
         {
-            Console.WriteLine("{0} - {1}", operatorInfo.GetType().Name, operatorInfo.Name);
+            Console.WriteLine("{0} - {1} - {2}", operatorInfo.GetType().Name, operatorInfo.Name, count);
         }
     }
 }

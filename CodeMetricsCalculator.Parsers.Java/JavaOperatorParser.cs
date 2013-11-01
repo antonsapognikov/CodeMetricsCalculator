@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java.CodeInfo;
@@ -26,6 +27,20 @@ namespace CodeMetricsCalculator.Parsers.Java
                     parsingResult.Add(javaOperator, operatorCount);
             }
             return parsingResult;
+        }
+        
+        internal static BlockOperator ParseAsBlockOperator(string source)
+        {
+            foreach (BlockOperator blockOperator in BlockOperator.All)
+            {
+                var parsingRegex = BuildRegexForOperator(blockOperator);
+                var matches = parsingRegex.Matches(source);
+                if (matches.Cast<Match>().Any(match => match.Length == source.Length))
+                {
+                    return blockOperator;
+                }
+            }
+            return null;
         }
 
         private static Regex BuildRegexForOperator(JavaOperator operatorInfo)

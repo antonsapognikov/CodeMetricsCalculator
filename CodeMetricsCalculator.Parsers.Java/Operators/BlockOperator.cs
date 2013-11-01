@@ -14,7 +14,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         {
             new BlockOperator("while (...) {...}", false),
             new BlockOperator("do {...} while (...)", false),
-            new BlockOperator("for (...;...;...) {...}", false),
+            new BlockOperator("for (...) {...}", false),
             new BlockOperator("if (...) {...}", false),
             new BlockOperator("else {...}", false),
             new BlockOperator("switch (...) {...}", true),

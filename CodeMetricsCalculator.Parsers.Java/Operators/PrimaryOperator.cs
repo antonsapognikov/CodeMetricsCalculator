@@ -9,7 +9,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         private static readonly List<PrimaryOperator> AllOperators =
             new List<PrimaryOperator>
             {
-                new PrimaryOperator(string.Format("{0}.{1}", Pattern.Identifier, Pattern.Args)),
+                new PrimaryOperator(string.Format("{0} . {0}", Pattern.Identifier)),
                 new PrimaryOperator(string.Format("{0} ({1})", Pattern.Identifier, Pattern.Args)),
                 new PrimaryOperator(string.Format("new {0} ({1})", Pattern.Identifier, Pattern.Args)),
                 new PrimaryOperator(string.Format("new {0} [{1}]", Pattern.Identifier, Pattern.Args)),

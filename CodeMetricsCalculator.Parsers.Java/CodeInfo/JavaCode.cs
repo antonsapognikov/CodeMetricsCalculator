@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Common.Utils;
@@ -31,7 +32,7 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
                     }
                     var guid = Guid.NewGuid();
                     _stringLiterals.Add(guid, match.Value);
-                    return guid.ToString().Quotes();
+                    return GuidEncoder.Encode(guid).ToString(CultureInfo.InvariantCulture).Quotes();
                 });
             //Removing excess spaces and tabs
             normalizedSource = Regex.Replace(normalizedSource, SpacesAndTabsPattern, " ");
@@ -48,9 +49,9 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             return normalizedSource;
         }
         
-        protected string DecodeLiteral(Guid guid)
+        protected string DecodeLiteral(string encodedGuid)
         {
-            return _stringLiterals[guid];
+            return _stringLiterals[GuidEncoder.Decode(encodedGuid)];
         }
     }
 }

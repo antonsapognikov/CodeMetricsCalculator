@@ -45,5 +45,10 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         {
             get { return _pattern; }
         }
+
+        protected override string NormalizeSource(string originalSource)
+        {
+            return originalSource;
+        }
     }
 }

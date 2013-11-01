@@ -11,9 +11,9 @@ namespace CodeMetricsCalculator.Parsers.Java
 {
     public static class PatternToRegexExtension
     {
-        private const string IdentifierRegex = @"[a-zA-Z1-9_]+";
-        private const string ArgsRegex = "[\"'a-zA-Z1-9,_ \r\n]*";
-        private const string ParamsRegex = "[\"'a-zA-Z1-9,<>_ \r\n]*";
+        private const string IdentifierRegex = @"[a-zA-Z0-9\(\)_]+";
+        private const string ArgsRegex = @"['a-zA-Z0-9,_\(\) \r\n " + "\"]*";
+        private const string ParamsRegex = "[\"'a-zA-Z0-9,<>_ \r\n]*";
 
         public static Regex ToRegex(this Pattern pattern)
         {
@@ -26,8 +26,9 @@ namespace CodeMetricsCalculator.Parsers.Java
                 .Replace(Pattern.Identifier, IdentifierRegex)
                 .Replace(Pattern.Params, ParamsRegex)
                 .Replace(@"\(\.\.\.\)", @"\([^\)]*\)")
-                .Replace(@"\[\.\.\.\]", @"\[[^\]]*\]");
-            if (!pattern.BracketsRequires)
+                .Replace(@"\[\.\.\.\]", @"\[[^\]]*\]")
+                .Replace(@"{\.\.\.}", @"{[^}]*}");
+            if (!pattern.BracesRequires)
                 patternString = patternString.Replace("{", "{?").Replace("}", "}?");
             return new Regex(patternString, RegexOptions.Compiled);
         }

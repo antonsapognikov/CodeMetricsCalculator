@@ -15,23 +15,23 @@ namespace CodeMetricsCalculator.Parsers
         public static readonly string Identifier = "{identifier}";
 
         private readonly string _pattern;
-        private readonly bool _bracketsRequires;
+        private readonly bool _bracesRequires;
 
         public Pattern(string pattern) : this (pattern, false)
         {
         }
 
-        public Pattern(string pattern, bool bracketsRequires)
+        public Pattern(string pattern, bool bracesRequires)
         {
             Contract.Requires<ArgumentNullException>(pattern != null, "pattern");
 
             _pattern = pattern;
-            _bracketsRequires = bracketsRequires;
+            _bracesRequires = bracesRequires;
         }
 
-        public bool BracketsRequires
+        public bool BracesRequires
         {
-            get { return _bracketsRequires; }
+            get { return _bracesRequires; }
         }
 
         /// <summary>
