@@ -19,7 +19,10 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
             new BlockOperator("else {...}", false),
             new BlockOperator("switch (...) {...}", true),
             new BlockOperator("case " + Pattern.Identifier + " : {...}", false),
-            new BlockOperator("default: {...}", false)
+            new BlockOperator("default: {...}", false),
+            new BlockOperator("try {...}", true),
+            new BlockOperator("catch (" + Pattern.Identifier + " " + Pattern.Identifier + ") {...}", true),
+            new BlockOperator("finally {...}", true)
         };
 
         private readonly bool _bracketsRequired;

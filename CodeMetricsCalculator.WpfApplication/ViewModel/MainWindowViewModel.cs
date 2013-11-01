@@ -101,14 +101,20 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 parseClassesTask.Start();
                 _classes = await parseClassesTask;
                 AppendLineToLog(string.Format("Parsed {0} classes.", _classes.Count));
+            
+                AppendLineToLog("Parsing methods...");
+                var parseMethodsTask =
+                    new Task<IReadOnlyCollection<IMethodInfo>>(() => _classes.Select(@class => @class.GetMethods())
+                        .Aggregate(AggregateMethods));
+                parseMethodsTask.Start();
+                var methods = await parseMethodsTask;
+                AppendLineToLog(string.Format("Parsed {0} methods.", methods.Count));
 
                 AppendLineToLog("Parsing expressions...");
-                var parseExpressionsTask = new Task<List<IExpressionInfo>>(() => _classes.Select(@class => @class.GetMethods())
-                 .Aggregate(AggregateMethods)
-                 .Select(info => info.GetBody())
-                 .Select(info => info.GetExpressions())
-                 .Aggregate(
-                     AggregateExpressions).ToList());
+                var parseExpressionsTask = new Task<List<IExpressionInfo>>(() => methods
+                    .Select(info => info.GetBody())
+                    .Select(info => info.GetExpressions())
+                    .Aggregate(AggregateExpressions).ToList());
                 parseExpressionsTask.Start();
                 var expressions = await parseExpressionsTask;
                 AppendLineToLog(string.Format("Parsed {0} expressions.", expressions.Count));
