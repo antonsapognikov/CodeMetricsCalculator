@@ -9,7 +9,5 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
     public interface IMethodBodyInfo : IMemberInfo
     {
         IMethodInfo Method { get; }
-
-        IReadOnlyCollection<IExpressionInfo> GetExpressions();
     }
 }

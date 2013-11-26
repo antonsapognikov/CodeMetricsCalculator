@@ -11,7 +11,8 @@ namespace CodeMetricsCalculator.Parsers.Java
 {
     public static class PatternToRegexExtension
     {
-        private const string IdentifierRegex = @"[a-zA-Z0-9\(\)_]+";
+        private const string IdentifierRegex = @"[a-zA-Z_][a-zA-Z0-9_]*";
+        private const string OperandRegex = @"[a-zA-Z0-9\(\)" + "\"_]+";
         private const string ArgsRegex = @"['a-zA-Z0-9,_\(\)\. \r\n " + "\"]*";
         private const string ParamsRegex = "[\"'a-zA-Z0-9,<>_ \r\n]*";
 
@@ -24,6 +25,7 @@ namespace CodeMetricsCalculator.Parsers.Java
                 .Replace(" ", @"[ \r\n]*")
                 .Replace(Pattern.Args, ArgsRegex)
                 .Replace(Pattern.Identifier, IdentifierRegex)
+                .Replace(Pattern.Operand, OperandRegex)
                 .Replace(Pattern.Params, ParamsRegex)
                 .Replace(@"\(\.\.\.\)", @"\([^\)]*\)")
                 .Replace(@"\[\.\.\.\]", @"\[[^\]]*\]")
@@ -32,7 +34,7 @@ namespace CodeMetricsCalculator.Parsers.Java
                 patternString = patternString.Replace("{", "{?").Replace("}", "}?");
             return new Regex(patternString, RegexOptions.Compiled);
         }
-
+        
 
 
         private static bool IsMetachar(char ch)

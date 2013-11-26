@@ -112,44 +112,51 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 AppendLineToLog(string.Format("Parsed {0} classes.", _classes.Count));
 
                 AppendLineToLog("Parsing...");
+
+                //Parallel.ForEach(_classes, ParseClass);
                 foreach (var classInfo in _classes)
                 {
-                    AppendLineToResult(string.Format("####### class {0} #######", classInfo.Name));
-                    //var parseMethodsTask = new Task<IReadOnlyCollection<IMethodInfo>>(classInfo.GetMethods);
-                    //parseMethodsTask.Start();
-                    var methods = classInfo.GetMethods();
-                    AppendLineToResult("********* methods  *********");
-                    foreach (var methodInfo in methods)
-                    {
-                        AppendLineToResult(string.Format("$$$$$$$$$ method {0} $$$$$$$$$", methodInfo.Name));
-                        IMethodInfo mInfo = methodInfo;
-                        //var parseExpressionsTask =
-                        //    new Task<IReadOnlyCollection<IExpressionInfo>>(() => mInfo.GetBody().GetExpressions());
-                        //parseExpressionsTask.Start();
-                        var expressions = mInfo.GetBody().GetExpressions();
-                        AppendLineToResult("Expressions: ");
-                        foreach (var expressionInfo in expressions)
-                        {
-                            AppendLineToResult(expressionInfo.NormalizedSource);
-                            //var parseOperatorsTask =
-                            //    new Task<IReadOnlyDictionary<IOperatorInfo, int>>(expressionInfo.GetOperators);
-                            //parseOperatorsTask.Start();
-                            var operators = expressionInfo.GetOperators();
-                            AppendLineToResult("Operators:");
-                            foreach (var op in operators)
-                            {
-                                AppendLineToResult(string.Format("{0} - {1} - {2}", op.Key.GetType().Name, op.Key.Name,
-                                    op.Value));
-                            }
-                            AppendLineToResult("------------");
-                        }
-                    }
+                    ParseClass(classInfo);
                 }
                 AppendLineToLog("Parsing finished.");
             }
             catch (Exception e)
             {
                 AppendLineToLog(e.Message);
+            }
+        }
+
+        private void ParseClass(IClassInfo classInfo)
+        {
+            AppendLineToResult(string.Format("####### class {0} #######", classInfo.Name));
+            //var parseMethodsTask = new Task<IReadOnlyCollection<IMethodInfo>>(classInfo.GetMethods);
+            //parseMethodsTask.Start();
+            var methods = classInfo.GetMethods();
+            AppendLineToResult("********* methods  *********");
+            foreach (var methodInfo in methods)
+            {
+                AppendLineToResult(string.Format("$$$$$$$$$ method {0} $$$$$$$$$", methodInfo.Name));
+                IMethodInfo mInfo = methodInfo;
+                //var parseExpressionsTask =
+                //    new Task<IReadOnlyCollection<IExpressionInfo>>(() => mInfo.GetBody().GetExpressions());
+                //parseExpressionsTask.Start();
+                /*var expressions = mInfo.GetBody().GetExpressions();
+                AppendLineToResult("Expressions: ");
+                foreach (var expressionInfo in expressions)
+                {
+                    AppendLineToResult(expressionInfo.NormalizedSource);
+                    //var parseOperatorsTask =
+                    //    new Task<IReadOnlyDictionary<IOperatorInfo, int>>(expressionInfo.GetOperators);
+                    //parseOperatorsTask.Start();
+                    var operators = expressionInfo.GetOperators();
+                    AppendLineToResult("Operators:");
+                    foreach (var op in operators)
+                    {
+                        AppendLineToResult(string.Format("{0} - {1} - {2}", op.Key.GetType().Name, op.Key.Name,
+                            op.Value));
+                    }
+                    AppendLineToResult("------------");
+                }*/
             }
         }
     }

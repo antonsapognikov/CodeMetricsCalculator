@@ -24,7 +24,7 @@
 
     <Style x:Key="MultilineTextBlockStyle" TargetType="TextBlock">
         <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="Margin" Value="{StaticResource ControlMargin}" />
     </Style>
     

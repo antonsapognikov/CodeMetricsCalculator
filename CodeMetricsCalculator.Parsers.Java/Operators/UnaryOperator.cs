@@ -23,7 +23,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         };
 
         public UnaryOperator(string operatorString, OperatorSyntax syntax)
-            : base(operatorString, OperationType.Unary, syntax)
+            : base(operatorString, operatorString, OperationType.Unary, syntax)
         {
         }
 

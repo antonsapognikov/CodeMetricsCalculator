@@ -13,6 +13,7 @@ namespace CodeMetricsCalculator.Parsers
         public static readonly string Args = "{args}";
         public static readonly string Params = "{params}";
         public static readonly string Identifier = "{identifier}";
+        public static readonly string Operand = "{operand}";
 
         private readonly string _pattern;
         private readonly bool _bracesRequires;

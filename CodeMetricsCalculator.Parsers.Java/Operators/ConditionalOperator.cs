@@ -11,13 +11,13 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
     {
         private static readonly List<ConditionalOperator> AllOperators = new List<ConditionalOperator>
         {
-            new ConditionalOperator("&&", OperationType.Binary),
-            new ConditionalOperator("||", OperationType.Binary),
-            new ConditionalOperator("?:", OperationType.Ternary)
+            new ConditionalOperator("&&", "&&", OperationType.Binary),
+            new ConditionalOperator("||", "||", OperationType.Binary),
+            new ConditionalOperator("?:", null, OperationType.Ternary)
         };
         
-        public ConditionalOperator(string operatorString, OperationType operationType)
-            : base(operatorString, operationType, OperatorSyntax.Infix)
+        public ConditionalOperator(string operatorString, string keyword, OperationType operationType)
+            : base(operatorString, keyword, operationType, OperatorSyntax.Infix)
         {
         }
 

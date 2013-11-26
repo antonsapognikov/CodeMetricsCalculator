@@ -48,5 +48,11 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             var parsingResults = new JavaMethodBodyParser().Parse(this);
             return parsingResults;
         }
+
+        public CodeDictionary GetMethodDictionary()
+        {
+            var codeDictionary = new JavaCodeDictionaryParser().Parse(this);
+            return codeDictionary;
+        }
     }
 }

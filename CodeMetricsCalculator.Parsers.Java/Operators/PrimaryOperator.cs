@@ -6,22 +6,37 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
 {
     internal class PrimaryOperator : JavaOperator
     {
+        private static class PatternFor
+        {
+            public static readonly string MethodInvocation = string.Format("{0} ({1})", Pattern.Identifier, Pattern.Args);
+        }
+
         private static readonly List<PrimaryOperator> AllOperators =
             new List<PrimaryOperator>
             {
-                new PrimaryOperator(string.Format("{0} . {0}", Pattern.Identifier)),
-                new PrimaryOperator(string.Format("{0} ({1})", Pattern.Identifier, Pattern.Args)),
-                new PrimaryOperator(string.Format("new {0} ({1})", Pattern.Identifier, Pattern.Args)),
-                new PrimaryOperator(string.Format("new {0} [{1}]", Pattern.Identifier, Pattern.Args)),
-                new PrimaryOperator(string.Format("instanceof ({0})", Pattern.Identifier)),
-                new PrimaryOperator("return"),
-                new PrimaryOperator("continue"),
-                new PrimaryOperator("break"),
-                new PrimaryOperator(string.Format("goto {0}", Pattern.Identifier))
+                new PrimaryOperator(string.Format("{0} . {1}", Pattern.Operand, Pattern.Identifier), null),
+                new PrimaryOperator(PatternFor.MethodInvocation, null),
+                new PrimaryOperator(string.Format("new {0} ({1})", Pattern.Identifier, Pattern.Args), "new"),
+                new PrimaryOperator(string.Format("{0} [{1}]", Pattern.Operand, Pattern.Args), null),
+                new PrimaryOperator(string.Format("instanceof ({0})", Pattern.Operand), "instanceof"),
+                new PrimaryOperator("return","return"),
+                new PrimaryOperator("continue","continue"),
+                new PrimaryOperator("break","break"),
+                new PrimaryOperator(string.Format("goto {0}", Pattern.Identifier), "goto")
             };
 
-        public PrimaryOperator(string pattern)
-            : base(new Pattern(pattern))
+        public static PrimaryOperator CreateMethodInvocationOperator(string methodName)
+        {
+            return new PrimaryOperator(PatternFor.MethodInvocation, methodName, methodName);
+        }
+
+        private PrimaryOperator(string pattern, string keyword)
+            : base(new Pattern(pattern), keyword)
+        {
+        }
+
+        private PrimaryOperator(string pattern, string source, string keyword)
+            : base(new Pattern(pattern), source, keyword)
         {
         }
 

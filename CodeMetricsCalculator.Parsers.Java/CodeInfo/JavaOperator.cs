@@ -24,11 +24,18 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         private static readonly List<JavaOperator> AllOperators;
 
         private readonly Pattern _pattern;
+        private readonly string _keyword;
 
-        protected JavaOperator(Pattern pattern)
-            : base(pattern.ToString())
+        protected JavaOperator(Pattern pattern, string keyword)
+            : this(pattern, pattern.ToString(), keyword)
+        {
+        }
+
+        protected JavaOperator(Pattern pattern, string source, string keyword)
+            : base(source)
         {
             _pattern = pattern;
+            _keyword = keyword;
         }
 
         public static IReadOnlyCollection<JavaOperator> Operators
@@ -44,6 +51,21 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         public Pattern Pattern
         {
             get { return _pattern; }
+        }
+
+        public bool IsKeywordBase
+        {
+            get { return _keyword != null; }
+        }
+
+        public string Keyword
+        {
+            get
+            {
+                if (!IsKeywordBase)
+                    throw new InvalidOperationException("Operator is not based on keyword.");
+                return _keyword;
+            }
         }
 
         protected override string NormalizeSource(string originalSource)

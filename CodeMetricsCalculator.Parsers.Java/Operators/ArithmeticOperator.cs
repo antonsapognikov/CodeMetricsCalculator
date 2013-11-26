@@ -12,15 +12,15 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
     {
         private static readonly List<ArithmeticOperator> AllOperators = new List<ArithmeticOperator>
         {
-                new ArithmeticOperator("+"),
-                new ArithmeticOperator("-"),
-                new ArithmeticOperator("*"),
-                new ArithmeticOperator("/"),
-                new ArithmeticOperator("%")
+            new ArithmeticOperator("+"),
+            new ArithmeticOperator("-"),
+            new ArithmeticOperator("*"),
+            new ArithmeticOperator("/"),
+            new ArithmeticOperator("%")
         };
 
         public ArithmeticOperator(string operatorString)
-            : base(operatorString, OperationType.Binary, OperatorSyntax.Infix)
+            : base(operatorString, operatorString, OperationType.Binary, OperatorSyntax.Infix)
                 
         {
         }

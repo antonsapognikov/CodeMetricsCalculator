@@ -23,7 +23,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         };
         
         public RelationalOperator(string operatorString)
-            : base(operatorString, OperationType.Binary, OperatorSyntax.Infix)
+            : base(operatorString, operatorString, OperationType.Binary, OperatorSyntax.Infix)
         {
         }
 

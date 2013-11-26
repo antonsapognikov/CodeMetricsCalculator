@@ -23,11 +23,5 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         {
             get { return _method; }
         }
-
-        public IReadOnlyCollection<IExpressionInfo> GetExpressions()
-        {
-            var parsingResults = new JavaExpressionParser().Parse(this);
-            return parsingResults;
-        }
     }
 }

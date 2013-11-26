@@ -21,23 +21,9 @@ namespace CodeMetricsCalculator
             var classesCode = new JavaCode(classesSource);
             var normalized = classesCode.NormalizedSource;
             var classes = new JavaClassParser().Parse(classesCode);
-            var expressions = classes.Select(@class => @class.GetMethods())
-                .Aggregate(AggregateMethods)
-                .Select(info => info.GetBody())
-                .Select(info => info.GetExpressions())
-                .Aggregate(
-                    AggregateExpressions).ToList();
-            Console.WriteLine("All expressions: ");
-            foreach (var expressionInfo in expressions)
+            foreach (var methodInfo in classes.First().GetMethods())
             {
-                Console.WriteLine(expressionInfo.NormalizedSource);
-                Console.WriteLine("Operators:");
-                foreach (var operatorInfo in expressionInfo.GetOperators())
-                {
-                    PrintOperator(operatorInfo.Key, operatorInfo.Value);
-                }
-                Console.WriteLine("-------------------");
-                //PrintExpression(expressionInfo);
+                methodInfo.GetMethodDictionary();
             }
             Console.WriteLine("Press any key to print classes and their members.");
             Console.ReadKey();
@@ -134,17 +120,6 @@ namespace CodeMetricsCalculator
         {
             Console.WriteLine("MethodBody: {0}{1}", Environment.NewLine, methodBodyInfo.NormalizedSource);
             
-            var expressions = methodBodyInfo.GetExpressions();
-            if (!expressions.Any())
-                Console.WriteLine("There is no expressions");
-            else
-            {
-                Console.WriteLine("Expressions:");
-                foreach (var expressionInfo in expressions)
-                {
-                    PrintExpression(expressionInfo);
-                }
-            }
         }
 
         private static void PrintExpression(IExpressionInfo expressionInfo)
@@ -161,6 +136,23 @@ namespace CodeMetricsCalculator
                     PrintOperator(operatorInfo.Key, operatorInfo.Value);
                 }
             }
+
+            var operands = expressionInfo.GetOperands();
+            if (!operands.Any())
+                Console.WriteLine("There is no operands");
+            else
+            {
+                Console.WriteLine("Operands:");
+                foreach (var operandInfo in operands)
+                {
+                    PrintOperand(operandInfo.Key, operandInfo.Value);
+                }
+            }
+        }
+
+        private static void PrintOperand(IOperandInfo operandInfo, int count)
+        {
+            Console.WriteLine("{0} - {1} - {2}", operandInfo.GetType().Name, operandInfo.Name, count);
         }
 
         private static void PrintOperator(IOperatorInfo operatorInfo, int count)

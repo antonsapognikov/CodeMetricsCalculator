@@ -14,8 +14,8 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         private readonly OperationType _operationType;
         private readonly OperatorSyntax _syntax;
 
-        protected CommonOperator(string operatorString, OperationType operationType, OperatorSyntax syntax)
-            : base(GeneratePattern(operatorString, operationType, syntax))
+        protected CommonOperator(string operatorString, string keyword, OperationType operationType, OperatorSyntax syntax)
+            : base(GeneratePattern(operatorString, operationType, syntax), keyword)
         {
             _operationType = operationType;
             _syntax = syntax;
@@ -38,12 +38,12 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
             if (operationType == OperationType.Unary)
             {
                 return syntax == OperatorSyntax.Prefix
-                    ? new Pattern(operatorString + Pattern.Identifier)
-                    : new Pattern(Pattern.Identifier + operatorString);
+                    ? new Pattern(operatorString + Pattern.Operand)
+                    : new Pattern(Pattern.Operand + operatorString);
             }
             if (operationType == OperationType.Binary)
-                return new Pattern(Pattern.Identifier + " " + operatorString + " " + Pattern.Identifier);
-            return new Pattern(@" ? " + Pattern.Identifier + " : " + Pattern.Identifier);
+                return new Pattern(Pattern.Operand + " " + operatorString + " " + Pattern.Operand);
+            return new Pattern(@" ? " + Pattern.Operand + " : " + Pattern.Operand);
         }
     }
 }
