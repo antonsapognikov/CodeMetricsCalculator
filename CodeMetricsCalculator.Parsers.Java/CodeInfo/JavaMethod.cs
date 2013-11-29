@@ -49,6 +49,12 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             return parsingResults;
         }
 
+        public IReadOnlyCollection<IInputVariable> GetInputVariables()
+        {
+            var parsingResult = new JavaInputVariableParser().Parse(this);
+            return parsingResult;
+        }
+
         public CodeDictionary GetMethodDictionary()
         {
             var codeDictionary = new JavaCodeDictionaryParser().Parse(this);

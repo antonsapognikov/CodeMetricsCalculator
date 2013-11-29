@@ -12,6 +12,8 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
 
         IMethodBodyInfo GetBody();
 
+        IReadOnlyCollection<IInputVariable> GetInputVariables();
+        
         CodeDictionary GetMethodDictionary();
     }
 }

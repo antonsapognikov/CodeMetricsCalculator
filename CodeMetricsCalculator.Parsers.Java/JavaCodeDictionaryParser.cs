@@ -32,7 +32,6 @@ namespace CodeMetricsCalculator.Parsers.Java
         {
             var operatorsDictionary = new Dictionary<string, int>();
 
-
             var notKeywordBasedOperators = operators.Where(@operator => !@operator.IsKeywordBase).ToList();
             foreach (var notKeywordBasedOperator in notKeywordBasedOperators)
             {

@@ -112,6 +112,7 @@
     <Compile Include="CodeInfo\JavaCode.cs" />
     <Compile Include="CodeInfo\JavaExpression.cs" />
     <Compile Include="CodeInfo\JavaField.cs" />
+    <Compile Include="CodeInfo\JavaInputVariable.cs" />
     <Compile Include="CodeInfo\JavaMethod.cs" />
     <Compile Include="CodeInfo\JavaMethodBody.cs" />
     <Compile Include="CodeInfo\JavaMethodParameter.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="JavaCodeParser.cs" />
     <Compile Include="CodeInfo\JavaOperand.cs" />
     <Compile Include="JavaFieldParser.cs" />
+    <Compile Include="JavaInputVariableParser.cs" />
     <Compile Include="JavaMethodBodyParser.cs" />
     <Compile Include="JavaMethodParser.cs" />
     <Compile Include="CodeInfo\JavaOperator.cs" />

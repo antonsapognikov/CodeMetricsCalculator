@@ -124,6 +124,7 @@
     <Compile Include="CodeInfo\IMethodInfo.cs" />
     <Compile Include="CodeInfo\IOperandInfo.cs" />
     <Compile Include="IFieldParser.cs" />
+    <Compile Include="IInputVariable.cs" />
     <Compile Include="IMethodBodyParser.cs" />
     <Compile Include="IMethodParser.cs" />
     <Compile Include="CodeInfo\IOperatorInfo.cs" />
