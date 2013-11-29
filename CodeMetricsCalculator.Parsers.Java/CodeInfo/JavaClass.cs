@@ -36,5 +36,23 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         {
             return _methods ?? (_methods = new JavaMethodParser().Parse(this));
         }
+
+        public IReadOnlyDictionary<IIdentifierInfo, int> GetIdentifiers()
+        {
+            var parsingResults = new JavaIdentifiersInClassParser().Parse(this);
+            var identifiers = new Dictionary<IIdentifierInfo, int>();
+            foreach (var parsingResult in parsingResults)
+            {
+                identifiers.Add(parsingResult.Key, parsingResult.Value);
+            }
+            foreach (var methodInfo in GetMethods())
+            {
+                foreach (var keyValuePair in methodInfo.GetIdentifiers())
+                {
+                    identifiers.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+            return identifiers;
+        }
     }
 }

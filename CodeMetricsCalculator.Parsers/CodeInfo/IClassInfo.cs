@@ -9,5 +9,7 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
         IReadOnlyCollection<IFieldInfo> GetFields();
 
         IReadOnlyCollection<IMethodInfo> GetMethods();
+
+        IReadOnlyDictionary<IIdentifierInfo, int> GetIdentifiers();
     }
 }

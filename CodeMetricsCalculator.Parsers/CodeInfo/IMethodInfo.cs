@@ -2,17 +2,17 @@
 
 namespace CodeMetricsCalculator.Parsers.CodeInfo
 {
-    public interface IMethodInfo : IMemberInfo
+    public interface IMethodInfo : IIdentifierInfo
     {
         IClassInfo Class { get; }
-
-        string Name { get; }
 
         IReadOnlyCollection<IMethodParameterInfo> Parameters { get; }
 
         IMethodBodyInfo GetBody();
 
         IReadOnlyCollection<IInputVariable> GetInputVariables();
+
+        IReadOnlyDictionary<IIdentifierInfo, int> GetIdentifiers(); 
         
         CodeDictionary GetMethodDictionary();
     }

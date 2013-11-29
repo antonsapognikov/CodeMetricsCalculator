@@ -7,23 +7,20 @@ using CodeMetricsCalculator.Parsers.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
 {
-    internal class JavaMethod : JavaCode, IMethodInfo
+    internal class JavaMethod : JavaIdentifier, IMethodInfo
     {
         private readonly IClassInfo _class;
-        private readonly string _name;
         private readonly IReadOnlyCollection<IMethodParameterInfo> _parameters;
 
         public JavaMethod(string name, IEnumerable<IMethodParameterInfo> parameters, string originalSource,
-            IClassInfo @class) : base(originalSource)
+            IClassInfo @class)
+            : base(name, originalSource)
         {
             if (@class == null)
                 throw new ArgumentNullException("class");
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
-            if (name == null)
-                throw new ArgumentNullException("name");
 
-            _name = name;
             _parameters = parameters.ToList().AsReadOnly();
             _class = @class;
         }
@@ -31,11 +28,6 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         public IClassInfo Class
         {
             get { return _class; }
-        }
-
-        public string Name
-        {
-            get { return _name; }
         }
 
         public IReadOnlyCollection<IMethodParameterInfo> Parameters
@@ -53,6 +45,14 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         {
             var parsingResult = new JavaInputVariableParser().Parse(this);
             return parsingResult;
+        }
+
+        public IReadOnlyDictionary<IIdentifierInfo, int> GetIdentifiers()
+        {
+            var parsingResult = new JavaIdentifiersInMethodParser().Parse(this);
+            return
+                parsingResult.ToDictionary<KeyValuePair<JavaIdentifier, int>, IIdentifierInfo, int>(
+                    keyValuePair => keyValuePair.Key, keyValuePair => keyValuePair.Value);
         }
 
         public CodeDictionary GetMethodDictionary()

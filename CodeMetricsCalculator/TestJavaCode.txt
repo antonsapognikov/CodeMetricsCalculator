@@ -1,126 +1,99 @@
+package by.fksis.schedule;
 
-/**
- * Посетитель рассчитывающий стоимость
- */
-public class PricingVisitor implements EquipmentVisitor {
-	
-	/**
-	 * Полная цена всего 
-	 */
-	private int total;
-	
-	private int partial = 5;
-	private int count=5;
-	private string text = "sfdd";
-	
-	/**
-	 * Прибавляем полную стоимость карты
-	 * @see visitor.EquipmentVisitor#VisitCard(visitor.Card)
-	 */
-	public void VisitCard(Card c) {
-		total += c.getNetPrice();
-	}
+import android.content.Context;
+import android.content.SharedPreferences;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-	/**
-	 * Здесь же, поскольку это системник, содержащий
-	 * большое количество внутренних частей - применяем скидку
-	 * @see visitor.EquipmentVisitor#VisitChassis(visitor.Chassis)
-	 */
-	public void VisitChassis(Chassis ch) {
-		total += ch.getDisountPrice();
-	}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.HashMap;
 
-	/**
-	 * Прибавляем полную стоимость флоппика
-	 * @see visitor.EquipmentVisitor#VisitFloppyDisk(FloppyDisk)
-	 */
-	public void VisitFloppyDisk(FloppyDisk d) {
-		total += d.getNetPrice();
-	}
+public final class API {
+    private static String username = null, accessKey = null;
+    private static final String SHARED_PREFERENCES_NAME = "credentials";
+    private static final String API_ROOT_URL = "http://fksis.bsuir.by/wps/schedule/api";
 
-	public int getTotal() {
-		return total;
-	}
-	
-}
-
-
-public class Math2 {
-        public static int charToInt(char c, int notUsed) {
-                return Integer.valueOf(Character.toString(c));
-        }
-        
-        public static List<Integer> toDigits(int n) {
-                return toDigits((long) n);
-        }
-        
-        public static List<Integer> toDigits(long n) {
-                List<Integer> digits = new ArrayList<Integer>();
-                if (n == 0) {
-                        digits.add(0);
-                } else {
-                        while (n > 0) {
-                                digits.add((int) n % 10);
-                                n = n / 10;
-                        }
-                }
-                java.util.Collections.reverse(digits);
-                return digits;
-        }
-
-        public static int toInt(List<Integer> digits) {
-        if (digits == null || digits.isEmpty()) {
-            throw new IllegalArgumentException("The list must not be null or empty.");
-        }
-        int r = 0;
-        int n = 1;
-        for (int i = digits.size() - 1; i >= 0; i--) {
-            r += digits.get(i) * n;
-            n *= 10;
-        }
-        return r;
+    public static boolean credentialsPresent() {
+        return username != null;
     }
 
-        public static int sumOfDigits(BigInteger a) {
-                String s = a.toString();
-                int sum = 0;
-                for (int i = 0; i < s.length(); i++) {
-                        sum += charToInt(s.charAt(i));
-                }
-                return sum;
-        }
+    public static void loadCredentials(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        username = sharedPreferences.getString("username", null);
+        accessKey = sharedPreferences.getString("accessKey", null);
+    }
 
-        public static boolean isInteger(double d) {
-                return d - (int) d == 0;
-        }
+    public static void updateCredentials(Context context, String username, String accessKey) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        sharedPreferences.edit()
+                .putString("username", username)
+                .putString("accessKey", accessKey)
+                .commit();
+        loadCredentials(context);
+    }
+    public static void clearCredentials(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        sharedPreferences.edit()
+                .remove("username")
+                .remove("accessKey")
+                .commit();
+        loadCredentials(context);
+    }
 
-        public static boolean isPalindrome(int a) {
-                return isPalindrome(Integer.toString(a));
-        }
+    public static String getUsername() {
+        return username;
+    }
 
-        public static boolean isPalindrome(String s) {
-                return s.equals(reverse(s));
+    @SuppressWarnings("deprecation")
+    public static String query(HashMap params) throws IOException {
+        try {
+            String url = API_ROOT_URL + "?_";
+            for (String key : params.keySet())
+                url += "&" + URLEncoder.encode(key) + "=" + URLEncoder.encode(params.get(key));
+            String data = "", nextLine;
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+            while ((nextLine = bufferedReader.readLine()) != null)
+                data += nextLine;
+            return data;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
         }
+    }
 
-        public static int reverse(int n) {
-                int reversed = 0;
-                while (n > 0) {
-                        reversed = 10 * reversed + n % 10;
-                        n = n / 10;
-                }
-                return reversed;
-        }
-        
-        public static String reverse(String s) {
-                return new StringBuilder(s).reverse().toString();
-        }
-        
-}
+    public static JSONObject queryUserData() throws IOException, JSONException {
+        HashMap<String, String> params = new HashMap();
+        params.put("info", "1");
+        params.put("auth_login", username);
+        params.put("auth_key", accessKey);
+        return new JSONObject(query(params));
+    }
 
-// класс доступен в рамках пакета
-class TestClass {
-}
+    public static JSONArray queryClasses() throws IOException, JSONException {
+        HashMap<String, String> params = new HashMap();
+        params.put("classes", "1");
+        return new JSONArray(query(params));
+    }
 
-// интерфейс доступен в рамках пакета
-interface TestInterface {
+    public static JSONArray queryBroadcasts() throws IOException, JSONException {
+        HashMap<String, String> params = new HashMap();
+        params.put("broadcasts", "1");
+        return new JSONArray(query(params));
+    }
+
+    public static void queryAddBroadcast(String text, long date) throws IOException, JSONException {
+        HashMap<String, String> params = new HashMap();
+        params.put("addBroadcast", "1");
+        params.put("auth_login", username);
+        params.put("auth_key", accessKey);
+        params.put("text", text);
+        params.put("expires", Long.toString(date));
+        query(params);
+    }
 }

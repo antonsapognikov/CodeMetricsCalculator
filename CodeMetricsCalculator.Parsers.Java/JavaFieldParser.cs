@@ -13,7 +13,7 @@ namespace CodeMetricsCalculator.Parsers.Java
                                      IFieldParser<JavaClass, JavaField>
     {
         private const string FieldRegexString =
-            @"[a-zA-Z][a-zA-Z0-9<,>_]+ +([a-zA-Z][a-zA-Z0-9_]+)( *= *[a-zA-Z0-9<,>\(\)" + "\" ]+)? *;";
+            @"[a-zA-Z_][a-zA-Z0-9<,>_]* +([a-zA-Z_][a-zA-Z0-9_]*)( *= *[a-zA-Z0-9_\+\-\*\\<,>\.\(\)" + "\" ]+)? *;";
 
         static JavaFieldParser()
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CodeMetricsCalculator.Parsers.CodeInfo
 {
-    public interface IVariableInfo : IMemberInfo
+    public interface IIdentifierInfo : IMemberInfo
     {
         string Name { get; }
     }

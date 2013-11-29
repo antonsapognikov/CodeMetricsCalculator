@@ -21,20 +21,18 @@ namespace CodeMetricsCalculator
             var classesCode = new JavaCode(classesSource);
             var normalized = classesCode.NormalizedSource;
             var classes = new JavaClassParser().Parse(classesCode);
-            foreach (var methodInfo in classes.First().GetMethods())
+            foreach (var javaClass in classes)
             {
-                var dictionary = methodInfo.GetMethodDictionary();
-                GC.KeepAlive(dictionary);
+                var dictionary = javaClass.GetIdentifiers();
+                Console.WriteLine(javaClass.NormalizedSource);
+                foreach (var keyValuePair in dictionary)
+                {
+                    Console.WriteLine("{0} - {1}", keyValuePair.Key.Name, keyValuePair.Value);
+                }
+                Console.WriteLine();
+                Console.WriteLine("##############################################");
+                Console.WriteLine();
             }
-            Console.WriteLine("Press any key to print classes and their members.");
-            Console.ReadKey();
-            Console.WriteLine("Classes: ");
-            foreach (var classInfo in classes)
-            {
-                Console.WriteLine("###########################");
-                PrintClass(classInfo);
-            }
-
             Console.ReadKey();
         }
 
@@ -112,7 +110,7 @@ namespace CodeMetricsCalculator
             }
         }
 
-        private static void PrintVariables(IEnumerable<IVariableInfo> variables)
+        private static void PrintVariables(IEnumerable<IIdentifierInfo> variables)
         {
             
         }
