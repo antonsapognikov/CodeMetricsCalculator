@@ -10,7 +10,7 @@ namespace CodeMetricsCalculator.Parsers.Java
     {
         private const string EmptyOrWhiteSpacePattern = @"[ \t]*";
         private const string WhiteSpacePattern = @"[ \t]+";
-        private const string TypeIdentifierPattern = @"[a-zA-Z_][a-zA-Z0-9_]+(<[a-zA-Z0-9<,>_ ]+>)?";
+        private const string TypeIdentifierPattern = @"[a-zA-Z_][a-zA-Z0-9_]+(<[a-zA-Z0-9<,>_ \[\]]+>)?(\[\])?";
         private const string VariableIdentifierPattern = @"[a-zA-Z_][a-zA-Z0-9_]*";
         private const string VariableValuePattern = @"[^;]+";
         private const string BracketArgumentsPattern = @"\([^=]*\)";

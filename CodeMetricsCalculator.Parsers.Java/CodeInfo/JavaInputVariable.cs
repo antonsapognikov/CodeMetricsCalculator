@@ -10,7 +10,7 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
     {
         private readonly string _name;
 
-        protected JavaInputVariable(string name, string originalSource)
+        public JavaInputVariable(string name, string originalSource)
             : base(originalSource)
         {
             if (name == null)
