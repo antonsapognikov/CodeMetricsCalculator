@@ -13,7 +13,7 @@ namespace CodeMetricsCalculator.Common.Utils
         {
             string enc = Convert.ToBase64String(guid.ToByteArray());
             enc = enc.Replace("/", "_");
-            enc = enc.Replace("+", "-");
+            enc = enc.Replace("+", "$");
             return enc.Substring(0, 22);
         }
 
@@ -21,7 +21,7 @@ namespace CodeMetricsCalculator.Common.Utils
         {
             Contract.Requires<ArgumentNullException>(encoded != null, "encoded");
             encoded = encoded.Replace("_", "/");
-            encoded = encoded.Replace("-", "+");
+            encoded = encoded.Replace("$", "+");
             byte[] buffer = Convert.FromBase64String(encoded + "==");
             return new Guid(buffer);
         }
@@ -30,7 +30,7 @@ namespace CodeMetricsCalculator.Common.Utils
         {
             Contract.Requires<ArgumentNullException>(encoded != null, "encoded");
             encoded = encoded.Replace("_", "/");
-            encoded = encoded.Replace("-", "+");
+            encoded = encoded.Replace("$", "+");
             try
             {
                 byte[] buffer = Convert.FromBase64String(encoded + "==");

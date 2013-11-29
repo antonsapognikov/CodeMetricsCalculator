@@ -11,11 +11,11 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         static JavaOperator()
         {
             AllOperators = new List<JavaOperator>();
+            AllOperators.AddRange(RelationalOperator.All);
             AllOperators.AddRange(AssignmentOperator.All);
             AllOperators.AddRange(ArithmeticOperator.All);
             AllOperators.AddRange(UnaryOperator.All);
             AllOperators.AddRange(BitwiseOperator.All);
-            AllOperators.AddRange(RelationalOperator.All);
             AllOperators.AddRange(ConditionalOperator.All);
             AllOperators.AddRange(PrimaryOperator.All);
             AllOperators.AddRange(BlockOperator.All);

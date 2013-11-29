@@ -52,7 +52,7 @@ public final class API {
     }
 
     @SuppressWarnings("deprecation")
-    public static String query(HashMap params) throws IOException {
+    public static String query(Map params) throws IOException {
         try {
             String url = API_ROOT_URL + "?_";
             for (String key : params.keySet())
@@ -95,6 +95,7 @@ public final class API {
         params.put("auth_key", accessKey);
         params.put("text", text);
         params.put("expires", Long.toString(date));
+		int a = 5;
         query(params);
     }
 }

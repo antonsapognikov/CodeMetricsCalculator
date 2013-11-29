@@ -23,11 +23,6 @@ namespace CodeMetricsCalculator
             var classes = new JavaClassParser().Parse(classesCode);
             foreach (var javaClass in classes)
             {
-                var methods = javaClass.GetMethods();
-                foreach (var methodInfo in methods)
-                {
-                    var variables = methodInfo.GetVariables();
-                }
                 var dictionary = javaClass.GetIdentifiers();
                 Console.WriteLine(javaClass.NormalizedSource);
                 foreach (var keyValuePair in dictionary)
@@ -39,6 +34,30 @@ namespace CodeMetricsCalculator
                 Console.WriteLine();
             }
             Console.ReadKey();
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            var methods = classes.SelectMany(@class => @class.GetMethods());
+            foreach (var methodInfo in methods)
+            {
+                var codeDictionary = methodInfo.GetMethodDictionary();
+                Console.WriteLine(methodInfo.GetBody().NormalizedSource);
+                Console.WriteLine("Operators:");
+                foreach (var keyValuePair in codeDictionary.Operators)
+                {
+                    Console.WriteLine("{0} - {1}", keyValuePair.Key, keyValuePair.Value);
+                }
+                Console.WriteLine("Operands:");
+                foreach (var keyValuePair in codeDictionary.Operands)
+                {
+                    Console.WriteLine("{0} - {1}", keyValuePair.Key, keyValuePair.Value);
+                }
+                Console.WriteLine();
+                Console.WriteLine("##############################################");
+                Console.WriteLine();
+            }
+            Console.ReadKey();
+
         }
 
         private static IReadOnlyCollection<IExpressionInfo> AggregateExpressions(IReadOnlyCollection<IExpressionInfo> readOnlyCollection, IReadOnlyCollection<IExpressionInfo> expressionInfos)

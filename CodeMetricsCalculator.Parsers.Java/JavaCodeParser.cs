@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java
@@ -33,6 +35,17 @@ namespace CodeMetricsCalculator.Parsers.Java
             }
             return lastBracketIndex;
         }
+
+        protected static IReadOnlyCollection<JavaType> GetUsedTypes(JavaClass code)
+        {
+            var types = new List<JavaType>();
+            types.AddRange(code.GetFields().Select(info => info.Type).Cast<JavaType>());
+            var methods = code.GetMethods();
+            types.AddRange(methods.Select(info => info.ReturnType).Cast<JavaType>());
+            var variablesTypes = methods.SelectMany(info => info.GetVariables()).Select(pair => pair.Key.Type).Cast<JavaType>();
+            types.AddRange(variablesTypes);
+            return types.Distinct().ToList();
+        } 
     }
 
     public abstract class JavaCodeParser<TJavaMember, TParsingResult> : JavaCodeParser, ICodeParser<TJavaMember, TParsingResult>

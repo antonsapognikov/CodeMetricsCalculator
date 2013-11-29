@@ -15,71 +15,109 @@ namespace CodeMetricsCalculator.Parsers.Java
     internal class JavaCodeDictionaryParser : JavaCodeParser<JavaMethod, CodeDictionary>, ICodeDictionaryParser<JavaMethod>
     {
         private const string IdentifierRegex = @"[a-zA-Z_][a-zA-Z0-9_]*";
+        private const string StringLiteralPattern = "\"[^\"]*\"";
+        private const string NumberPatter = @"[-+]?([0-9]*\.[0-9]+|[0-9]+)";
+        private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]*" + "({0})" + "[^a-zA-Z0-9_]*";
+        private const string JavaOperatorPattern = "[^!+-=/&|%]*" + "({0})" + "[^!+-=/&|%]*"; 
         private static readonly string MethodCallStartRegex = string.Format(@"{0}\(", IdentifierRegex);
 
         public override CodeDictionary Parse(JavaMethod javaMethod)
         {
             Contract.Requires(javaMethod != null);
             
-            var source = javaMethod.GetBody().NormalizedSource;
-            var operators = JavaOperator.Operators;
-            var operatorsDictionary = ParseOperators(source, operators, out source);
-            var codeDictionary = new CodeDictionary(operatorsDictionary, new Dictionary<string, int>());
+            var operatorsDictionary = ParseOperators(javaMethod);
+            var operandsDictionary = ParseOperands(javaMethod);
+            var codeDictionary = new CodeDictionary(operatorsDictionary, operandsDictionary);
             return codeDictionary;
         }
 
-        private IReadOnlyDictionary<string, int> ParseOperators(string javaMethodSource, IReadOnlyCollection<JavaOperator> operators, out string modifiedSource)
+        private IReadOnlyDictionary<string, int> ParseOperands(JavaMethod javaMethod)
         {
-            var operatorsDictionary = new Dictionary<string, int>();
-
-            var notKeywordBasedOperators = operators.Where(@operator => !@operator.IsKeywordBase).ToList();
-            foreach (var notKeywordBasedOperator in notKeywordBasedOperators)
+            var source = javaMethod.GetBody().NormalizedSource;
+            var operands = new Dictionary<string, int>();
+            var variables = javaMethod.GetVariables();
+            foreach (var keyValuePair in variables)
             {
-                var parsedOperators = new List<string>();
-                if (notKeywordBasedOperator == PrimaryOperator.VariableDeclaring)
-                    parsedOperators.AddRange(ParseVariableDeclaringOperator(javaMethodSource, out javaMethodSource));
-                if (notKeywordBasedOperator == PrimaryOperator.VariableDeclaringWithAssignment)
-                    parsedOperators.AddRange(ParseVariableDeclaringWithAssignmentOperator(javaMethodSource, out javaMethodSource));
-                if (notKeywordBasedOperator == PrimaryOperator.MaltyVariableDeclaring)
-                    parsedOperators.AddRange(ParseMaltyVariableDeclaringOperator(javaMethodSource, out javaMethodSource));
-                if (notKeywordBasedOperator == PrimaryOperator.MethodInvocation)
-                    parsedOperators.AddRange(ParseMethodInvocationOperator(javaMethodSource, out javaMethodSource));
-                if (notKeywordBasedOperator == PrimaryOperator.Indexer)
-                    parsedOperators.AddRange(ParseIndexerOperator(javaMethodSource, out javaMethodSource));
-                if (notKeywordBasedOperator == PrimaryOperator.MemberAccess)
-                    parsedOperators.AddRange(ParseMemberAccessOperator(javaMethodSource, out javaMethodSource));
-                if (notKeywordBasedOperator is ConditionalOperator &&
-                    (notKeywordBasedOperator as ConditionalOperator).OperationType == OperationType.Ternary)
-                    parsedOperators.AddRange(ParseTernaryOperator(javaMethodSource, out javaMethodSource));
-                foreach (var parsedOperator in parsedOperators)
-                {
-                    AddToDictionary(parsedOperator, 1, operatorsDictionary);
-                }
+                source = source.Replace(keyValuePair.Key.Type.Name, " ");
+                operands.Add(keyValuePair.Key.Name, keyValuePair.Value);
             }
 
-            var keywordBasedOperators = operators.Where(@operator => @operator.IsKeywordBase).ToList();
+            var fields = javaMethod.Class.GetFields();
+            foreach (var fieldInfo in fields)
+            {
+                var fieldAsVariableRegex = new Regex(string.Format(JavaIdentifierPattern, fieldInfo.Name));
+                var count = fieldAsVariableRegex.Matches(source).Count;
+                if (count > 0 && !operands.ContainsKey(fieldInfo.Name))
+                    operands.Add(fieldInfo.Name, count);
+            }
+
+            var literalRegex = new Regex(StringLiteralPattern);
+            var literals = literalRegex.Matches(source).Cast<Match>().Select(match => match.Value);
+            foreach (var literal in literals)
+            {
+                source = literalRegex.Replace(source, " ");
+                if (!operands.ContainsKey(literal))
+                    operands.Add(literal, 1);
+                else
+                    operands[literal] += 1;
+            }
+
+            var numberRegex = new Regex("[+-=/&|% ](" + NumberPatter + ")[+-=/&|%; ]");
+            var numbers = numberRegex.Matches(source).Cast<Match>().Select(match => match.Groups[1].Value);
+            foreach (var number in numbers)
+            {
+                if (!operands.ContainsKey(number))
+                    operands.Add(number, 1);
+                else
+                    operands[number] += 1;
+            }
+            return operands;
+        }
+
+        private IReadOnlyDictionary<string, int> ParseOperators(JavaMethod javaMethod)
+        {
+            var javaMethodSource = javaMethod.GetBody().NormalizedSource;
+            var operatorsDictionary = new Dictionary<string, int>();
+
+
+            var parsedOperators = new List<string>();
+            parsedOperators.AddRange(ParseMethodInvocationOperator(javaMethodSource, out javaMethodSource));
+            parsedOperators.AddRange(ParseTernaryOperator(javaMethodSource, out javaMethodSource));
+            parsedOperators.AddRange(ParseMemberAccessOperator(javaMethodSource, out javaMethodSource));
+            parsedOperators.AddRange(ParseIndexerOperator(javaMethodSource, out javaMethodSource));
+            var variables = javaMethod.GetVariables();
+            parsedOperators.AddRange(variables.Select(pair => pair.Key.NormalizedSource));
+
+            foreach (var parsedOperator in parsedOperators)
+            {
+                AddToDictionary(parsedOperator, 1, operatorsDictionary);
+            }
+            
+            foreach (var keyValuePair in variables)
+            {
+                var typeName = keyValuePair.Key.Type.Name;
+                javaMethodSource = javaMethodSource.Replace(typeName, " ");
+            }
+            var keywordBasedOperators = JavaOperator.Operators.Where(@operator => @operator.IsKeywordBase).ToList();
             foreach (var keywordBasedOperator in keywordBasedOperators)
             {
                 var keyword = keywordBasedOperator.Keyword;
                 var count = ParseKeywordBasedOperator(javaMethodSource, keyword, out javaMethodSource);
                 AddToDictionary(keywordBasedOperator.Name, count, operatorsDictionary);
             }
-
-            modifiedSource = javaMethodSource;
             return operatorsDictionary;
         }
 
         private static int ParseKeywordBasedOperator(string source, string keyword, out string modifiedSource)
         {
-            var keywordIndex = 0;
-            var count = 0;
-
-            while ((keywordIndex = source.IndexOf(keyword, StringComparison.Ordinal)) != -1)
-            {
-                count++;
-                source = source.Remove(keywordIndex, keyword.Length).Insert(keywordIndex, " ");
-            }
+            var keywordRegex = new Regex(string.Format(JavaOperatorPattern, Regex.Escape(keyword)));
+            var matches = keywordRegex.Matches(source);
+            int count = matches.Count;
             modifiedSource = source;
+            foreach (var match in matches.Cast<Match>())
+            {
+                modifiedSource = modifiedSource.Remove(match.Groups[1].Index, match.Groups[1].Length);
+            }
             return count;
         }
 
@@ -100,8 +138,15 @@ namespace CodeMetricsCalculator.Parsers.Java
 
         private static IEnumerable<string> ParseIndexerOperator(string source, out string modifiedSource)
         {
-            modifiedSource = source;
-            return Enumerable.Empty<string>();
+            var pattern = @"\[[^\[\]]+\]" ;
+            var count = Regex.Matches(source, pattern).Count;
+            modifiedSource = Regex.Replace(source, pattern, " ");
+            var list = new List<string>();
+            for (int i = 0; i < count; i++)
+            {
+                list.Add("[...]");
+            }
+            return list;
         }
 
         private static IEnumerable<string> ParseMemberAccessOperator(string source, out string modifiedSource)
@@ -112,29 +157,17 @@ namespace CodeMetricsCalculator.Parsers.Java
 
         private static IEnumerable<string> ParseTernaryOperator(string source, out string modifiedSource)
         {
-            modifiedSource = source;
-            return Enumerable.Empty<string>();
+            var pattern = Regex.Escape("?");
+            var count = Regex.Matches(source, pattern).Count;
+            modifiedSource = Regex.Replace(source, pattern, " ");
+            var list = new List<string>();
+            for (int i = 0; i < count; i++)
+            {
+                list.Add("?:");
+            }
+            return list;
         }
-
-        private static IEnumerable<string> ParseVariableDeclaringOperator(string source, out string modifiedSource)
-        {
-            modifiedSource = source;
-            return Enumerable.Empty<string>();
-        }
-
-        private static IEnumerable<string> ParseVariableDeclaringWithAssignmentOperator(string source, out string modifiedSource)
-        {
-            modifiedSource = source;
-            return Enumerable.Empty<string>();
-        }
-
-        private static IEnumerable<string> ParseMaltyVariableDeclaringOperator(string source, out string modifiedSource)
-        {
-            modifiedSource = source;
-            return Enumerable.Empty<string>();
-        }
-
-
+        
         private static void AddToDictionary(string operatorName, int count, IDictionary<string, int> operators)
         {
             if (!operators.ContainsKey(operatorName))
@@ -147,6 +180,5 @@ namespace CodeMetricsCalculator.Parsers.Java
                 operators[operatorName] += count;
             }
         }
-
     }
 }
