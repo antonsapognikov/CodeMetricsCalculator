@@ -23,7 +23,8 @@ namespace CodeMetricsCalculator
             var classes = new JavaClassParser().Parse(classesCode);
             foreach (var methodInfo in classes.First().GetMethods())
             {
-                methodInfo.GetMethodDictionary();
+                var dictionary = methodInfo.GetMethodDictionary();
+                GC.KeepAlive(dictionary);
             }
             Console.WriteLine("Press any key to print classes and their members.");
             Console.ReadKey();
