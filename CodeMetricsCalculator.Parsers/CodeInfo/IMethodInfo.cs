@@ -8,11 +8,13 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
 
         IReadOnlyCollection<IMethodParameterInfo> Parameters { get; }
 
+        ITypeInfo ReturnType { get; }
+
         IMethodBodyInfo GetBody();
 
         IReadOnlyCollection<IInputVariable> GetInputVariables();
 
-        IReadOnlyDictionary<IIdentifierInfo, int> GetIdentifiers(); 
+        IReadOnlyDictionary<IVariableInfo, int> GetVariables(); 
         
         CodeDictionary GetMethodDictionary();
     }

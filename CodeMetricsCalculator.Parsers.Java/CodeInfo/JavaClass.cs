@@ -47,7 +47,7 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             }
             foreach (var methodInfo in GetMethods())
             {
-                foreach (var keyValuePair in methodInfo.GetIdentifiers())
+                foreach (var keyValuePair in methodInfo.GetVariables())
                 {
                     identifiers.Add(keyValuePair.Key, keyValuePair.Value);
                 }

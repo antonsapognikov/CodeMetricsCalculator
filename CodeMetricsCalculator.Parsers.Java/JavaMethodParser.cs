@@ -16,7 +16,7 @@ namespace CodeMetricsCalculator.Parsers.Java
         IMethodParser<JavaClass, JavaMethod>
     {
         //{return type} {method name} ({parameters}) throws {Identifiers} {
-        private const string MethodRegexString = @"[a-zA-Z_][a-zA-Z0-9<>,\.>_]* +([a-zA-Z_][a-zA-Z0-9<>,\.>_]*) *" +
+        private const string MethodRegexString = @"([a-zA-Z_][a-zA-Z0-9<>,\.>_]*) +([a-zA-Z_][a-zA-Z0-9<>,\.>_]*) *" +
                                                  @"\(([a-zA-Z0-9<>,\.>_\[\] ]*)\) *(throws [a-zA-Z_][a-zA-Z0-9<>,\.>_ ]*)? *{";
 
         static JavaMethodParser()
@@ -37,14 +37,20 @@ namespace CodeMetricsCalculator.Parsers.Java
             var methodSources = ParseMethodSources(classSource);
             var methods =
                 methodSources.
-                    Select(s => new JavaMethod(ParseMethodName(s), ParseParameters(s), s, code)).
+                    Select(s => new JavaMethod(ParseReturnType(s), ParseMethodName(s), ParseParameters(s), s, code)).
                     ToList();
             return methods.AsReadOnly();
         }
 
+        private static ITypeInfo ParseReturnType(string methodSource)
+        {
+            var typeName = MethodRegex.Matches(methodSource)[0].Groups[1].Value;
+            return new JavaType(typeName);
+        }
+
         private static IEnumerable<IMethodParameterInfo> ParseParameters(string methodSource)
         {
-            var parametersString = MethodRegex.Matches(methodSource)[0].Groups[2].Value;
+            var parametersString = MethodRegex.Matches(methodSource)[0].Groups[3].Value;
             if (string.IsNullOrWhiteSpace(parametersString))
                 return Enumerable.Empty<IMethodParameterInfo>();
             var parameterSources = parametersString.Split(',').Select(s => s.Trim(' '));
@@ -54,7 +60,8 @@ namespace CodeMetricsCalculator.Parsers.Java
                 var typeAndParameterName = parameterSource.Split(new []{' '}, StringSplitOptions.RemoveEmptyEntries);
                 if (typeAndParameterName.Length != 2)
                     throw new ParsingException("Method parameter parsing error.");
-                parameters.Add(new JavaMethodParameter(typeAndParameterName[1], parameterSource));
+                var type = new JavaType(typeAndParameterName[0]);
+                parameters.Add(new JavaMethodParameter(type, typeAndParameterName[1], parameterSource));
             }
             return parameters;
         }
@@ -81,7 +88,7 @@ namespace CodeMetricsCalculator.Parsers.Java
 
         private static string ParseMethodName(string methodSource)
         {
-            return MethodRegex.Matches(methodSource)[0].Groups[1].Value;
+            return MethodRegex.Matches(methodSource)[0].Groups[2].Value;
         }
     }
 }

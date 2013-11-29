@@ -13,7 +13,7 @@ namespace CodeMetricsCalculator.Parsers.Java
                                      IFieldParser<JavaClass, JavaField>
     {
         private const string FieldRegexString =
-            @"[a-zA-Z_][a-zA-Z0-9<,>_]* +([a-zA-Z_][a-zA-Z0-9_]*)( *= *[a-zA-Z0-9_\+\-\*\\<,>\.\(\)" + "\" ]+)? *;";
+            @"([a-zA-Z_][a-zA-Z0-9<,>_]*) +([a-zA-Z_][a-zA-Z0-9_]*)( *= *[a-zA-Z0-9_\+\-\*\\<,>\.\(\)" + "\" ]+)? *;";
 
         static JavaFieldParser()
         {
@@ -33,7 +33,11 @@ namespace CodeMetricsCalculator.Parsers.Java
                 source = source.Replace(methodInfo.OriginalSource, string.Empty);
             }
             var matches = FieldRegex.Matches(source).Cast<Match>();
-            var fields = matches.Select(match => new JavaField(match.Groups[1].Value, code, match.Value)).ToList();
+            var fields =
+                matches.Select(
+                    match =>
+                        new JavaField(new JavaType(match.Groups[1].Value), match.Groups[2].Value,
+                            code, match.Value)).ToList();
             return new ReadOnlyCollection<JavaField>(fields);
         }
     }

@@ -23,6 +23,11 @@ namespace CodeMetricsCalculator
             var classes = new JavaClassParser().Parse(classesCode);
             foreach (var javaClass in classes)
             {
+                var methods = javaClass.GetMethods();
+                foreach (var methodInfo in methods)
+                {
+                    var variables = methodInfo.GetVariables();
+                }
                 var dictionary = javaClass.GetIdentifiers();
                 Console.WriteLine(javaClass.NormalizedSource);
                 foreach (var keyValuePair in dictionary)

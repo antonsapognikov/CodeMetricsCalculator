@@ -111,6 +111,8 @@
     <Compile Include="CodeDictionary.cs" />
     <Compile Include="CodeInfo\IMethodParameterInfo.cs" />
     <Compile Include="CodeInfo\IIdentifierInfo.cs" />
+    <Compile Include="CodeInfo\ITypeInfo.cs" />
+    <Compile Include="CodeInfo\IVariableInfo.cs" />
     <Compile Include="CodeInfo\MemberInfo.cs" />
     <Compile Include="CodeInfo\IClassInfo.cs" />
     <Compile Include="CodeInfo\IMemberInfo.cs" />

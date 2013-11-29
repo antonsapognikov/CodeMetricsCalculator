@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -24,13 +25,27 @@ namespace CodeMetricsCalculator.Parsers.Java
             var allIdentifiers = new List<JavaIdentifier>();
             allIdentifiers.AddRange(code.GetFields().Cast<JavaIdentifier>());
             allIdentifiers.AddRange(code.GetMethods().Cast<JavaIdentifier>());
+            allIdentifiers.AddRange(GetUsedTypes(code));
+
             foreach (var identifier in allIdentifiers)
             {
                 var regex = new Regex(string.Format(JavaIdentifierPattern, identifier.Name));
                 var usageCount = regex.Matches(methodSource).Count;
                 identifiers.Add(identifier, usageCount);
             }
+
             return identifiers;
         }
+
+        private static IReadOnlyCollection<JavaType> GetUsedTypes(JavaClass code)
+        {
+            var types = new List<JavaType>();
+            types.AddRange(code.GetFields().Select(info => info.Type).Cast<JavaType>());
+            var methods = code.GetMethods();
+            types.AddRange(methods.Select(info => info.ReturnType).Cast<JavaType>());
+            var variablesTypes = methods.SelectMany(info => info.GetVariables()).Select(pair => pair.Key.Type).Cast<JavaType>();
+            types.AddRange(variablesTypes);
+            return types.Distinct().ToList();
+        } 
     }
 }

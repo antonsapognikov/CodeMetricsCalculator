@@ -15,7 +15,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 
 public final class API {
-    private static String username = null, accessKey = null;
+    private static String username = null;
+	private static String accessKey = null;
     private static final String SHARED_PREFERENCES_NAME = "credentials";
     private static final String API_ROOT_URL = "http://fksis.bsuir.by/wps/schedule/api";
 

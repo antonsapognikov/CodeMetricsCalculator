@@ -11,16 +11,20 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
     {
         private readonly IClassInfo _class;
         private readonly IReadOnlyCollection<IMethodParameterInfo> _parameters;
+        private readonly ITypeInfo _returnType;
 
-        public JavaMethod(string name, IEnumerable<IMethodParameterInfo> parameters, string originalSource,
+        public JavaMethod(ITypeInfo returnType, string name, IEnumerable<IMethodParameterInfo> parameters, string originalSource,
             IClassInfo @class)
             : base(name, originalSource)
         {
+            if (returnType == null)
+                throw new ArgumentNullException("returnType");
             if (@class == null)
                 throw new ArgumentNullException("class");
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
 
+            _returnType = returnType;
             _parameters = parameters.ToList().AsReadOnly();
             _class = @class;
         }
@@ -35,6 +39,11 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             get { return _parameters; }
         }
 
+        public ITypeInfo ReturnType
+        {
+            get { return _returnType; }
+        }
+
         public IMethodBodyInfo GetBody()
         {
             var parsingResults = new JavaMethodBodyParser().Parse(this);
@@ -47,11 +56,11 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             return parsingResult;
         }
 
-        public IReadOnlyDictionary<IIdentifierInfo, int> GetIdentifiers()
+        public IReadOnlyDictionary<IVariableInfo, int> GetVariables()
         {
-            var parsingResult = new JavaIdentifiersInMethodParser().Parse(this);
+            var parsingResult = new JavaVariablesParser().Parse(this);
             return
-                parsingResult.ToDictionary<KeyValuePair<JavaIdentifier, int>, IIdentifierInfo, int>(
+                parsingResult.ToDictionary<KeyValuePair<JavaVariable, int>, IVariableInfo, int>(
                     keyValuePair => keyValuePair.Key, keyValuePair => keyValuePair.Value);
         }
 

@@ -10,23 +10,23 @@ using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java
 {
-    internal class JavaIdentifiersInMethodParser : JavaCodeParser<JavaMethod, IReadOnlyDictionary<JavaIdentifier, int>>
+    internal class JavaVariablesParser : JavaCodeParser<JavaMethod, IReadOnlyDictionary<JavaVariable, int>>
     {
         private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]" + "{0}" + "[^a-zA-Z0-9_]"; 
         private const string VariableDeclaringPattern =
-            @"[a-zA-Z_][a-zA-Z0-9<,>_]* +([a-zA-Z_][a-zA-Z0-9_]*)( *= *[a-zA-Z0-9_\+\-\*\\<,>\.\(\)" + "\" ]+)? *;";
+            @"([a-zA-Z_][a-zA-Z0-9<,>_]*) +([a-zA-Z_][a-zA-Z0-9_]*)( *= *[a-zA-Z0-9_\+\-\*\\<,>\.\(\)" + "\" ]+)? *;";
 
-        static JavaIdentifiersInMethodParser()
+        static JavaVariablesParser()
         {
             VariableDeclaringRegex = new Regex(VariableDeclaringPattern, RegexOptions.Compiled);
         }
 
-        public override IReadOnlyDictionary<JavaIdentifier, int> Parse(JavaMethod code)
+        public override IReadOnlyDictionary<JavaVariable, int> Parse(JavaMethod code)
         {
             Contract.Requires(code != null);
 
             var methodSource = code.GetBody().NormalizedSource;
-            var identifiers = new Dictionary<JavaIdentifier, int>();
+            var identifiers = new Dictionary<JavaVariable, int>();
 
             //parsing method parameters as identifiers
             var parameters = code.Parameters.Cast<JavaMethodParameter>();
@@ -60,7 +60,8 @@ namespace CodeMetricsCalculator.Parsers.Java
                 if (variableDeclaring.StartsWith("return") || variableDeclaring.StartsWith("goto"))
                     continue;
                 var groups = match.Groups;
-                variables.Add(new JavaVariable(match.Groups[1].Value, match.Value));
+                var type = new JavaType(match.Groups[1].Value);
+                variables.Add(new JavaVariable(type, match.Groups[2].Value, match.Value));
             }
             return variables.AsReadOnly();
         } 

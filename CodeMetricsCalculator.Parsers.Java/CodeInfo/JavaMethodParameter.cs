@@ -7,9 +7,10 @@ using CodeMetricsCalculator.Parsers.CodeInfo;
 
 namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
 {
-    internal class JavaMethodParameter : JavaIdentifier, IMethodParameterInfo
+    internal class JavaMethodParameter : JavaVariable, IMethodParameterInfo
     {
-        public JavaMethodParameter(string name, string originalSource) : base(name, originalSource)
+        public JavaMethodParameter(JavaType type, string name, string originalSource)
+            : base(type, name, originalSource)
         {
         }
     }
