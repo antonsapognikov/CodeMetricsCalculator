@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseEqualityComparer.cs" />
     <Compile Include="Utils\CollectionUtils.cs" />
     <Compile Include="Utils\GuidEncoder.cs" />
     <Compile Include="Utils\StringUtils.cs" />
