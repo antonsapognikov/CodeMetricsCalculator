@@ -16,5 +16,7 @@ namespace CodeMetricsCalculator.Parsers
         bool IsModified { get; }
 
         bool IsControl { get; }
+
+        bool IsCalculationOrOutput { get; }
     }
 }

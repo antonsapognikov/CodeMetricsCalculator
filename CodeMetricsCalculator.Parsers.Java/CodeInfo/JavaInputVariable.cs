@@ -38,5 +38,10 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
         {
             get; set;
         }
+
+        public bool IsCalculationOrOutput
+        {
+            get; set;
+        }
     }
 }
