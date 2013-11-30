@@ -16,7 +16,7 @@ namespace CodeMetricsCalculator.Parsers.Java
         private const string VariableIdentifierPattern = @"[a-zA-Z_][a-zA-Z0-9_]*";
         private const string VariableValuePattern = @"[^;]+";
         private const string MethodArgumentPattern = @"[^;]*";
-        private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]" + "{0}" + "[^a-zA-Z0-9_]";
+        private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]*" + "{0}" + "[^a-zA-Z0-9_]*";
 
         private static readonly string MethodResultVariableNamePattern = string.Format(@"^{0}", VariableIdentifierPattern);
 
@@ -153,7 +153,7 @@ namespace CodeMetricsCalculator.Parsers.Java
         {
             if (variableName == null)
                 throw new ArgumentNullException("variableName");
-            return string.Format(@"{1}{0}=", EmptyOrWhiteSpacePattern, variableName);
+            return string.Format(@"{1}{0}=[^=]", EmptyOrWhiteSpacePattern, variableName);
         } 
 
         private static string CreateMethodCallPattern(string methodName)

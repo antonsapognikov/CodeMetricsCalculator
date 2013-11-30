@@ -46,7 +46,7 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
                 .Select(s => s.Trim(' ', '\t'))
                 .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
             normalizedSource = lines.Count > 0
-                ? lines.Aggregate((s1, s2) => " " + s1 + Environment.NewLine + " " + s2)
+                ? lines.Aggregate((s1, s2) => " " + s1 + Environment.NewLine + " " + s2 + " ")
                 : string.Empty;
                 
             return normalizedSource;

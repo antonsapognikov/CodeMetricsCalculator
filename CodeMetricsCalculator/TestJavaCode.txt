@@ -1,10 +1,21 @@
 public class img2html extends Frame 
 {
-	static Image im=null;
-	static int W=-1,H=-1;
+	static Image im = null;
+	static int W = 1, H = 1;
 
-    	public static void main(String args[])
+    	public static void main()
     	{
+		Scanner sc= new Scanner(System.in);
+        int strFromScaner = sc.nextInt();
+		strFromScaner = strFromScaner + " ";
+        System.out.println(strFromScaner);
+        int number = sc.nextInt();
+		if (number == 1)
+			System.out.println(number);
+		int otherNumber = sc.nextInt(); //do not use
+
+        sc.close();
+
 		String infile,outfile;
 		infile="UNSPECIFIED";
 		outfile="UNSPECIFIED";
@@ -153,7 +164,7 @@ public class img2html extends Frame
 		}
 		return(OK);
 	}
-
+	
 
 
 	public static void usage() {
