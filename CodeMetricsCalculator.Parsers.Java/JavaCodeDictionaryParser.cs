@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -11,7 +12,7 @@ namespace CodeMetricsCalculator.Parsers.Java
         private const string IdentifierRegex = @"[a-zA-Z_][a-zA-Z0-9_]*";
         private const string StringLiteralPattern = "\"[^\"]*\"";
         private const string NumberPatter = @"[-+]?([0-9]*\.[0-9]+|[0-9]+)";
-        private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]*" + "({0})" + "[^a-zA-Z0-9_]*";
+        private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]*" + "({0})" + "[^a-zA-Z0-9_]";
         private const string JavaOperatorPattern = "[^!+-=/&|%]*" + "({0})" + "[^!+-=/&|%]*"; 
         private static readonly string MethodCallStartRegex = string.Format(@"{0}\(", IdentifierRegex);
 
@@ -129,17 +130,16 @@ namespace CodeMetricsCalculator.Parsers.Java
             return operators;
         }
 
-        private static IEnumerable<string> ParseIndexerOperator(string source, out string modifiedSource)
+        private IEnumerable<string> ParseIndexerOperator(string source, out string modifiedSource)
         {
-            var pattern = @"\[[^\[\]]+\]" ;
-            var count = Regex.Matches(source, pattern).Count;
-            modifiedSource = Regex.Replace(source, pattern, " ");
-            var list = new List<string>();
-            for (int i = 0; i < count; i++)
-            {
-                list.Add("[...]");
-            }
-            return list;
+
+            modifiedSource = source;
+            var pattern = @"\[[^\]]";
+            var matches = Regex.Matches(source, pattern).Cast<Match>().ToList();
+            return matches
+                .Select(match => match.Index)
+                .Select(index => source.Substring(index, FindClosingBracketIndex(source, "[", "]", index) - index + 1))
+                .ToList();
         }
 
         private static IEnumerable<string> ParseMemberAccessOperator(string source, out string modifiedSource)
@@ -148,17 +148,15 @@ namespace CodeMetricsCalculator.Parsers.Java
             return Enumerable.Empty<string>();
         }
 
-        private static IEnumerable<string> ParseTernaryOperator(string source, out string modifiedSource)
+        private IEnumerable<string> ParseTernaryOperator(string source, out string modifiedSource)
         {
-            var pattern = Regex.Escape("?");
-            var count = Regex.Matches(source, pattern).Count;
-            modifiedSource = Regex.Replace(source, pattern, " ");
-            var list = new List<string>();
-            for (int i = 0; i < count; i++)
-            {
-                list.Add("?:");
-            }
-            return list;
+            modifiedSource = source;
+            var pattern = @"\?";
+            var matches = Regex.Matches(source, pattern).Cast<Match>().ToList();
+            return matches
+                .Select(match => match.Index)
+                .Select(index => "...?...:..."/*source.Substring(index, FindClosingBracketIndex(source, "?", ":", index) - index + 1)*/)
+                .ToList();
         }
 
         private IEnumerable<string> ParseBracketOperator(string source, out string modifiedSource)
@@ -168,7 +166,7 @@ namespace CodeMetricsCalculator.Parsers.Java
             var matches = Regex.Matches(source, pattern).Cast<Match>().ToList();
             return matches
                 .Select(match => match.Index)
-                .Select(index => source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index + 1))
+                .Select(index => "(...)"/*source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index + 1)*/)
                 .ToList();
         }
 

@@ -37,6 +37,30 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             return _methods ?? (_methods = new JavaMethodParser().Parse(this));
         }
 
+        public CodeDictionary GetClassDictionary()
+        {
+            var methodDictionaries = GetMethods().Select(info => info.GetMethodDictionary()).ToList();
+            var methodOperators = methodDictionaries.SelectMany(dictionary => dictionary.Operators);
+            var methodOperands = methodDictionaries.SelectMany(dictionary => dictionary.Operands);
+            var operators = new Dictionary<string, int>();
+            foreach (var methodOperator in methodOperators)
+            {
+                if (operators.ContainsKey(methodOperator.Key))
+                    operators[methodOperator.Key] += methodOperator.Value;
+                else
+                    operators.Add(methodOperator.Key, methodOperator.Value);
+            }
+            var operands = new Dictionary<string, int>();
+            foreach (var methodOperand in methodOperands)
+            {
+                if (operands.ContainsKey(methodOperand.Key))
+                    operands[methodOperand.Key] += methodOperand.Value;
+                else
+                    operands.Add(methodOperand.Key, methodOperand.Value);
+            }
+            return new CodeDictionary(operators, operands);
+        }
+
         public IReadOnlyDictionary<IIdentifierInfo, int> GetIdentifiers()
         {
             var parsingResults = new JavaIdentifiersInClassParser().Parse(this);

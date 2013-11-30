@@ -10,6 +10,8 @@ namespace CodeMetricsCalculator.Parsers.CodeInfo
 
         IReadOnlyCollection<IMethodInfo> GetMethods();
 
+        CodeDictionary GetClassDictionary();
+
         IReadOnlyDictionary<IIdentifierInfo, int> GetIdentifiers();
     }
 }

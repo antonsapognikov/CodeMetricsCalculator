@@ -43,7 +43,7 @@ namespace CodeMetricsCalculator.Parsers.Java
                 "readLine"
             };
 
-        private static readonly List<string> ContolConstructions =
+        private static readonly List<string> ControlConstructions =
             new List<string>
             {
                 "if",
@@ -79,7 +79,7 @@ namespace CodeMetricsCalculator.Parsers.Java
                 .Select(index => source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index + 1))
                 .ToList();
 
-            List<string> controlArguments = ContolConstructions
+            List<string> controlArguments = ControlConstructions
                 .Select(CreateControlConstructionPattern)
                 .Select(pattern => Regex.Matches(source, pattern))
                 .SelectMany(mathes => mathes.Cast<Match>())

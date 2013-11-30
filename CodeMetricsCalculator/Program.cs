@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using CodeMetricsCalculator.Metrics;
 using CodeMetricsCalculator.Parsers;
 using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java;
@@ -21,9 +22,19 @@ namespace CodeMetricsCalculator
             var classesCode = new JavaCode(classesSource);
             var normalized = classesCode.NormalizedSource;
             var classes = new JavaClassParser().Parse(classesCode);
+            
             foreach (var javaClass in classes)
             {
-                var dictionary = javaClass.GetIdentifiers();
+                Console.WriteLine("Chepin: " + ChepinMetricCalculator.Calculate(javaClass));
+                Console.WriteLine("Average spen: " + SpenMetricCalculator.CalculateAverage(javaClass 
+                    ));
+                var spens = SpenMetricCalculator.Calculate(javaClass);
+                Console.WriteLine("Spens:");
+                foreach (var keyValuePair in spens)
+                {
+                    Console.WriteLine("{0} - {1}", keyValuePair.Key.Name, keyValuePair.Value);
+                }
+                /*var dictionary = javaClass.GetIdentifiers();
                 Console.WriteLine(javaClass.NormalizedSource);
                 foreach (var keyValuePair in dictionary)
                 {
@@ -31,8 +42,8 @@ namespace CodeMetricsCalculator
                 }
                 Console.WriteLine();
                 Console.WriteLine("##############################################");
-                Console.WriteLine();
-            }
+                Console.WriteLine();*/
+            }/*
             Console.ReadKey();
             Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -41,7 +52,7 @@ namespace CodeMetricsCalculator
             foreach (var methodInfo in methods)
             {
                 var codeDictionary = methodInfo.GetMethodDictionary();
-                Console.WriteLine(methodInfo.GetBody().NormalizedSource);
+                Console.WriteLine(methodInfo.NormalizedSource);
                 Console.WriteLine("Operators:");
                 foreach (var keyValuePair in codeDictionary.Operators)
                 {
@@ -55,7 +66,7 @@ namespace CodeMetricsCalculator
                 Console.WriteLine();
                 Console.WriteLine("##############################################");
                 Console.WriteLine();
-            }
+            }*/
             Console.ReadKey();
 
         }

@@ -53,6 +53,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeMetricsCalculator.Metrics\CodeMetricsCalculator.Metrics.csproj">
+      <Project>{09CD35C8-080A-4B7E-9F84-602EB5A33FAA}</Project>
+      <Name>CodeMetricsCalculator.Metrics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeMetricsCalculator.Parsers.Java\CodeMetricsCalculator.Parsers.Java.csproj">
       <Project>{B8E996A4-D603-4E25-B958-B72A4DD0A4AF}</Project>
       <Name>CodeMetricsCalculator.Parsers.Java</Name>
