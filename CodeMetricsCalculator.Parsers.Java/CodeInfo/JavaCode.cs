@@ -41,11 +41,14 @@ namespace CodeMetricsCalculator.Parsers.Java.CodeInfo
             //Removing multiline comments...
             normalizedSource = Regex.Replace(normalizedSource, MultilineCommentPattern, string.Empty);
             //Removing empty lines and trim
-            normalizedSource = normalizedSource
+            var lines = normalizedSource
                 .Split(new [] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => s.Trim(' ', '\t'))
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .Aggregate((s1, s2) => s1 + Environment.NewLine + s2);
+                .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+            normalizedSource = lines.Count > 0
+                ? lines.Aggregate((s1, s2) => " " + s1 + Environment.NewLine + " " + s2)
+                : string.Empty;
+                
             return normalizedSource;
         }
         

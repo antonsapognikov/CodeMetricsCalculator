@@ -12,7 +12,7 @@ namespace CodeMetricsCalculator.Parsers.Java
         private const string IdentifierRegex = @"[a-zA-Z_][a-zA-Z0-9_]*";
         private const string StringLiteralPattern = "\"[^\"]*\"";
         private const string NumberPatter = @"[-+]?([0-9]*\.[0-9]+|[0-9]+)";
-        private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]*" + "({0})" + "[^a-zA-Z0-9_]";
+        private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]" + "({0})" + "[^a-zA-Z0-9_]";
         private const string JavaOperatorPattern = "[^!+-=/&|%]*" + "({0})" + "[^!+-=/&|%]*"; 
         private static readonly string MethodCallStartRegex = string.Format(@"{0}\(", IdentifierRegex);
 
@@ -124,8 +124,8 @@ namespace CodeMetricsCalculator.Parsers.Java
             var startIndexes = matches
                 .Select(match => new { CallIndex = match.Index, BrackerIndex = match.Index + match.Value.Length - 1 })
                 .ToList();
-            var operators = startIndexes.Select(item => source.Substring(item.CallIndex,
-                                FindClosingBracketIndex(source, "(", ")", item.BrackerIndex) - item.CallIndex + 1)).ToList();
+            var operators = startIndexes.Select(item => source.Substring(item.CallIndex, item.BrackerIndex - item.CallIndex) + "(...)"/*source.Substring(item.CallIndex,
+                                FindClosingBracketIndex(source, "(", ")", item.BrackerIndex) - item.CallIndex + 1)*/).ToList();
             modifiedSource = source; //todo remove invocations from source
             return operators;
         }

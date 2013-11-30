@@ -1,101 +1,168 @@
-package by.fksis.schedule;
+public class img2html extends Frame 
+{
+	static Image im=null;
+	static int W=-1,H=-1;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+    	public static void main(String args[])
+    	{
+		String infile,outfile;
+		infile="UNSPECIFIED";
+		outfile="UNSPECIFIED";
+		boolean paramsOK=false,mode=false;
+		if (args.length <= 1) {
+			usage();
+			paramsOK=false;
+		} 
+		if (args.length == 2) {
+			infile = args[0];
+			outfile = args[1];
+			paramsOK=true;
+		}
+		if (paramsOK) {
+			System.out.println("img2html :");
+			System.out.println("  image file  " + infile);
+			System.out.println("  data file   " + outfile);
+			img2html widow = new img2html();
+			System.out.println("img2html : Loading image file");
+			if (widow.processFile(infile)==false) {
+				System.exit(0);
+			} 			
+			System.out.println("img2html : Saving data file");
+			saveByteData(outfile,mode);
+			System.exit(0);
+		}
+    	}
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
+	public static void saveByteData(String fn,boolean i)
+	{
+		int[] grabMapXY;
+		grabMapXY		= 	new int[(W * H)];
+		int pix;
+		PixelGrabber pg = new PixelGrabber(im,0,0,W,H,grabMapXY,0,W); 			
+		// start grab
+		try {
+			pg.grabPixels();
+		} catch (InterruptedException e) {
+			System.out.println("Map grab failed : " + e);
+			return;
+		}
+		if ((pg.status() & ImageObserver.ABORT) != 0) {
+			System.out.println("Map grab failed !");
+			return;
+		}	
+		// need to base r on number of valid pixels
+		writeToFn(fn,"<HTML>");
+		writeToFn(fn,"");
+		writeToFn(fn,"<BODY>");
+		writeToFn(fn,"");
+		writeToFn(fn,"<TABLE border=0 cellspacing=0 cellpadding=0>");
+		int red,green,blue,p;
+		String r,g,b;
+		Color c;
+		for (int y =0; y < H; y++) {	
+			
+			writeToFn(fn,"  <TR>");
+			for (int x =0; x < W; x++) {
+				pix=grabMapXY[ y * W + x ];
+				c = new Color(pix);
+				red=c.getRed();
+				blue=c.getBlue();
+				green=c.getGreen();
+				r=Integer.toHexString(red);
+				g=Integer.toHexString(green);
+				b=Integer.toHexString(blue);
+				if (r.length()==1) { r="0"+r; }
+				if (g.length()==1) { g="0"+g; }
+				if (b.length()==1) { b="0"+b; }
+				writeToFn(fn,"    <TD WIDTH=1 HEIGHT=1 BGCOLOR=#" + r + g + b + ">", " " + x + "," + y + " - of - " + W + "," + H);
+				writeToFn(fn,"    </TD>");
+			}
+			writeToFn(fn,"  </TR>");
+		}
+		writeToFn(fn,"");
+		writeToFn(fn,"</TABLE>");
+		writeToFn(fn,"");
+		writeToFn(fn,"</BODY>");
+		writeToFn(fn,"</HTML>");
+	}
 
-public final class API {
-    private static String username = null;
-	private static String accessKey = null;
-    private static final String SHARED_PREFERENCES_NAME = "credentials";
-    private static final String API_ROOT_URL = "http://fksis.bsuir.by/wps/schedule/api";
+	public static void writeToFn(String fn,String Dbytes,String status) {
+		try {
+			System.out.println(Dbytes + "  pixel " + status);
+			DataOutputStream dos = new DataOutputStream( new FileOutputStream(fn,true));
+			dos.writeBytes(Dbytes); // 
+			dos.writeByte(13); // line feed for each line
+           		dos.writeByte(10); // line feed for each line 
+			// close here
+			dos.close();
+     		} catch (IOException e) {
+    			System.err.println("File error: " + e.getMessage());
+        	}
+	}
 
-    public static boolean credentialsPresent() {
-        return username != null;
-    }
 
-    public static void loadCredentials(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        username = sharedPreferences.getString("username", null);
-        accessKey = sharedPreferences.getString("accessKey", null);
-    }
+	public static void writeToFn(String fn,String Dbytes) {
+		try {
+			System.out.println(Dbytes );
+			DataOutputStream dos = new DataOutputStream( new FileOutputStream(fn,true));
+			dos.writeBytes(Dbytes); // 
+			dos.writeByte(13); // line feed for each line
+           		dos.writeByte(10); // line feed for each line 
+			// close here
+			dos.close();
+     		} catch (IOException e) {
+    			System.err.println("File error: " + e.getMessage());
+        	}
+	}
 
-    public static void updateCredentials(Context context, String username, String accessKey) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit()
-                .putString("username", username)
-                .putString("accessKey", accessKey)
-                .commit();
-        loadCredentials(context);
-    }
-    public static void clearCredentials(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit()
-                .remove("username")
-                .remove("accessKey")
-                .commit();
-        loadCredentials(context);
-    }
+	public boolean processFile(String fn)
+	{
+		boolean OK=false;
+		int exitcounter;
+		try {
+			im = getToolkit().getImage(fn);
+		}
+		catch (Exception e) 
+		{
+			System.out.println("1HOLY MOLY THIS NEVER HAPPENS!!!! "+e);
+		} 
+		MediaTracker tracker= new MediaTracker(this);
+		tracker.addImage(im,0);
+		try {
+			tracker.waitForID(0);
+		} 
+		catch (InterruptedException e) 
+		{
+			System.out.println("2HOLY MOLY THIS NEVER HAPPENS "+e);
+		} 
+		if (tracker.isErrorID(0)) {
+			System.out.println("IMAGE FILE COULD NOT BE LOADED");
+			System.out.println(fn);
+		} else {
+			exitcounter=0;
+			while ( ((W==-1)||(H==-1)) && (exitcounter<=16000000) ) {
+				W=im.getWidth(null);
+				H=im.getHeight(null);
+				exitcounter++;
+			}
+			if (exitcounter>15999999) {
+				System.out.println("Timeout attempting to load image, is it to big?");
+			} else {
+				OK=true;
+			}
+		}
+		return(OK);
+	}
 
-    public static String getUsername() {
-        return username;
-    }
 
-    @SuppressWarnings("deprecation")
-    public static String query(Map params) throws IOException {
-        try {
-            String url = API_ROOT_URL + "?_";
-            for (String key : params.keySet())
-                url += "&" + URLEncoder.encode(key) + "=" + URLEncoder.encode(params.get(key));
-            String data = "", nextLine;
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
-            while ((nextLine = bufferedReader.readLine()) != null)
-                data += nextLine;
-            return data;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
-    public static JSONObject queryUserData() throws IOException, JSONException {
-        HashMap<String, String> params = new HashMap();
-        params.put("info", "1");
-        params.put("auth_login", username);
-        params.put("auth_key", accessKey);
-        return new JSONObject(query(params));
-    }
+	public static void usage() {
+		System.out.println("Usage:");
+		System.out.println("java img2html infile outfile ");
+		System.out.println(" infile  : image file .gif ");
+		System.out.println(" outfile : html file to be created");
+		//System.out.println(" /i      : Inverse data ");
+	}
 
-    public static JSONArray queryClasses() throws IOException, JSONException {
-        HashMap<String, String> params = new HashMap();
-        params.put("classes", "1");
-        return new JSONArray(query(params));
-    }
 
-    public static JSONArray queryBroadcasts() throws IOException, JSONException {
-        HashMap<String, String> params = new HashMap();
-        params.put("broadcasts", "1");
-        return new JSONArray(query(params));
-    }
-
-    public static void queryAddBroadcast(String text, long date) throws IOException, JSONException {
-        HashMap<String, String> params = new HashMap();
-        params.put("addBroadcast", "1");
-        params.put("auth_login", username);
-        params.put("auth_key", accessKey);
-        params.put("text", text);
-        params.put("expires", Long.toString(date));
-		int a = 5;
-        query(params);
-    }
-}
+}	// end of class

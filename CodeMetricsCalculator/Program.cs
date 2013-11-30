@@ -34,7 +34,7 @@ namespace CodeMetricsCalculator
                 {
                     Console.WriteLine("{0} - {1}", keyValuePair.Key.Name, keyValuePair.Value);
                 }
-                /*var dictionary = javaClass.GetIdentifiers();
+                var dictionary = javaClass.GetIdentifiers();
                 Console.WriteLine(javaClass.NormalizedSource);
                 foreach (var keyValuePair in dictionary)
                 {
@@ -42,8 +42,8 @@ namespace CodeMetricsCalculator
                 }
                 Console.WriteLine();
                 Console.WriteLine("##############################################");
-                Console.WriteLine();*/
-            }/*
+                Console.WriteLine();
+            }
             Console.ReadKey();
             Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -66,7 +66,7 @@ namespace CodeMetricsCalculator
                 Console.WriteLine();
                 Console.WriteLine("##############################################");
                 Console.WriteLine();
-            }*/
+            }
             Console.ReadKey();
 
         }

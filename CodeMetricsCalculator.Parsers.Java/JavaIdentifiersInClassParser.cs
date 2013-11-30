@@ -12,7 +12,7 @@ namespace CodeMetricsCalculator.Parsers.Java
 {
     class JavaIdentifiersInClassParser : JavaCodeParser<JavaClass, IReadOnlyDictionary<JavaIdentifier, int>>
     {
-        private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]*" + "{0}" + "[^a-zA-Z0-9_]*"; 
+        private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]" + "{0}" + "[^a-zA-Z0-9_]"; 
 
         public override IReadOnlyDictionary<JavaIdentifier, int> Parse(JavaClass code)
         {
@@ -25,7 +25,7 @@ namespace CodeMetricsCalculator.Parsers.Java
             var allIdentifiers = new List<JavaIdentifier>();
             allIdentifiers.AddRange(code.GetFields().Cast<JavaIdentifier>());
             allIdentifiers.AddRange(code.GetMethods().Cast<JavaIdentifier>());
-            allIdentifiers.AddRange(GetUsedTypes(code));
+            //allIdentifiers.AddRange(GetUsedTypes(code));
 
             foreach (var identifier in allIdentifiers)
             {
