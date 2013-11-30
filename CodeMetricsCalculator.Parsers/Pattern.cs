@@ -24,7 +24,7 @@ namespace CodeMetricsCalculator.Parsers
 
         public Pattern(string pattern, bool bracesRequires)
         {
-            Contract.Requires<ArgumentNullException>(pattern != null, "pattern");
+            Contract.Requires(pattern != null, "pattern");
 
             _pattern = pattern;
             _bracesRequires = bracesRequires;

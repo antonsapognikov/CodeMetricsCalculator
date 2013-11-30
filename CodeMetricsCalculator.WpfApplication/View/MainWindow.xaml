@@ -29,9 +29,9 @@
         <TextBlock Grid.Row="2"  Style="{StaticResource TextBlockStyle}" Text="Step 2: Select metric." />
         <Grid Grid.Row="3" Margin="{StaticResource ControlMargin}">
             <ItemsControl>
-                <RadioButton GroupName="Metrics" Content="Halstead" IsChecked="True" />
-                <RadioButton GroupName="Metrics" Content="Spen" />
-                <RadioButton GroupName="Metrics" Content="Chepin" />
+                <RadioButton GroupName="Metrics" Content="Holstead" IsChecked="True" Command="{Binding Path=EvaluateHolsteadCommand}" />
+                <RadioButton GroupName="Metrics" Content="Spen" Command="{Binding Path=EvaluateSpenCommand}" />
+                <RadioButton GroupName="Metrics" Content="Chepin" Command="{Binding Path=EvaluateChepinCommand}" />
             </ItemsControl>
         </Grid>
         <ScrollViewer Grid.Row="4" Style="{StaticResource ScrollViewerStyle}">

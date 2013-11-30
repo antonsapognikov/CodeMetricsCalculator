@@ -8,11 +8,11 @@ using CodeMetricsCalculator.Parsers.CodeInfo;
 
 namespace CodeMetricsCalculator.Metrics
 {
-    public class HolstedMetricCalculator
+    public class HolsteadMetricCalculator
     {
         private readonly int _uniqueOperators, _uniqueOperands, _operators, _operands;
 
-        public HolstedMetricCalculator(IClassInfo classInfo)
+        public HolsteadMetricCalculator(IClassInfo classInfo)
         {
             Contract.Requires(classInfo != null);
 
@@ -65,7 +65,7 @@ namespace CodeMetricsCalculator.Metrics
         /// <returns></returns>
         public double CalculateTheoreticalProgramVolume()
         {
-            return CalculateTheoreticalProgramLength() * Math.Log(CalculateTheoreticalProgramLength(), 2);
+            return CalculateProgramDictionary() * Math.Log(CalculateProgramDictionary(), 2);
         }
 
         /// <summary>
@@ -93,6 +93,15 @@ namespace CodeMetricsCalculator.Metrics
         public double CalculateRequiredElementarySolutions()
         {
             return CalculateTheoreticalProgramLength()*Math.Log(CalculateProgramDictionary()/CalculateProgramLevel(), 2);
+        }
+
+        /// <summary>
+        /// I = L^ * V
+        /// </summary>
+        /// <returns></returns>
+        public double CalculateIntelligenceContent()
+        {
+            return CalculateRealProgramParameters() * CalculateProgramVolume();
         }
     }
 }

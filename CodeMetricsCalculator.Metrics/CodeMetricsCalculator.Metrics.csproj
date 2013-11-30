@@ -40,7 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChepinMetricCalculator.cs" />
-    <Compile Include="HolstedMetricCalculator.cs" />
+    <Compile Include="HolsteadMetricCalculator.cs" />
+    <Compile Include="MetricType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpenMetricCalculator.cs" />
   </ItemGroup>

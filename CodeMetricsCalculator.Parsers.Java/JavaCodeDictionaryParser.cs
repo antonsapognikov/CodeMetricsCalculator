@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -114,7 +113,9 @@ namespace CodeMetricsCalculator.Parsers.Java
             foreach (var match in matches.Cast<Match>())
             {
                 modifiedSource = modifiedSource.Remove(match.Groups[1].Index, match.Groups[1].Length);
+                modifiedSource = modifiedSource.Insert(match.Groups[1].Index, new string('~', match.Groups[1].Value.Length));
             }
+            modifiedSource = modifiedSource.Replace("~", string.Empty);
             return count;
         }
 
@@ -132,7 +133,6 @@ namespace CodeMetricsCalculator.Parsers.Java
 
         private IEnumerable<string> ParseIndexerOperator(string source, out string modifiedSource)
         {
-
             modifiedSource = source;
             var pattern = @"\[[^\]]";
             var matches = Regex.Matches(source, pattern).Cast<Match>().ToList();
@@ -162,11 +162,11 @@ namespace CodeMetricsCalculator.Parsers.Java
         private IEnumerable<string> ParseBracketOperator(string source, out string modifiedSource)
         {
             modifiedSource = source;
-            var pattern = @"\(";
+            var pattern = @"\(|{";
             var matches = Regex.Matches(source, pattern).Cast<Match>().ToList();
             return matches
-                .Select(match => match.Index)
-                .Select(index => "(...)"/*source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index + 1)*/)
+                .Select(match => match.Value == "(" ? "(...)" : "{...}")
+                //.Select(index => "(...)"/*source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index + 1)*/)
                 .ToList();
         }
 
