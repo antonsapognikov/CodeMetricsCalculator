@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 ﻿using System.IO;
-﻿using System.Text;
+using System.Linq;
+using System.Text;
 using System.Windows.Input;
 using CodeMetricsCalculator.Common.UI.ViewModel.Base;
 ﻿using CodeMetricsCalculator.Metrics;
@@ -182,6 +183,8 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             AppendLineToResult(string.Format("Количество идентификаторов - {0}", classInfo.GetIdentifiers().Count));
             AppendLineToResult(string.Format("Количество операторов - {0}", dictionary.Operators.Count));
             AppendLineToResult(string.Format("Количество операндов - {0}", dictionary.Operands.Count));
+            AppendLineToResult(string.Format("Количество неуникальных операторов - {0}", dictionary.Operators.Values.Sum()));
+            AppendLineToResult(string.Format("Количество неуникальных операндов - {0}", dictionary.Operands.Values.Sum()));
             AppendLineToResult("-------------------------------------------------");
             switch (CurrentMetricType)
             {

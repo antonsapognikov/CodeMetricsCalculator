@@ -10,10 +10,19 @@ namespace CodeMetricsCalculator.Parsers.Java
     {
         private const string IdentifierRegex = @"[a-zA-Z_][a-zA-Z0-9_]*";
         private const string StringLiteralPattern = "\"[^\"]*\"";
-        private const string NumberPatter = @"[-+]?([0-9]*\.[0-9]+|[0-9]+)";
+        private const string NumberPatter = @"[-+]?([0-9]+(x|\.)?[0-9]*)";
         private const string JavaIdentifierPattern = "[^a-zA-Z0-9_]" + "({0})" + "[^a-zA-Z0-9_]";
         private const string JavaOperatorPattern = "[^!+-=/&|%]*" + "({0})" + "[^!+-=/&|%]*"; 
         private static readonly string MethodCallStartRegex = string.Format(@"{0}\(", IdentifierRegex);
+
+        private static readonly List<string> ReservedOperands =
+            new List<string>
+            {
+                "null",
+                "true",
+                "false",
+                "this"
+            };
 
         public override CodeDictionary Parse(JavaMethod javaMethod)
         {
@@ -65,6 +74,19 @@ namespace CodeMetricsCalculator.Parsers.Java
                 else
                     operands[number] += 1;
             }
+            foreach (var operand in ReservedOperands)
+            {
+                var pattern = string.Format(JavaIdentifierPattern, operand);
+                var count = Regex.Matches(source, pattern).Count;
+                if (count == 0)
+                    continue;
+                if (!operands.ContainsKey(operand))
+                    operands.Add(operand, count);
+                else
+                    operands[operand] += count;
+            }
+
+
             return operands;
         }
 
