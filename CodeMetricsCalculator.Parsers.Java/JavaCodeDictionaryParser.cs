@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java.CodeInfo;
-using CodeMetricsCalculator.Parsers.Java.Operators;
 
 namespace CodeMetricsCalculator.Parsers.Java
 {
@@ -85,6 +79,8 @@ namespace CodeMetricsCalculator.Parsers.Java
             parsedOperators.AddRange(ParseTernaryOperator(javaMethodSource, out javaMethodSource));
             parsedOperators.AddRange(ParseMemberAccessOperator(javaMethodSource, out javaMethodSource));
             parsedOperators.AddRange(ParseIndexerOperator(javaMethodSource, out javaMethodSource));
+            //Не знаю надо ли их приводить к форме (), так как сейчас сюда идет вся скобка
+            parsedOperators.AddRange(ParseBracketOperator(javaMethodSource, out javaMethodSource));
             var variables = javaMethod.GetVariables();
             parsedOperators.AddRange(variables.Select(pair => pair.Key.NormalizedSource));
 
@@ -125,13 +121,10 @@ namespace CodeMetricsCalculator.Parsers.Java
         {
             var matches = Regex.Matches(source, MethodCallStartRegex).Cast<Match>().ToList();
             var startIndexes = matches
-            .Select(match => new { CallIndex = match.Index, BrackerIndex = match.Index + match.Value.Length - 1 })
-            .ToList();
-            var operators =
-                startIndexes.Select(
-                    item =>
-                        source.Substring(item.CallIndex,
-                            FindClosingBracketIndex(source, "(", ")", item.BrackerIndex) - item.CallIndex + 1)).ToList();
+                .Select(match => new { CallIndex = match.Index, BrackerIndex = match.Index + match.Value.Length - 1 })
+                .ToList();
+            var operators = startIndexes.Select(item => source.Substring(item.CallIndex,
+                                FindClosingBracketIndex(source, "(", ")", item.BrackerIndex) - item.CallIndex + 1)).ToList();
             modifiedSource = source; //todo remove invocations from source
             return operators;
         }
@@ -167,7 +160,18 @@ namespace CodeMetricsCalculator.Parsers.Java
             }
             return list;
         }
-        
+
+        private IEnumerable<string> ParseBracketOperator(string source, out string modifiedSource)
+        {
+            modifiedSource = source;
+            var pattern = @"\(";
+            var matches = Regex.Matches(source, pattern).Cast<Match>().ToList();
+            return matches
+                .Select(match => match.Index)
+                .Select(index => source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index + 1))
+                .ToList();
+        }
+
         private static void AddToDictionary(string operatorName, int count, IDictionary<string, int> operators)
         {
             if (!operators.ContainsKey(operatorName))
