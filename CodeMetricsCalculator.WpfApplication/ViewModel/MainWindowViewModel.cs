@@ -1,12 +1,11 @@
-
-﻿using System;
+using System;
 using System.Collections.Generic;
 ﻿using System.IO;
 ﻿using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CodeMetricsCalculator.Common.UI.ViewModel.Base;
-using CodeMetricsCalculator.Parsers.CodeInfo;
+﻿using CodeMetricsCalculator.Metrics;
+﻿using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java;
 using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 using Microsoft.Win32;
@@ -15,13 +14,27 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
 {
     public class MainWindowViewModel : UIViewModel
     {
+        private MetricType _metricType = MetricType.Holstead;
         private string _fileName;
         private StringBuilder _result = new StringBuilder();
         private StringBuilder _log = new StringBuilder();
         private IReadOnlyCollection<IClassInfo> _classes;
         private ICommand _openFileCommand;
+        private ICommand _evaluateChepinCommand;
+        private ICommand _evaluateHolsteadCommand;
+        private ICommand _evalueateSpenCommand;
 
         private const string JavaSourceFilter = "Java source files (*.java)|*.java|All files (*.*)|*.*";
+
+        public MetricType CurrentMetricType
+        {
+            get { return _metricType; }
+            set
+            {
+                _metricType = value;
+                OnPropertyChanged(() => CurrentMetricType);
+            }
+        }
 
         public string FileName
         {
@@ -58,6 +71,21 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             get { return _openFileCommand ?? (_openFileCommand = CreateCommand<object>(parameter => OnCreateFile())); }
         }
 
+        public ICommand EvaluateChepinCommand
+        {
+            get { return _evaluateChepinCommand ?? (_evaluateChepinCommand = CreateCommand<object>(parameter => OnEvaluateMetric(MetricType.Chepin))); }
+        }
+
+        public ICommand EvaluateHolsteadCommand
+        {
+            get { return _evaluateHolsteadCommand ?? (_evaluateHolsteadCommand = CreateCommand<object>(parameter => OnEvaluateMetric(MetricType.Holstead))); }
+        }
+
+        public ICommand EvaluateSpenCommand
+        {
+            get { return _evalueateSpenCommand ?? (_evalueateSpenCommand = CreateCommand<object>(parameter => OnEvaluateMetric(MetricType.Spen))); }
+        }
+
         public MainWindowViewModel()
         {
             //Test values
@@ -88,9 +116,14 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             if (result.Value)
             {
                 FileName = dialog.FileName;
-                Task.Run(() => LoadAndParseFile());
-                //LoadAndParseFileAsync();
+                LoadAndParseFile();
             }
+        }
+
+        private void OnEvaluateMetric(MetricType type)
+        {
+            CurrentMetricType = type;
+            LoadAndParseFile();
         }
 
         private void LoadAndParseFile()
@@ -100,20 +133,20 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 ClearResults();
                 string source;
                 AppendLineToLog("Reading file...");
+                if (!File.Exists(FileName))
+                {
+                    AppendLineToResult("Файл не найден!");
+                    return;
+                }
                 using (var sr = new StreamReader(File.OpenRead(FileName)))
                 {
                     source =  sr.ReadToEnd();
                 }
                 var code = new JavaCode(source);
                 AppendLineToLog("Parsing classes...");
-                //var parseClassesTask = new Task<IReadOnlyCollection<IClassInfo>>(() => new JavaClassParser().Parse(code));
-                //parseClassesTask.Start();
                 _classes = new JavaClassParser().Parse(code);
                 AppendLineToLog(string.Format("Parsed {0} classes.", _classes.Count));
-
                 AppendLineToLog("Parsing...");
-
-                //Parallel.ForEach(_classes, ParseClass);
                 foreach (var classInfo in _classes)
                 {
                     ParseClass(classInfo);
@@ -128,35 +161,54 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
 
         private void ParseClass(IClassInfo classInfo)
         {
-            AppendLineToResult(string.Format("####### class {0} #######", classInfo.Name));
-            //var parseMethodsTask = new Task<IReadOnlyCollection<IMethodInfo>>(classInfo.GetMethods);
-            //parseMethodsTask.Start();
+            AppendLineToResult(string.Format("####### класс {0} #######", classInfo.Name));
+            var fields = classInfo.GetFields();
+            AppendLineToResult("-------------------------------------------------");
+            AppendLineToResult("********* поля  *********");
+            foreach (var field in fields)
+            {
+                AppendLineToResult(string.Format("$$$$$$$$$ поле {0} $$$$$$$$$", field.Name));
+            }
             var methods = classInfo.GetMethods();
-            AppendLineToResult("********* methods  *********");
+            AppendLineToResult("-------------------------------------------------");
+            AppendLineToResult("********* методы  *********");
             foreach (var methodInfo in methods)
             {
-                AppendLineToResult(string.Format("$$$$$$$$$ method {0} $$$$$$$$$", methodInfo.Name));
-                IMethodInfo mInfo = methodInfo;
-                //var parseExpressionsTask =
-                //    new Task<IReadOnlyCollection<IExpressionInfo>>(() => mInfo.GetBody().GetExpressions());
-                //parseExpressionsTask.Start();
-                /*var expressions = mInfo.GetBody().GetExpressions();
-                AppendLineToResult("Expressions: ");
-                foreach (var expressionInfo in expressions)
-                {
-                    AppendLineToResult(expressionInfo.NormalizedSource);
-                    //var parseOperatorsTask =
-                    //    new Task<IReadOnlyDictionary<IOperatorInfo, int>>(expressionInfo.GetOperators);
-                    //parseOperatorsTask.Start();
-                    var operators = expressionInfo.GetOperators();
-                    AppendLineToResult("Operators:");
-                    foreach (var op in operators)
+                AppendLineToResult(string.Format("$$$$$$$$$ метод {0} $$$$$$$$$", methodInfo.Name));
+            }
+            AppendLineToResult("-------------------------------------------------");
+            AppendLineToResult("********* информация *********");
+            var dictionary = classInfo.GetClassDictionary();
+            AppendLineToResult(string.Format("Количество идентификаторов - {0}", classInfo.GetIdentifiers().Count));
+            AppendLineToResult(string.Format("Количество операторов - {0}", dictionary.Operators.Count));
+            AppendLineToResult(string.Format("Количество операндов - {0}", dictionary.Operands.Count));
+            AppendLineToResult("-------------------------------------------------");
+            switch (CurrentMetricType)
+            {
+                case MetricType.Chepin :
+                    AppendLineToResult("$$$$$$$$$ Метрика Чепина $$$$$$$$$");
+                    AppendLineToResult(string.Format("Информационная прочность - {0}", ChepinMetricCalculator.Calculate(classInfo)));
+                    break;
+                case MetricType.Holstead :
+                    AppendLineToResult("$$$$$$$$$ Метрика Холстеда $$$$$$$$$");
+                    var holstead = new HolsteadMetricCalculator(classInfo);
+                    AppendLineToResult(string.Format("Словарь программы - {0}", holstead.CalculateProgramDictionary()));
+                    AppendLineToResult(string.Format("Объем программы - {0}", holstead.CalculateProgramVolume()));
+                    AppendLineToResult(string.Format("Длина программы - {0}", holstead.CalculateProgramLength()));                   
+                    AppendLineToResult(string.Format("Потенциальный объем программы - {0}", holstead.CalculateTheoreticalProgramVolume()));
+                    AppendLineToResult(string.Format("Теоретическая длина программы - {0}", holstead.CalculateTheoreticalProgramLength()));
+                    AppendLineToResult(string.Format("Уровень качества программы - {0}", holstead.CalculateProgramLevel()));
+                    AppendLineToResult(string.Format("Параметры реальной программы - {0}", holstead.CalculateRealProgramParameters()));
+                    AppendLineToResult(string.Format("Требуемый элементарные решения - {0}", holstead.CalculateRequiredElementarySolutions()));
+                    AppendLineToResult(string.Format("Интеллектуальное содержание алгоритма - {0}", holstead.CalculateIntelligenceContent()));
+                    break;
+                case MetricType.Spen :
+                    AppendLineToResult("$$$$$$$$$ Подсчет спена $$$$$$$$$");
+                    foreach (var identifier in SpenMetricCalculator.Calculate(classInfo))
                     {
-                        AppendLineToResult(string.Format("{0} - {1} - {2}", op.Key.GetType().Name, op.Key.Name,
-                            op.Value));
+                        AppendLineToResult(string.Format("Идентификатор - {0}. Спен - {1}", identifier.Key.Name, identifier.Value));
                     }
-                    AppendLineToResult("------------");
-                }*/
+                    break;
             }
         }
     }

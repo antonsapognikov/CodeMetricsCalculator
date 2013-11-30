@@ -18,7 +18,7 @@ namespace CodeMetricsCalculator.Parsers.Java
 
         public static Regex ToRegex(this Pattern pattern)
         {
-            Contract.Requires<ArgumentNullException>(pattern != null, "pattern");
+            Contract.Requires(pattern != null, "pattern");
 
             var patternString = pattern.ToString();
             patternString = Escape(patternString)

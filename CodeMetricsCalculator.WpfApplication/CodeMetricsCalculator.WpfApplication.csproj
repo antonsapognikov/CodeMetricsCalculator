@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CodeMetricsCalculator.WpfApplication</RootNamespace>
-    <AssemblyName>CodeMetricsCalculator.WpfApplication</AssemblyName>
+    <AssemblyName>a</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -102,6 +102,14 @@
     <ProjectReference Include="..\CodeMetricsCalculator.Common.UI\CodeMetricsCalculator.Common.UI.csproj">
       <Project>{fb149eb2-5355-490a-9994-0cd088778e76}</Project>
       <Name>CodeMetricsCalculator.Common.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeMetricsCalculator.Common\CodeMetricsCalculator.Common.csproj">
+      <Project>{28fe0829-fd72-4b65-81b4-b4020556121c}</Project>
+      <Name>CodeMetricsCalculator.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeMetricsCalculator.Metrics\CodeMetricsCalculator.Metrics.csproj">
+      <Project>{09CD35C8-080A-4B7E-9F84-602EB5A33FAA}</Project>
+      <Name>CodeMetricsCalculator.Metrics</Name>
     </ProjectReference>
     <ProjectReference Include="..\CodeMetricsCalculator.Parsers.Java\CodeMetricsCalculator.Parsers.Java.csproj">
       <Project>{B8E996A4-D603-4E25-B958-B72A4DD0A4AF}</Project>

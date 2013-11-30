@@ -33,7 +33,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
 
         private static Pattern GeneratePattern(string operatorString, OperationType operationType, OperatorSyntax syntax)
         {
-            Contract.Requires<ArgumentNullException>(operatorString != null, "operatorString");
+            Contract.Requires(operatorString != null, "operatorString");
 
             if (operationType == OperationType.Unary)
             {
