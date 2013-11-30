@@ -93,11 +93,11 @@ namespace CodeMetricsCalculator.Parsers.Java
                 int outputCount = outputArguments.Sum(args => Regex.Matches(args, CreateJavaIdentifierPattern(variable.Name)).Count);
                 int contolCount = controlArguments.Sum(args => Regex.Matches(args, CreateJavaIdentifierPattern(variable.Name)).Count);
                 int allUsedCount = variables.First(pair => pair.Key.Name == variable.Name).Value;
-                int declarationCount = IsAssignedInDeclaration(variable) ? modifiedCount : modifiedCount + 1;
+                int declarationCount = IsAssignedInDeclaration(variable) ? 1 : 2;
                 variable.IsControl = contolCount > 0;
                 variable.IsModified = modifiedCount > 1;
-                variable.IsCalculationOrOutput = allUsedCount - contolCount - declarationCount > 0;
-                variable.IsUsed = allUsedCount != declarationCount;
+                variable.IsCalculationOrOutput = allUsedCount - contolCount - modifiedCount - declarationCount + 1 > 0;
+                variable.IsUsed = allUsedCount != modifiedCount + declarationCount - 1;
             }
             return result;
         }
