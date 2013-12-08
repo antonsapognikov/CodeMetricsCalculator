@@ -13,7 +13,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
         private const string TypePattern = @"type";
         private const string ConstantPattern = @"const";
         private const string BeginPattern = @"begin";
-        private const string PascalIdentifierPattern = "[^a-zA-Z0-9_]*" + "{0}" + "[^a-zA-Z0-9_]*";
+        private const string PascalIdentifierPattern = "[^a-zA-Z0-9_]+" + "{0}" + "[^a-zA-Z0-9_]+";
 
         public override IReadOnlyDictionary<PascalVariable, int> Parse(PascalMethod code)
         {
@@ -26,7 +26,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
             var parameters = code.Parameters.Cast<PascalMethodParameter>();
             foreach (var methodParameterInfo in parameters)
             {
-                var regex = new Regex(string.Format(PascalIdentifierPattern, methodParameterInfo.Name));
+                var regex = new Regex(string.Format(PascalIdentifierPattern, methodParameterInfo.Name), RegexOptions.IgnoreCase);
                 var usageCount = regex.Matches(methodSource).Count + 1; //+declaring
                 identifiers.Add(methodParameterInfo, usageCount);
             }
@@ -35,7 +35,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
             var variables = ParseVariables(methodSource);
             foreach (var javaVariable in variables)
             {
-                var regex = new Regex(string.Format(PascalIdentifierPattern, javaVariable.Name));
+                var regex = new Regex(string.Format(PascalIdentifierPattern, javaVariable.Name), RegexOptions.IgnoreCase);
                 var usageCount = regex.Matches(methodSource).Count;
                 identifiers.Add(javaVariable, usageCount);
             }
