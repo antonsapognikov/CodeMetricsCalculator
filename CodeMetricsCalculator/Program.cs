@@ -9,13 +9,6 @@ namespace CodeMetricsCalculator
 {
     public class Program
     {
-        private const string SpacesAndTabsPattern = @"[ \t]+";
-        private const string BaseMultilineCommentPattern = @"{[^}]*}";
-        private const string AdditionalMultilineCommentPattern = @"\(\*[^(\*\))]*\*\)";
-
-        private static readonly string StringLiteralPattern = string.Format(@"'[^'{0}]*'", Environment.NewLine);
-        private static readonly string InlineCommentPattern = string.Format(@"//[^{0}]*{0}", Environment.NewLine);
-        
         private static void Main(string[] args)
         {
             var classesSource = Resource.TestPascalCode;
@@ -23,7 +16,8 @@ namespace CodeMetricsCalculator
             var classes = new PascalClassParser().Parse(pascalCode);
             foreach (var pascalClass in classes)
             {
-                GC.KeepAlive(pascalClass);
+                var methods = pascalClass.GetMethods();
+                GC.KeepAlive(methods);
                 Debugger.Break();
             }
          /*   var classesCode = new JavaCode(classesSource);

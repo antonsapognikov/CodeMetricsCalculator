@@ -9,16 +9,18 @@ namespace CodeMetricsCalculator.Parsers.Pascal
     {
         protected const string IdentifierPattern = @"[a-zA-Z1-9_]+";
         protected const string ArgumentsPattern = "[\"'a-zA-Z1-9,_ ]+";
-        
+
         protected int FindClosingBracketIndex(string source, string openingBracket, string closingBracket,
-                                              int startOpeningBracketIndex)
+            int startOpeningBracketIndex)
         {
             var bracketsCounter = 1;
             var lastBracketIndex = startOpeningBracketIndex;
             while (bracketsCounter != 0)
             {
-                var openingBracketIndex = source.IndexOf(openingBracket, lastBracketIndex + 1, StringComparison.Ordinal);
-                var closingBracketIndex = source.IndexOf(closingBracket, lastBracketIndex + 1, StringComparison.Ordinal);
+                var openingBracketIndex = source.IndexOf(openingBracket, lastBracketIndex + 1,
+                    StringComparison.OrdinalIgnoreCase);
+                var closingBracketIndex = source.IndexOf(closingBracket, lastBracketIndex + 1,
+                    StringComparison.OrdinalIgnoreCase);
                 if (closingBracketIndex == -1) //не нашли закрывающую скобку 
                     return -1;
 
