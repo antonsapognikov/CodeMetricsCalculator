@@ -25,6 +25,7 @@ namespace CodeMetricsCalculator
             
             foreach (var javaClass in classes)
             {
+                var m = javaClass.GetMethods();
                 Console.WriteLine("Chepin: " + ChepinMetricCalculator.Calculate(javaClass));
                 Console.WriteLine("Average spen: " + SpenMetricCalculator.CalculateAverage(javaClass 
                     ));
@@ -70,56 +71,7 @@ namespace CodeMetricsCalculator
             Console.ReadKey();
 
         }
-
-        private static IReadOnlyCollection<IExpressionInfo> AggregateExpressions(IReadOnlyCollection<IExpressionInfo> readOnlyCollection, IReadOnlyCollection<IExpressionInfo> expressionInfos)
-        {
-            var list = new List<IExpressionInfo>();
-            list.AddRange(readOnlyCollection);
-            list.AddRange(expressionInfos);
-            return new ReadOnlyCollection<IExpressionInfo>(list);
-        }
-
-        private static IReadOnlyCollection<IMethodInfo> AggregateMethods(IReadOnlyCollection<IMethodInfo> readOnlyCollection,
-            IReadOnlyCollection<IMethodInfo> onlyCollection)
-        {
-            var list = new List<IMethodInfo>();
-            list.AddRange(readOnlyCollection);
-            list.AddRange(onlyCollection);
-            return new ReadOnlyCollection<IMethodInfo>(list);
-        }
-
-        private static void PrintClass(IClassInfo classInfo)
-        {
-            Console.WriteLine("Name - {0}{1}Sources:{1}\t{2}",
-                    classInfo.Name,
-                    Environment.NewLine,
-                    classInfo.NormalizedSource);
-            var fields = classInfo.GetFields();
-            if (!fields.Any())
-                Console.WriteLine("There is no fields");
-            else
-            {
-                Console.WriteLine("Fileds:");
-                foreach (var fieldInfo in fields)
-                {
-                    PrintField(fieldInfo);
-                }
-            }
-
-            var methods = classInfo.GetMethods();
-            if (!methods.Any())
-                Console.WriteLine("There is no methods");
-            else
-            {
-                Console.WriteLine("Methods:");
-                foreach (var methodInfo in methods)
-                {
-                    PrintMethod(methodInfo);
-                    Console.WriteLine("***************************");
-                }
-            }
-        }
-
+        
         private static void PrintField(IFieldInfo fieldInfo)
         {
             Console.WriteLine("{0} - {1}", fieldInfo.Name, fieldInfo.NormalizedSource);
@@ -155,35 +107,7 @@ namespace CodeMetricsCalculator
             Console.WriteLine("MethodBody: {0}{1}", Environment.NewLine, methodBodyInfo.NormalizedSource);
             
         }
-
-        private static void PrintExpression(IExpressionInfo expressionInfo)
-        {
-            Console.WriteLine("\t*{0}{1}", Environment.NewLine, expressionInfo.NormalizedSource);
-            var operators = expressionInfo.GetOperators();
-            if (!operators.Any())
-                Console.WriteLine("There is no operators");
-            else
-            {
-                Console.WriteLine("Operators:");
-                foreach (var operatorInfo in operators)
-                {
-                    PrintOperator(operatorInfo.Key, operatorInfo.Value);
-                }
-            }
-
-            var operands = expressionInfo.GetOperands();
-            if (!operands.Any())
-                Console.WriteLine("There is no operands");
-            else
-            {
-                Console.WriteLine("Operands:");
-                foreach (var operandInfo in operands)
-                {
-                    PrintOperand(operandInfo.Key, operandInfo.Value);
-                }
-            }
-        }
-
+        
         private static void PrintOperand(IOperandInfo operandInfo, int count)
         {
             Console.WriteLine("{0} - {1} - {2}", operandInfo.GetType().Name, operandInfo.Name, count);

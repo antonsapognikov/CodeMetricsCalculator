@@ -110,7 +110,6 @@
   <ItemGroup>
     <Compile Include="CodeInfo\JavaClass.cs" />
     <Compile Include="CodeInfo\JavaCode.cs" />
-    <Compile Include="CodeInfo\JavaExpression.cs" />
     <Compile Include="CodeInfo\JavaField.cs" />
     <Compile Include="CodeInfo\JavaInputVariable.cs" />
     <Compile Include="CodeInfo\JavaMethod.cs" />
@@ -139,7 +138,6 @@
     <Compile Include="Operators\PrimaryOperator.cs" />
     <Compile Include="Operators\RelationalOperator.cs" />
     <Compile Include="Operators\UnaryOperator.cs" />
-    <Compile Include="PatternToRegexExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
