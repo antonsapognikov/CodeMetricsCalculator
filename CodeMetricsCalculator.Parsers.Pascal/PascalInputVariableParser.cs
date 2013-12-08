@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Parsers.CodeInfo;
@@ -9,181 +8,110 @@ namespace CodeMetricsCalculator.Parsers.Pascal
 {
     class PascalInputVariableParser : PascalCodeParser<PascalMethod, IReadOnlyCollection<PascalInputVariable>>
     {
-        private const string ScannerType = "Scanner";
-        private const string ReaderType = "Reader";
-        private const string BufferedReaderType = "BufferedReader";
-        private const string EmptyOrWhiteSpacePattern = @"[ \t]*";
-        private const string VariableIdentifierPattern = @"[a-zA-Z_][a-zA-Z0-9_]*";
-        private const string VariableValuePattern = @"[^;]+";
-        private const string MethodArgumentPattern = @"[^;]*";
-        private const string PascalIdentifierPattern = "[^a-zA-Z0-9_]*" + "{0}" + "[^a-zA-Z0-9_]*";
+        private const string EmptyOrWhiteSpacePattern = @" *";
+        private const string PascalArgumentIdentifierPattern = "[^a-zA-Z0-9_]*" + "{0}" + "[^a-zA-Z0-9_]*";
+        private const string PascalIdentifierPattern = "[^a-zA-Z0-9_]+" + "{0}" + "[^a-zA-Z0-9_]+";
 
-        private static readonly string MethodResultVariableNamePattern = string.Format(@"^{0}", VariableIdentifierPattern);
-
-        private static readonly List<string> ScannerInputMethods =
-            new List<string>
+        private static readonly List<Regex> ControlConstructions =
+            new List<Regex>
             {
-                "next",
-                "nextBigDecimal",
-                "nextBigInteger",
-                "nextBoolean",
-                "nextByte",
-                "nextDouble",
-                "nextFloat",
-                "nextInt",
-                "nextLine",
-                "nextLong",
-                "nextShort"
+                new Regex(@"if[^;]+then", RegexOptions.IgnoreCase | RegexOptions.Compiled),
+                new Regex(@"case[^;]+of", RegexOptions.IgnoreCase | RegexOptions.Compiled),
+                new Regex(@"until[^;]+;", RegexOptions.IgnoreCase | RegexOptions.Compiled),
+                new Regex(@"while[^;]+do", RegexOptions.IgnoreCase | RegexOptions.Compiled),
+                new Regex(@"for[^;]+do", RegexOptions.IgnoreCase | RegexOptions.Compiled)
             };
 
-        private static readonly List<string> ReaderMethods =
-            new List<string>
+        private static readonly List<string> InputMethods =
+           new List<string>
             {
                 "read",
-                "readLine"
-            };
-
-        private static readonly List<string> ControlConstructions =
-            new List<string>
-            {
-                "if",
-                "switch",
-                "for",
-                "while"
+                "readln"
             };
 
         private static readonly List<string> OutputMethods =
             new List<string>
             {
-                "println"
+                "write",
+                "writeln"
             };
 
         public override IReadOnlyCollection<PascalInputVariable> Parse(PascalMethod code)
         {
             string source = code.NormalizedSource;
             IReadOnlyDictionary<IVariableInfo, int> variables = code.GetVariables();
-            IEnumerable<PascalVariable> scannerResult = ParseMethodResultInputVariables(source, variables, ScannerType, ScannerInputMethods);
-            IEnumerable<PascalVariable> readerResult = ParseMethodResultInputVariables(source, variables, ReaderType, ReaderMethods);
-            IEnumerable<PascalVariable> bufferedReaderResult = ParseMethodResultInputVariables(source, variables, BufferedReaderType, ReaderMethods);
-            List<PascalInputVariable> result = scannerResult
-                .Concat(readerResult)
-                .Concat(bufferedReaderResult)
+            List<PascalVariable> inputVariables = ParseInputVariables(source, variables.Keys.Cast<PascalVariable>()).ToList();
+            List<PascalVariable> outputVariables = ParseOuputVariables(source, inputVariables).ToList();
+
+            List<PascalInputVariable> result = inputVariables
                 .Select(variable => new PascalInputVariable(variable.Name, variable.OriginalSource))
                 .ToList();
 
-            List<string> outputArguments = OutputMethods
-                .Select(CreateMethodCallPattern)
-                .Select(pattern => Regex.Matches(source, pattern))
-                .SelectMany(mathes => mathes.Cast<Match>())
-                .Select(match => match.Index + match.Value.Length)
-                .Select(index => source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index + 1))
-                .ToList();
-
             List<string> controlArguments = ControlConstructions
-                .Select(CreateControlConstructionPattern)
-                .Select(pattern => Regex.Matches(source, pattern))
+                .Select(pattern => pattern.Matches(source))
                 .SelectMany(mathes => mathes.Cast<Match>())
-                .Select(match => match.Index + match.Value.Length)
-                .Select(index => source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index + 1))
+                .Select(match => match.Value)
                 .ToList();
 
             foreach (var variable in result)
             {
                 int modifiedCount = Regex.Matches(source, CreateModifiedPattern(variable.Name)).Count;
-                int outputCount = outputArguments.Sum(args => Regex.Matches(args, CreatePascalIdentifierPattern(variable.Name)).Count);
                 int contolCount = controlArguments.Sum(args => Regex.Matches(args, CreatePascalIdentifierPattern(variable.Name)).Count);
                 int allUsedCount = variables.First(pair => pair.Key.Name == variable.Name).Value;
-                int declarationCount = IsAssignedInDeclaration(variable) ? 1 : 2;
                 variable.IsControl = contolCount > 0;
-                variable.IsModified = modifiedCount > 1;
-                variable.IsCalculationOrOutput = allUsedCount - contolCount - modifiedCount - declarationCount + 1 > 0;
-                variable.IsUsed = allUsedCount != modifiedCount + declarationCount - 1;
+                variable.IsModified = modifiedCount > 0;
+                variable.IsCalculationOrOutput = allUsedCount - contolCount - modifiedCount - 2 > 0;
+                variable.IsUsed = allUsedCount != modifiedCount + 2;
             }
             return result;
         }
 
-        private bool IsAssignedInDeclaration(PascalInputVariable variable)
+        private IEnumerable<PascalVariable> ParseInputVariables(string source, IEnumerable<PascalVariable> variables)
         {
-            if (variable == null)
-                throw new ArgumentNullException("variable");
-            return Regex.IsMatch(variable.OriginalSource, CreateModifiedPattern(variable.Name));
+            List<string> inputMethods = InputMethods
+                .Select(CreateMethodCallPattern)
+                .Select(method => Regex.Matches(source, method, RegexOptions.IgnoreCase))
+                .SelectMany(matches => matches.Cast<Match>())
+                .Select(match => match.Index + match.Length)
+                .Select(index => source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index))
+                .ToList();
+            return variables
+                .Where(variable => inputMethods.Any(method => Regex.Matches(method, CreatePascalArgumentIdentifierPattern(variable.Name), RegexOptions.IgnoreCase).Count != 0))
+                .ToList();
         }
 
-        private IEnumerable<PascalVariable> ParseMethodResultInputVariables(string source, IReadOnlyDictionary<IVariableInfo, int> variables, string readerType, List<string> methods)
+        private IEnumerable<PascalVariable> ParseOuputVariables(string source, IEnumerable<PascalVariable> variables)
         {
-            if (source == null)
-                throw new ArgumentNullException("source");
-            if (variables == null)
-                throw new ArgumentNullException("variables");
-            if (readerType == null)
-                throw new ArgumentNullException("readerType");
-            if (methods == null)
-                throw new ArgumentNullException("methods");
+            List<string> outputMethods = OutputMethods
+                .Select(CreateMethodCallPattern)
+                .Select(method => Regex.Matches(source, method, RegexOptions.IgnoreCase))
+                .SelectMany(matches => matches.Cast<Match>())
+                .Select(match => match.Index + match.Length)
+                .Select(index => source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index))
+                .ToList();
+            return variables
+                .Where(variable => outputMethods.Any(method => Regex.Matches(method, CreatePascalArgumentIdentifierPattern(variable.Name), RegexOptions.IgnoreCase).Count != 0))
+                .ToList();
+        }
 
-            if (variables.All(pair => pair.Key.Type.Name != readerType))
-                return Enumerable.Empty<PascalVariable>();
-            var reader = (PascalVariable) variables.First(pair => pair.Key.Type.Name == readerType).Key;
-            List<string> multilineResults = methods
-                .Select(methodName => CreateMultilineInputPattern(reader.Name, methodName))
-                .Select(pattern => Regex.Matches(source, pattern))
-                .SelectMany(matches => matches.Cast<Match>())
-                .Select(match => match.Value)
-                .ToList();
-            List<string> inlineResults = methods
-                .Select(CreateInlineInputPattern)
-                .Select(pattern => Regex.Matches(source, pattern))
-                .SelectMany(matches => matches.Cast<Match>())
-                .Select(match => match.Value)
-                .ToList();
-            return multilineResults
-                .Concat(inlineResults)
-                .Select(value => Regex.Match(value, MethodResultVariableNamePattern).Value)
-                .Select(name => (PascalVariable) variables.First(pair => pair.Key.Name == name).Key)
-                .ToList();
+        private static string CreatePascalArgumentIdentifierPattern(string identifier)
+        {
+            return string.Format(PascalArgumentIdentifierPattern, identifier);
         }
 
         private static string CreatePascalIdentifierPattern(string identifier)
         {
-            if (identifier == null)
-                throw new ArgumentNullException("identifier");
             return string.Format(PascalIdentifierPattern, identifier);
         }
 
         private static string CreateModifiedPattern(string variableName)
         {
-            if (variableName == null)
-                throw new ArgumentNullException("variableName");
-            return string.Format(@"{1}{0}=[^=]", EmptyOrWhiteSpacePattern, variableName);
+            return string.Format(@"{1}{0}:=", EmptyOrWhiteSpacePattern, variableName);
         } 
 
         private static string CreateMethodCallPattern(string methodName)
         {
-            if (methodName == null)
-                throw new ArgumentNullException("methodName");
             return string.Format(@"{0}\(", methodName);
-        }
-
-        private static string CreateControlConstructionPattern(string controlConstruction)
-        {
-            if (controlConstruction == null)
-                throw new ArgumentNullException("controlConstruction");
-            return string.Format(@"{1}{0}\(", EmptyOrWhiteSpacePattern, controlConstruction);
-        }
-
-        private static string CreateMultilineInputPattern(string readerName, string methodName)
-        {
-            if (readerName == null)
-                throw new ArgumentNullException("readerName");
-            if (methodName == null)
-                throw new ArgumentNullException("methodName");
-            return string.Format(@"{1}{0}={0}{2}\.{3}\(", EmptyOrWhiteSpacePattern, VariableIdentifierPattern, readerName, methodName);
-        }
-
-        private static string CreateInlineInputPattern(string methodName)
-        {
-            if (methodName == null)
-                throw new ArgumentNullException("methodName");
-            return string.Format(@"{1}{0}={0}{2}\)\.{4}\({3}\);", EmptyOrWhiteSpacePattern, VariableIdentifierPattern, VariableValuePattern, MethodArgumentPattern, methodName);
         }
     }
 }
