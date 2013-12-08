@@ -9,18 +9,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
     {
         private static readonly List<AssignmentOperator> AllOperators = new List<AssignmentOperator>
         {
-            new AssignmentOperator("="),
-            new AssignmentOperator("+="),
-            new AssignmentOperator("-="),
-            new AssignmentOperator("*="),
-            new AssignmentOperator("/="),
-            new AssignmentOperator("%="),
-            new AssignmentOperator("&="),
-            new AssignmentOperator("^="),
-            new AssignmentOperator("|="),
-            new AssignmentOperator("<<="),
-            new AssignmentOperator(">>="),
-            new AssignmentOperator(">>>=")
+            new AssignmentOperator(":=")
         };
 
         public AssignmentOperator(string operatorString)

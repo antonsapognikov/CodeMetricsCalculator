@@ -7,40 +7,36 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
 {
     internal class BlockOperator : PascalOperator
     {
-        public const string OpeningBlockBracket = "{";
-        public const string ClosingBlockBracket = "}";
+        public const string OpeningBlockBracket = "begin";
+        public const string ClosingBlockBracket = "end;";
         
         private static readonly List<BlockOperator> AllOperators = new List<BlockOperator>
         {
-            new BlockOperator("while (...) {...}", false, "while"),
-            new BlockOperator("do {...} while (...)", false, "do"),
-            new BlockOperator("for (...) {...}", false, "for"),
-            new BlockOperator("if (...) {...}", false, "if"),
-            new BlockOperator("else {...}", false, "else"),
-            new BlockOperator("switch (...) {...}", true, "switch"),
-            new BlockOperator("case " + Pattern.Identifier + " : {...}", false, "case"),
-            new BlockOperator("default: {...}", false, "default"),
-            new BlockOperator("try {...}", true, "try"),
+            new BlockOperator("repeat"),
+            new BlockOperator("until"),
+            new BlockOperator("while"),
+            new BlockOperator("do"),
+            new BlockOperator("for"),
+            new BlockOperator("to"),
+            new BlockOperator("downto"),
+            new BlockOperator("if"),
+            new BlockOperator("then"),
+            new BlockOperator("else"),
+            new BlockOperator("case"),
+            new BlockOperator("of"),
             new BlockOperator("catch (" + Pattern.Identifier + " " + Pattern.Identifier + ") {...}", true, "catch"),
             new BlockOperator("finally {...}", true, "finally")
         };
 
-        private readonly bool _bracketsRequired;
 
-        public BlockOperator(string pattern, bool bracketsRequired, string keyword)
-            : base(new Pattern(pattern, bracketsRequired), keyword)
+        public BlockOperator(string keyword)
+            : base(new Pattern(keyword), keyword)
         {
-            _bracketsRequired = bracketsRequired;
         }
 
         public static IReadOnlyCollection<BlockOperator> All
         {
             get { return AllOperators.AsReadOnly(); }
-        }
-
-        public bool BracketsRequired
-        {
-            get { return _bracketsRequired; }
         }
     }
 }

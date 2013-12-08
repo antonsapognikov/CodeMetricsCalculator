@@ -20,13 +20,13 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
             new PrimaryOperator(string.Format("{0} [{1}]", Pattern.Operand, Pattern.Args), null);
 
         public static readonly PrimaryOperator VariableDeclaring =
-            new PrimaryOperator(string.Format("{0} {1};", Pattern.Identifier, Pattern.Operand), null);
+            new PrimaryOperator(string.Format("{0}: {1};", Pattern.Operand, Pattern.Identifier), null);
 
         public static readonly PrimaryOperator VariableDeclaringWithAssignment =
-            new PrimaryOperator(string.Format("{0} {1} = {1};", Pattern.Identifier, Pattern.Operand), null);
+            new PrimaryOperator(string.Format("{0}: {1} = {0};", Pattern.Operand, Pattern.Identifier), null);
 
         public static readonly PrimaryOperator MaltyVariableDeclaring =
-            new PrimaryOperator(string.Format("{0} {1}, {1};", Pattern.Identifier, Pattern.Operand), null);
+            new PrimaryOperator(string.Format("{0}, {0}: {1};", Pattern.Operand, Pattern.Identifier), null);
 
 
 
@@ -39,11 +39,14 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
                 VariableDeclaring,
                 VariableDeclaringWithAssignment,
                 MaltyVariableDeclaring,
-                new PrimaryOperator(string.Format("new {0} ({1})", Pattern.Identifier, Pattern.Args), "new"),
-                new PrimaryOperator(string.Format("instanceof ({0})", Pattern.Operand), "instanceof"),
-                new PrimaryOperator("return","return"),
-                new PrimaryOperator("continue","continue"),
+                new PrimaryOperator("Result","Result"),
+                new PrimaryOperator("raise","raise"),
+                new PrimaryOperator("inc","inc"),
+                new PrimaryOperator("dec","dec"),
+                new PrimaryOperator("as","as"),
                 new PrimaryOperator("break","break"),
+                new PrimaryOperator("continue","continue"),
+                new PrimaryOperator("exit","exit"),
                 new PrimaryOperator(string.Format("goto {0}", Pattern.Identifier), "goto")
             };
 

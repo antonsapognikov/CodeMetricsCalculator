@@ -12,12 +12,18 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
     {
         private static readonly List<BitwiseOperator> AllOperators = new List<BitwiseOperator>
         {
-            new BitwiseOperator("<<"),
-            new BitwiseOperator(">>"),
-            new BitwiseOperator(">>>"),
             new BitwiseOperator("&"),
             new BitwiseOperator("|"),
-            new BitwiseOperator("^")
+            new BitwiseOperator("~"),
+            new BitwiseOperator("<<"),
+            new BitwiseOperator(">>"),
+            new BitwiseOperator("^"),
+            new BitwiseOperator("not"),
+            new BitwiseOperator("and"),
+            new BitwiseOperator("or"),
+            new BitwiseOperator("xor"),
+            new BitwiseOperator("shl"),
+            new BitwiseOperator("shr")
         };
 
         public BitwiseOperator(string operatorString)

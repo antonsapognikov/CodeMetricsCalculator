@@ -16,23 +16,12 @@ namespace CodeMetricsCalculator.Parsers
         public static readonly string Operand = "{operand}";
 
         private readonly string _pattern;
-        private readonly bool _bracesRequires;
 
-        public Pattern(string pattern) : this (pattern, false)
-        {
-        }
-
-        public Pattern(string pattern, bool bracesRequires)
+        public Pattern(string pattern)
         {
             Contract.Requires(pattern != null, "pattern");
 
             _pattern = pattern;
-            _bracesRequires = bracesRequires;
-        }
-
-        public bool BracesRequires
-        {
-            get { return _bracesRequires; }
         }
 
         /// <summary>

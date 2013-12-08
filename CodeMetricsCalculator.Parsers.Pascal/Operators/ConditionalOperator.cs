@@ -11,9 +11,11 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
     {
         private static readonly List<ConditionalOperator> AllOperators = new List<ConditionalOperator>
         {
-            new ConditionalOperator("&&", "&&", OperationType.Binary),
-            new ConditionalOperator("||", "||", OperationType.Binary),
-            new ConditionalOperator("?:", null, OperationType.Ternary)
+            new ConditionalOperator("and", "and", OperationType.Binary),
+            new ConditionalOperator("and then", "and then", OperationType.Binary),
+            new ConditionalOperator("or", "or", OperationType.Binary),
+            new ConditionalOperator("or else", "or else", OperationType.Binary),
+            new ConditionalOperator("not", "not", OperationType.Binary),
         };
         
         public ConditionalOperator(string operatorString, string keyword, OperationType operationType)

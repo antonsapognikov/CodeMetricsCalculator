@@ -16,7 +16,8 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
             new ArithmeticOperator("-"),
             new ArithmeticOperator("*"),
             new ArithmeticOperator("/"),
-            new ArithmeticOperator("%")
+            new ArithmeticOperator("div"),
+            new ArithmeticOperator("mod")
         };
 
         public ArithmeticOperator(string operatorString)

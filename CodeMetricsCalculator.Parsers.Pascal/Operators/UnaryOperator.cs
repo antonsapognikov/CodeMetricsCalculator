@@ -14,12 +14,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
         {
             new UnaryOperator("+", OperatorSyntax.Prefix),
             new UnaryOperator("-", OperatorSyntax.Prefix),
-            new UnaryOperator("++", OperatorSyntax.Prefix),
-            new UnaryOperator("--", OperatorSyntax.Prefix),
-            new UnaryOperator("++", OperatorSyntax.Postfix),
-            new UnaryOperator("--", OperatorSyntax.Postfix),
-            new UnaryOperator("!", OperatorSyntax.Prefix),
-            new UnaryOperator("~", OperatorSyntax.Prefix)
+            new UnaryOperator("!", OperatorSyntax.Prefix)
         };
 
         public UnaryOperator(string operatorString, OperatorSyntax syntax)

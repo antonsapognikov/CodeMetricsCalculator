@@ -14,12 +14,12 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
     {
         private static readonly List<RelationalOperator> AllOperators = new List<RelationalOperator>
         {
-            new RelationalOperator("=="),
-            new RelationalOperator("!="),
-            new RelationalOperator(">"),
+            new RelationalOperator("="),
+            new RelationalOperator("<>"),
             new RelationalOperator(">="),
+            new RelationalOperator("<="),
+            new RelationalOperator(">"),
             new RelationalOperator("<"),
-            new RelationalOperator("<=")
         };
         
         public RelationalOperator(string operatorString)

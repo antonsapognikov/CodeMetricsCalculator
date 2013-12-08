@@ -98,10 +98,8 @@ namespace CodeMetricsCalculator.Parsers.Pascal
 
             var parsedOperators = new List<string>();
             parsedOperators.AddRange(ParseMethodInvocationOperator(javaMethodSource, out javaMethodSource));
-            parsedOperators.AddRange(ParseTernaryOperator(javaMethodSource, out javaMethodSource));
             parsedOperators.AddRange(ParseMemberAccessOperator(javaMethodSource, out javaMethodSource));
             parsedOperators.AddRange(ParseIndexerOperator(javaMethodSource, out javaMethodSource));
-            //Не знаю надо ли их приводить к форме (), так как сейчас сюда идет вся скобка
             parsedOperators.AddRange(ParseBracketOperator(javaMethodSource, out javaMethodSource));
             var variables = javaMethod.GetVariables();
             parsedOperators.AddRange(variables.Select(pair => pair.Key.NormalizedSource));
@@ -170,16 +168,6 @@ namespace CodeMetricsCalculator.Parsers.Pascal
             return Enumerable.Empty<string>();
         }
 
-        private IEnumerable<string> ParseTernaryOperator(string source, out string modifiedSource)
-        {
-            modifiedSource = source;
-            var pattern = @"\?";
-            var matches = Regex.Matches(source, pattern).Cast<Match>().ToList();
-            return matches
-                .Select(match => match.Index)
-                .Select(index => "...?...:..."/*source.Substring(index, FindClosingBracketIndex(source, "?", ":", index) - index + 1)*/)
-                .ToList();
-        }
 
         private IEnumerable<string> ParseBracketOperator(string source, out string modifiedSource)
         {
