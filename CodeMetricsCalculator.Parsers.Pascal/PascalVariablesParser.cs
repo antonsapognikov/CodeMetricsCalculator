@@ -13,7 +13,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
         private const string TypePattern = @"type";
         private const string ConstantPattern = @"const";
         private const string BeginPattern = @"begin";
-        private const string PascalIdentifierPattern = "[^a-zA-Z0-9_]" + "{0}" + "[^a-zA-Z0-9_]";
+        private const string PascalIdentifierPattern = "[^a-zA-Z0-9_]*" + "{0}" + "[^a-zA-Z0-9_]*";
 
         public override IReadOnlyDictionary<PascalVariable, int> Parse(PascalMethod code)
         {
@@ -85,7 +85,8 @@ namespace CodeMetricsCalculator.Parsers.Pascal
                 }
                 if (values.Length == 2)
                 {
-                    result.Add(values[0], values[1]);
+                    List<string> names = values[0].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    names.ForEach(name => result.Add(name, values[1]));
                 }
             }
             return result.Select(pair => new PascalVariable(new PascalType(pair.Value), pair.Key, allVariables));
