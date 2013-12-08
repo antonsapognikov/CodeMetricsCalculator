@@ -11,8 +11,8 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
         static PascalOperator()
         {
             AllOperators = new List<PascalOperator>();
-            AllOperators.AddRange(RelationalOperator.All);
             AllOperators.AddRange(AssignmentOperator.All);
+            AllOperators.AddRange(RelationalOperator.All);
             AllOperators.AddRange(ArithmeticOperator.All);
             AllOperators.AddRange(UnaryOperator.All);
             AllOperators.AddRange(BitwiseOperator.All);

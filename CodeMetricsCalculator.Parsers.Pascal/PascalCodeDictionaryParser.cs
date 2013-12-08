@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,20 +9,20 @@ namespace CodeMetricsCalculator.Parsers.Pascal
 {
     internal class PascalCodeDictionaryParser : PascalCodeParser<PascalMethod, CodeDictionary>, ICodeDictionaryParser<PascalMethod>
     {
-        private const string IdentifierRegex = @"[a-zA-Z_][a-zA-Z0-9_]*";
-        private const string StringLiteralPattern = "\"[^\"]*\"";
+        private const string IdentifierRegex = @"[a-z_][a-z0-9_]*";
+        private static readonly string StringLiteralPattern = string.Format(@"'[^'{0}]*'", Environment.NewLine);
         private const string NumberPatter = @"[-+]?([0-9]+(x|\.)?[0-9]*)";
-        private const string PascalIdentifierPattern = "[^a-zA-Z0-9_]" + "({0})" + "[^a-zA-Z0-9_]";
+        private const string PascalIdentifierPattern = "[^a-z0-9_]" + "({0})" + "[^a-z0-9_]";
         private const string PascalOperatorPattern = "[^!+-=/&|%]*" + "({0})" + "[^!+-=/&|%]*"; 
         private static readonly string MethodCallStartRegex = string.Format(@"{0}\(", IdentifierRegex);
 
         private static readonly List<string> ReservedOperands =
             new List<string>
             {
-                "null",
+                "nil",
                 "true",
                 "false",
-                "this"
+                "self"
             };
 
         public override CodeDictionary Parse(PascalMethod javaMethod)
@@ -48,13 +49,13 @@ namespace CodeMetricsCalculator.Parsers.Pascal
             var fields = javaMethod.Class.GetFields();
             foreach (var fieldInfo in fields)
             {
-                var fieldAsVariableRegex = new Regex(string.Format(PascalIdentifierPattern, fieldInfo.Name));
+                var fieldAsVariableRegex = new Regex(string.Format(PascalIdentifierPattern, fieldInfo.Name), RegexOptions.Compiled | RegexOptions.IgnoreCase);
                 var count = fieldAsVariableRegex.Matches(source).Count;
                 if (count > 0 && !operands.ContainsKey(fieldInfo.Name))
                     operands.Add(fieldInfo.Name, count);
             }
 
-            var literalRegex = new Regex(StringLiteralPattern);
+            var literalRegex = new Regex(StringLiteralPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var literals = literalRegex.Matches(source).Cast<Match>().Select(match => match.Value);
             foreach (var literal in literals)
             {
@@ -65,7 +66,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
                     operands[literal] += 1;
             }
 
-            var numberRegex = new Regex("[+-=/&|% ](" + NumberPatter + ")[+-=/&|%; ]");
+            var numberRegex = new Regex("[+-=/&|% ](" + NumberPatter + ")[+-=/&|%; ]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var numbers = numberRegex.Matches(source).Cast<Match>().Select(match => match.Groups[1].Value);
             foreach (var number in numbers)
             {
@@ -77,7 +78,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
             foreach (var operand in ReservedOperands)
             {
                 var pattern = string.Format(PascalIdentifierPattern, operand);
-                var count = Regex.Matches(source, pattern).Count;
+                var count = Regex.Matches(source, pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase).Count;
                 if (count == 0)
                     continue;
                 if (!operands.ContainsKey(operand))
@@ -141,7 +142,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
 
         private IEnumerable<string> ParseMethodInvocationOperator(string source, out string modifiedSource)
         {
-            var matches = Regex.Matches(source, MethodCallStartRegex).Cast<Match>().ToList();
+            var matches = Regex.Matches(source, MethodCallStartRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase).Cast<Match>().ToList();
             var startIndexes = matches
                 .Select(match => new { CallIndex = match.Index, BrackerIndex = match.Index + match.Value.Length - 1 })
                 .ToList();
@@ -155,7 +156,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
         {
             modifiedSource = source;
             var pattern = @"\[[^\]]";
-            var matches = Regex.Matches(source, pattern).Cast<Match>().ToList();
+            var matches = Regex.Matches(source, pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase).Cast<Match>().ToList();
             return matches
                 .Select(match => match.Index)
                 .Select(index => source.Substring(index, FindClosingBracketIndex(source, "[", "]", index) - index + 1))
@@ -172,12 +173,9 @@ namespace CodeMetricsCalculator.Parsers.Pascal
         private IEnumerable<string> ParseBracketOperator(string source, out string modifiedSource)
         {
             modifiedSource = source;
-            var pattern = @"\(|{";
-            var matches = Regex.Matches(source, pattern).Cast<Match>().ToList();
-            return matches
-                .Select(match => match.Value == "(" ? "(...)" : "{...}")
-                //.Select(index => "(...)"/*source.Substring(index, FindClosingBracketIndex(source, "(", ")", index) - index + 1)*/)
-                .ToList();
+            var pattern = @"begin";
+            var matches = Regex.Matches(source, pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase).Cast<Match>().ToList();
+            return matches.Select(match => "begin...end;").ToList();
         }
 
         private static void AddToDictionary(string operatorName, int count, IDictionary<string, int> operators)

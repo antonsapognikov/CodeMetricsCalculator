@@ -31,8 +31,11 @@ namespace CodeMetricsCalculator.Parsers.Pascal
             if (methodBodyClosingBracketIndex == -1)
                 throw new ParsingException("No closing bracket for method.");
             var varIndex = sources.IndexOf("var", StringComparison.OrdinalIgnoreCase);
+            var constIndex = sources.IndexOf("const", StringComparison.OrdinalIgnoreCase);
             if (varIndex != -1 && varIndex < methodBodyBeginIndex)
                 methodBodyBeginIndex = varIndex;
+            if (constIndex != -1 && constIndex < methodBodyBeginIndex)
+                methodBodyBeginIndex = constIndex;
             var methodBodySource = sources.Substring(methodBodyBeginIndex,
                 methodBodyClosingBracketIndex - methodBodyBeginIndex - 4);
             return methodBodySource;

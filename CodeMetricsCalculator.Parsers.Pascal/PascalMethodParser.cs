@@ -17,7 +17,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
     {
 
         private const string MethodRegexString =
-            @"function +([a-z_][a-z0-9_]*)\.([a-z_][a-z0-9_]*) *\(([a-z_][a-z0-9<>,:;\.>_ ]*)\): *([a-z_][a-z0-9<>,\.>_]*) *;";
+            @"(function|procedure) +([a-z_][a-z0-9_]*)\.([a-z_][a-z0-9_]*) *\(([a-z_][a-z0-9<>,:;\.>_ ]*)?\):? *([a-z_][a-z0-9<>,\.>_]*)? *;";
 
         static PascalMethodParser()
         {
@@ -42,13 +42,15 @@ namespace CodeMetricsCalculator.Parsers.Pascal
 
         private static ITypeInfo ParseReturnType(string methodSource)
         {
-            var typeName = MethodRegex.Matches(methodSource)[0].Groups[4].Value;
+            var typeName = MethodRegex.Matches(methodSource)[0].Groups[5].Value;
+            if (string.IsNullOrWhiteSpace(typeName))
+                typeName = "void";
             return new PascalType(typeName);
         }
 
         private static IEnumerable<IMethodParameterInfo> ParseParameters(string methodSource)
         {
-            var parametersString = MethodRegex.Matches(methodSource)[0].Groups[3].Value;
+            var parametersString = MethodRegex.Matches(methodSource)[0].Groups[4].Value;
             if (string.IsNullOrWhiteSpace(parametersString))
                 return Enumerable.Empty<IMethodParameterInfo>();
             var parameterSources = parametersString.Split(';').Select(s => s.Trim(' '));
@@ -87,13 +89,13 @@ namespace CodeMetricsCalculator.Parsers.Pascal
 
         private static bool IsMethodBelongToClass(string methodSource, string className)
         {
-            var classFromMethod = MethodRegex.Matches(methodSource)[0].Groups[1].Value;
+            var classFromMethod = MethodRegex.Matches(methodSource)[0].Groups[2].Value;
             return classFromMethod.Equals(className, StringComparison.OrdinalIgnoreCase);
         }
 
         private static string ParseMethodName(string methodSource)
         {
-            return MethodRegex.Matches(methodSource)[0].Groups[2].Value;
+            return MethodRegex.Matches(methodSource)[0].Groups[3].Value;
         }
     }
 }
