@@ -28,7 +28,7 @@ namespace CodeMetricsCalculator.Parsers.Java.Operators
         private readonly bool _bracketsRequired;
 
         public BlockOperator(string pattern, bool bracketsRequired, string keyword)
-            : base(new Pattern(pattern, bracketsRequired), keyword)
+            : base(new Pattern(pattern), keyword)
         {
             _bracketsRequired = bracketsRequired;
         }

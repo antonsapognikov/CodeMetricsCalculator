@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using CodeMetricsCalculator.Parsers.Pascal;
+using CodeMetricsCalculator.Parsers.Pascal.CodeInfo;
 
 namespace CodeMetricsCalculator
 {
@@ -16,6 +19,13 @@ namespace CodeMetricsCalculator
         private static void Main(string[] args)
         {
             var classesSource = Resource.TestPascalCode;
+            var pascalCode = new PascalCode(classesSource);
+            var classes = new PascalClassParser().Parse(pascalCode);
+            foreach (var pascalClass in classes)
+            {
+                GC.KeepAlive(pascalClass);
+                Debugger.Break();
+            }
          /*   var classesCode = new JavaCode(classesSource);
             var normalized = classesCode.NormalizedSource;
             var classes = new JavaClassParser().Parse(classesCode);

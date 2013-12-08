@@ -24,8 +24,10 @@ namespace CodeMetricsCalculator.Parsers.Pascal.Operators
             new BlockOperator("else"),
             new BlockOperator("case"),
             new BlockOperator("of"),
-            new BlockOperator("catch (" + Pattern.Identifier + " " + Pattern.Identifier + ") {...}", true, "catch"),
-            new BlockOperator("finally {...}", true, "finally")
+            new BlockOperator("on"),
+            new BlockOperator("catch"),
+            new BlockOperator("finally"),
+            new BlockOperator("with")
         };
 
 

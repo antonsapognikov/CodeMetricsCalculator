@@ -15,8 +15,8 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
         
         private static readonly string StringLiteralPattern = string.Format(@"'[^'{0}]*'", Environment.NewLine);
         private static readonly string InlineCommentPattern = string.Format(@"//[^{0}]*{0}", Environment.NewLine);
-        
-        private readonly Dictionary<Guid, string> _stringLiterals = new Dictionary<Guid, string>(); 
+
+        private readonly Dictionary<string, string> _stringLiterals = new Dictionary<string, string>(); 
 
         public PascalCode(string originalSource)
             : base(originalSource)
@@ -43,7 +43,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
                 {
                     return _stringLiterals.GetKey(match.Value).ToString().Quotes();
                 }
-                var guid = new Guid(GuidEncoder.Encode(Guid.NewGuid()));
+                var guid = GuidEncoder.Encode(Guid.NewGuid());
                 _stringLiterals.Add(guid, match.Value);
                 return guid.ToString().Quotes();
             });

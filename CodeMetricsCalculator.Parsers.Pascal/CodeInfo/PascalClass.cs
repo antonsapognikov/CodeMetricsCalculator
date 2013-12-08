@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
@@ -14,18 +15,32 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
     {
         private readonly string _name;
         private IReadOnlyCollection<IMethodInfo> _methods;
+        private readonly string _declaration;
+        private readonly string _implementation;
 
-        public PascalClass(string name, string originalSource) : base(originalSource)
+        public PascalClass(string name, string declaration, string implementation)
+            : base(declaration + Environment.NewLine + implementation)
         {
-            if (name == null)
-                throw new ArgumentNullException("name");
+            Contract.Requires(name != null);
+            Contract.Requires(declaration != null);
+            Contract.Requires(implementation != null);
 
             _name = name;
+            _declaration = declaration;
+            _implementation = implementation;
         }
 
         public string Name
         {
             get { return _name; }
+        }
+        
+        public string Declaration {
+            get { return _declaration; }
+        }
+
+        public string Implementation {
+            get { return _implementation; }
         }
 
         public IReadOnlyCollection<IFieldInfo> GetFields()

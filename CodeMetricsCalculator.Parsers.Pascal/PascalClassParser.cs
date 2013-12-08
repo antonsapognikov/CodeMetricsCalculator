@@ -15,48 +15,64 @@ namespace CodeMetricsCalculator.Parsers.Pascal
     {
         static PascalClassParser()
         {
-            ClassNameRegex = new Regex(@"class +([a-zA-Z_][a-zA-Z0-9<>_]*) *" +
-                                       @"(extends [a-zA-Z_][a-zA-Z0-9<,>_ ]*)? *" +
-                                       @"(implements [a-zA-Z_][a-zA-Z0-9<,>_ ]*)?[\r\n ]*{",
-                RegexOptions.Compiled);
+            ClassRegex = new Regex(@"([a-z_][a-z0-9_]*) *= *class *\(",
+                RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        private static readonly Regex ClassNameRegex;
+        private static readonly Regex ClassRegex;
 
         public override IReadOnlyCollection<PascalClass> Parse(PascalCode code)
         {
             if (code == null)
                 throw new ArgumentNullException("code");
 
-            var classSources = ParseClassSources(code.NormalizedSource);
-            var classes = classSources.Select(s => new PascalClass(ParseClassName(s), s)).ToList();
-            return classes.AsReadOnly();
+            var source = code.NormalizedSource;
+            var declarations = ParseClassDeclarations(source).ToArray();
+            var implementationSection = ParseImplementation(source);
+
+            return
+                declarations.Select(s => new PascalClass(ParseClassName(s), s, implementationSection))
+                    .ToList()
+                    .AsReadOnly();
         }
 
-        private IEnumerable<string> ParseClassSources(string sources)
+        private static IEnumerable<string> ParseClassDeclarations(string source)
         {
-            var classSources = new List<string>();
-
-            var startClassIndex = sources.IndexOf("class ", StringComparison.Ordinal);
-
-            while (startClassIndex != -1)
+            var typeDeclarationsSource = ParseTypeSection(source);
+            var classDeclarations = ClassRegex.Matches(typeDeclarationsSource);
+            foreach (var classDeclaration in classDeclarations.Cast<Match>())
             {
-                var classOpeningBracketIndex = sources.IndexOf('{', startClassIndex);
-                if (classOpeningBracketIndex == -1)
-                    throw new ParsingException("No opening bracket after keyword 'class'.");
-                var classClosingBracketIndex = FindClosingBracketIndex(sources, "{", "}", classOpeningBracketIndex);
-                if (classClosingBracketIndex == -1)
-                    throw new ParsingException("No closing bracket for class.");
-                var classSource = sources.Substring(startClassIndex, classClosingBracketIndex - startClassIndex + 1);
-                classSources.Add(classSource);
-                startClassIndex = sources.IndexOf("class ", classClosingBracketIndex, StringComparison.Ordinal);
+                var endIndex = typeDeclarationsSource.IndexOf("end;", classDeclaration.Index,
+                    StringComparison.Ordinal);
+                if (endIndex == -1)
+                    throw new ParsingException("There is no end key.");
+                yield return
+                    typeDeclarationsSource.Substring(classDeclaration.Index, endIndex + 3 - classDeclaration.Index);
             }
-            return classSources;
         }
 
-        private static string ParseClassName(string classSource)
+        private static string ParseTypeSection(string source)
         {
-            var match = ClassNameRegex.Matches(classSource)[0];
+            var typeKeywordIndex = source.IndexOf("type", StringComparison.OrdinalIgnoreCase);
+            var implementationKeywordIndex = source.IndexOf("implementation", StringComparison.OrdinalIgnoreCase);
+            if (typeKeywordIndex == -1 || implementationKeywordIndex == -1)
+                throw new ParsingException("There is no typeKeyword or implementationKeyword.");
+            var typeDeclarationsSource = source.Substring(typeKeywordIndex + 4,
+                implementationKeywordIndex - (typeKeywordIndex + 4));
+            return typeDeclarationsSource;
+        }
+
+        private static string ParseImplementation(string source)
+        {
+            var implementationKeywordIndex = source.IndexOf("implementation", StringComparison.OrdinalIgnoreCase);
+            if (implementationKeywordIndex == -1)
+                throw new ParsingException("There is no implementationKeyword.");
+            return source.Substring(implementationKeywordIndex + "implementation".Length);
+        }
+
+        private static string ParseClassName(string declarationSource)
+        {
+            var match = ClassRegex.Matches(declarationSource)[0];
             return match.Groups[1].Value;
         }
     }
