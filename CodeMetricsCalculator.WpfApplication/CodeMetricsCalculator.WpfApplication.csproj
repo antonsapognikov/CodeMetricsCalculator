@@ -115,6 +115,10 @@
       <Project>{B8E996A4-D603-4E25-B958-B72A4DD0A4AF}</Project>
       <Name>CodeMetricsCalculator.Parsers.Java</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CodeMetricsCalculator.Parsers.Pascal\CodeMetricsCalculator.Parsers.Pascal.csproj">
+      <Project>{6BBFAC2F-5C5E-4775-A637-018733DC6B1B}</Project>
+      <Name>CodeMetricsCalculator.Parsers.Pascal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeMetricsCalculator.Parsers\CodeMetricsCalculator.Parsers.csproj">
       <Project>{43EB3CC2-4A53-4D45-8BD0-59C88E64458D}</Project>
       <Name>CodeMetricsCalculator.Parsers</Name>

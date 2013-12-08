@@ -9,6 +9,8 @@ using CodeMetricsCalculator.Common.UI.ViewModel.Base;
 ﻿using CodeMetricsCalculator.Parsers.CodeInfo;
 using CodeMetricsCalculator.Parsers.Java;
 using CodeMetricsCalculator.Parsers.Java.CodeInfo;
+using CodeMetricsCalculator.Parsers.Pascal;
+using CodeMetricsCalculator.Parsers.Pascal.CodeInfo;
 using Microsoft.Win32;
 
 namespace CodeMetricsCalculator.WpfApplication.ViewModel
@@ -25,7 +27,7 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
         private ICommand _evaluateHolsteadCommand;
         private ICommand _evalueateSpenCommand;
 
-        private const string JavaSourceFilter = "Java source files (*.java)|*.java|All files (*.*)|*.*";
+        private const string JavaSourceFilter = "Pascal source files (*.pas)|*.pas|All files (*.*)|*.*";
 
         public MetricType CurrentMetricType
         {
@@ -143,9 +145,9 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 {
                     source =  sr.ReadToEnd();
                 }
-                var code = new JavaCode(source);
+                var code = new PascalCode(source);
                 AppendLineToLog("Parsing classes...");
-                _classes = new JavaClassParser().Parse(code);
+                _classes = new PascalClassParser().Parse(code);
                 AppendLineToLog(string.Format("Parsed {0} classes.", _classes.Count));
                 AppendLineToLog("Parsing...");
                 foreach (var classInfo in _classes)
