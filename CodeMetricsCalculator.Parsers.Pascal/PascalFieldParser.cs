@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Parsers.Pascal.CodeInfo;
@@ -35,6 +36,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
         {
             if (code == null)
                 throw new ArgumentNullException("code");
+            return new ReadOnlyCollection<PascalField>(new List<PascalField>());
 
             var source = code.GetMethods().Aggregate(code.NormalizedSource, (current, methodInfo) => current.Replace(methodInfo.OriginalSource, string.Empty));
             return FieldRegex.Matches(source).Cast<Match>()

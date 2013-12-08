@@ -43,7 +43,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
             foreach (var keyValuePair in variables)
             {
                 source = source.Replace(keyValuePair.Key.Type.Name, " ");
-                operands.Add(keyValuePair.Key.Name, keyValuePair.Value);
+                operands.Add(javaMethod.Name + "_" + keyValuePair.Key.Name, keyValuePair.Value);
             }
 
             var fields = javaMethod.Class.GetFields();

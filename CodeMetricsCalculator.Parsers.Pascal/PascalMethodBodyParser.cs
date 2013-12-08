@@ -26,7 +26,7 @@ namespace CodeMetricsCalculator.Parsers.Pascal
             var methodBodyBeginIndex = sources.IndexOf("begin", StringComparison.OrdinalIgnoreCase);
             if (methodBodyBeginIndex == -1)
                 throw new ParsingException("No opening bracket after method declaration.");
-            var methodBodyClosingBracketIndex = FindClosingBracketIndex(sources, "begin", "end;",
+            var methodBodyClosingBracketIndex = FindClosingBracketIndex(sources, "begin", "end",
                 methodBodyBeginIndex);
             if (methodBodyClosingBracketIndex == -1)
                 throw new ParsingException("No closing bracket for method.");
