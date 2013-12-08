@@ -61,34 +61,56 @@ namespace CodeMetricsCalculator {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to package org.scribe.builder;
-        ///
-        ///import java.io.*;
-        ///import org.scribe.builder.api.*;
-        ///import org.scribe.exceptions.*;
-        ///import org.scribe.model.*;
-        ///import org.scribe.oauth.*;
-        ///import org.scribe.utils.*;
-        ///
-        ////**
-        ///* Implementation of the Builder pattern, with a fluent interface that creates a
-        ///* {@link OAuthService}
-        ///*
-        ///* @author Pablo Fernandez
-        ///*
-        ///*/
-        ///public class ServiceBuilder
+        ///   Looks up a localized string similar to public class img2html extends Frame 
         ///{
-        ///  private String apiKey;
-        ///  private String apiSecret;
-        ///  private String callback;
-        ///  private Api api;
-        ///  private String scope;
-        ///   [rest of string was truncated]&quot;;.
+        ///	static Image im = null;
+        ///	static int W = 1, H = 1;
+        ///
+        ///    	public static void main()
+        ///    	{
+        ///		Scanner sc= new Scanner(System.in);
+        ///        int strFromScaner = sc.nextInt();
+        ///		strFromScaner = strFromScaner + &quot; &quot;;
+        ///        System.out.println(strFromScaner);
+        ///        int number = sc.nextInt();
+        ///		if (number == 1)
+        ///			System.out.println(number);
+        ///		int otherNumber = sc.nextInt(); //do not use
+        ///
+        ///        sc.close();
+        ///
+        ///		String infile,outfile;
+        ///		infile=&quot;UNSPECIFIED&quot;; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TestJavaCode {
             get {
                 return ResourceManager.GetString("TestJavaCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {-----------------------------------------------------------------------------
+        /// Package: Trig
+        /// Package: Elementary
+        /// Package: Numerical
+        /// Package: Lists
+        /// Package: Data
+        ///-----------------------------------------------------------------------------}
+        ///unit uFunctions;
+        ///
+        ///interface
+        ///
+        ///uses SysUtils, Classes, uMathIntf, uMath, uMathValues, uFPUSupport, uMathConstants;
+        ///
+        ///type
+        ///  TPackageTrig = class(TFunctionPackage)
+        ///  published
+        ///    function Deg2Rad_1(Context: IContext; args: TExprList): IExpression;
+        ///    f [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TestPascalCode {
+            get {
+                return ResourceManager.GetString("TestPascalCode", resourceCulture);
             }
         }
     }

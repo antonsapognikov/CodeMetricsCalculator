@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using CodeMetricsCalculator.Metrics;
-using CodeMetricsCalculator.Parsers;
-using CodeMetricsCalculator.Parsers.CodeInfo;
-using CodeMetricsCalculator.Parsers.Java;
-using CodeMetricsCalculator.Parsers.Java.CodeInfo;
 
 namespace CodeMetricsCalculator
 {
     public class Program
     {
+        private const string SpacesAndTabsPattern = @"[ \t]+";
+        private const string BaseMultilineCommentPattern = @"{[^}]*}";
+        private const string AdditionalMultilineCommentPattern = @"\(\*[^(\*\))]*\*\)";
+
+        private static readonly string StringLiteralPattern = string.Format(@"'[^'{0}]*'", Environment.NewLine);
+        private static readonly string InlineCommentPattern = string.Format(@"//[^{0}]*{0}", Environment.NewLine);
+        
         private static void Main(string[] args)
         {
-            var classesSource = Resource.TestJavaCode;
-            var classesCode = new JavaCode(classesSource);
+            var classesSource = Resource.TestPascalCode;
+         /*   var classesCode = new JavaCode(classesSource);
             var normalized = classesCode.NormalizedSource;
             var classes = new JavaClassParser().Parse(classesCode);
             
@@ -67,11 +64,11 @@ namespace CodeMetricsCalculator
                 Console.WriteLine();
                 Console.WriteLine("##############################################");
                 Console.WriteLine();
-            }
+            }*/
             Console.ReadKey();
 
         }
-        
+     /*   
         private static void PrintField(IFieldInfo fieldInfo)
         {
             Console.WriteLine("{0} - {1}", fieldInfo.Name, fieldInfo.NormalizedSource);
@@ -116,6 +113,6 @@ namespace CodeMetricsCalculator
         private static void PrintOperator(IOperatorInfo operatorInfo, int count)
         {
             Console.WriteLine("{0} - {1} - {2}", operatorInfo.GetType().Name, operatorInfo.Name, count);
-        }
+        }*/
     }
 }

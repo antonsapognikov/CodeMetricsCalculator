@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CodeMetricsCalculator.Common.Utils;
@@ -10,10 +9,13 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
 {
     public class PascalCode : MemberInfo
     {
-        private const string StringLiteralPattern = "\"[^\"]*\""; 
-        private const string MultilineCommentPattern = "/\\*([^\\*]|(\\*+[^\\*/]))*\\*+/";      
-        private readonly string _inlineCommentPattern = string.Format("//[^{0}]*{0}", Environment.NewLine);
         private const string SpacesAndTabsPattern = @"[ \t]+";
+        private const string BaseMultilineCommentPattern = @"{[^}]*}";
+        private const string AdditionalMultilineCommentPattern = @"\(\*[^(\*\))]*\*\)";
+        
+        private static readonly string StringLiteralPattern = string.Format(@"'[^'{0}]*'", Environment.NewLine);
+        private static readonly string InlineCommentPattern = string.Format(@"//[^{0}]*{0}", Environment.NewLine);
+        
         private readonly Dictionary<Guid, string> _stringLiterals = new Dictionary<Guid, string>(); 
 
         public PascalCode(string originalSource)
@@ -23,38 +25,56 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
 
         protected override string NormalizeSource(string originalSource)
         {
-            //Replacing string literals...
-            var normalizedSource = Regex.Replace(originalSource, StringLiteralPattern, match =>
-                {
-                    if (_stringLiterals.ContainsValue(match.Value))
-                    {
-                        return _stringLiterals.GetKey(match.Value).ToString().Quotes();
-                    }
-                    var guid = Guid.NewGuid();
-                    _stringLiterals.Add(guid, match.Value);
-                    return GuidEncoder.Encode(guid).ToString(CultureInfo.InvariantCulture).Quotes();
-                });
-            //Removing excess spaces and tabs
-            normalizedSource = Regex.Replace(normalizedSource, SpacesAndTabsPattern, " ");
-            //Removing inline comments...
-            normalizedSource = Regex.Replace(normalizedSource, _inlineCommentPattern, Environment.NewLine);
-            //Removing multiline comments...
-            normalizedSource = Regex.Replace(normalizedSource, MultilineCommentPattern, string.Empty);
-            //Removing empty lines and trim
-            var lines = normalizedSource
-                .Split(new [] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Trim(' ', '\t'))
-                .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
-            normalizedSource = lines.Count > 0
-                ? lines.Aggregate((s1, s2) => " " + s1 + Environment.NewLine + " " + s2 + " ")
-                : string.Empty;
-                
+            string normalizedSource = originalSource;
+            ReplaceStringLiterals(normalizedSource, out normalizedSource);
+            ReplaceSpacesAndTabs(normalizedSource, out normalizedSource);
+            ReplaceInlineComments(normalizedSource, out normalizedSource);
+            ReplaceMultilineComments(normalizedSource, out normalizedSource);
+            ReplaceInvalidLines(normalizedSource, out normalizedSource);                         
             return normalizedSource;
         }
-        
-        protected string DecodeLiteral(string encodedGuid)
+
+        private void ReplaceStringLiterals(string input, out string output)
         {
-            return _stringLiterals[GuidEncoder.Decode(encodedGuid)];
+            _stringLiterals.Clear();
+            output = Regex.Replace(input, StringLiteralPattern, match =>
+            {
+                if (_stringLiterals.ContainsValue(match.Value))
+                {
+                    return _stringLiterals.GetKey(match.Value).ToString().Quotes();
+                }
+                var guid = new Guid(GuidEncoder.Encode(Guid.NewGuid()));
+                _stringLiterals.Add(guid, match.Value);
+                return guid.ToString().Quotes();
+            });
+        }
+
+        private void ReplaceSpacesAndTabs(string input, out string output)
+        {
+            output = Regex.Replace(input, SpacesAndTabsPattern, " ");
+        }
+
+        private void ReplaceInlineComments(string input, out string output)
+        {
+            output = Regex.Replace(input, InlineCommentPattern, Environment.NewLine);
+        }
+
+        private void ReplaceMultilineComments(string input, out string output)
+        {
+            output = Regex.Replace(input, BaseMultilineCommentPattern, string.Empty);
+            output = Regex.Replace(output, AdditionalMultilineCommentPattern, string.Empty);
+        }
+
+        private void ReplaceInvalidLines(string intput, out string output)
+        {
+            var lines = intput
+                .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim(' ', '\t'))
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToList();
+            output = lines.Count > 0
+                ? lines.Aggregate((s1, s2) => " " + s1 + Environment.NewLine + " " + s2 + " ")
+                : string.Empty;
         }
     }
 }
