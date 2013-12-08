@@ -23,14 +23,18 @@ namespace CodeMetricsCalculator.Parsers.Pascal
 
         private string ParseMethodBodySource(string sources)
         {
-            var methodBodyOpeningBracketIndex = sources.IndexOf('{');
-            if (methodBodyOpeningBracketIndex == -1)
+            var methodBodyBeginIndex = sources.IndexOf("begin", StringComparison.OrdinalIgnoreCase);
+            if (methodBodyBeginIndex == -1)
                 throw new ParsingException("No opening bracket after method declaration.");
-            var methodBodyClosingBracketIndex = FindClosingBracketIndex(sources, "{", "}", methodBodyOpeningBracketIndex);
+            var methodBodyClosingBracketIndex = FindClosingBracketIndex(sources, "begin", "end;",
+                methodBodyBeginIndex);
             if (methodBodyClosingBracketIndex == -1)
                 throw new ParsingException("No closing bracket for method.");
-            var methodBodySource = sources.Substring(methodBodyOpeningBracketIndex + 1,
-                methodBodyClosingBracketIndex - methodBodyOpeningBracketIndex - 1);
+            var varIndex = sources.IndexOf("var", StringComparison.OrdinalIgnoreCase);
+            if (varIndex != -1 && varIndex < methodBodyBeginIndex)
+                methodBodyBeginIndex = varIndex;
+            var methodBodySource = sources.Substring(methodBodyBeginIndex,
+                methodBodyClosingBracketIndex - methodBodyBeginIndex - 4);
             return methodBodySource;
         }
     }

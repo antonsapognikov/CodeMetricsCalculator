@@ -17,6 +17,10 @@ namespace CodeMetricsCalculator
             foreach (var pascalClass in classes)
             {
                 var methods = pascalClass.GetMethods();
+                foreach (var methodInfo in methods)
+                {
+                    GC.KeepAlive(methodInfo.GetBody());
+                }
                 GC.KeepAlive(methods);
                 Debugger.Break();
             }
