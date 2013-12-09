@@ -3,6 +3,7 @@ using System.Collections.Generic;
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using CodeMetricsCalculator.Common.UI.ViewModel.Base;
 ﻿using CodeMetricsCalculator.Metrics;
@@ -119,17 +120,17 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             if (result.Value)
             {
                 FileName = dialog.FileName;
-                LoadAndParseFile();
+                LoadAndParseFileAsync();
             }
         }
 
         private void OnEvaluateMetric(MetricType type)
         {
             CurrentMetricType = type;
-            LoadAndParseFile();
+            LoadAndParseFileAsync();
         }
 
-        private void LoadAndParseFile()
+        private async void LoadAndParseFileAsync()
         {
             try
             {
@@ -152,7 +153,10 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 AppendLineToLog("Parsing...");
                 foreach (var classInfo in _classes)
                 {
-                    ParseClass(classInfo);
+                    IClassInfo info = classInfo;
+                    var parseClassTask = new Task(() => ParseClass(info));
+                    parseClassTask.Start();
+                    await parseClassTask;
                 }
                 AppendLineToLog("Parsing finished.");
             }
