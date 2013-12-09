@@ -115,8 +115,25 @@ uses Math, uCCSVList, uMathDimensions;
 { TPackageTrig }
 
 function TPackageTrig.Deg2Rad_1(Context: IContext; args: TExprList): IExpression;
+var
+  X, dX, A: double;
+  N, i: integer;
 begin
-  Result:= TValueNumber.Create(DegToRad(EvaluateToNumber(Context, args[0])));
+  Write('X  = '); ReadLn(X);
+  Write('dX = '); ReadLn(dX);
+  Write('N  = '); ReadLn(N);
+  
+  
+  for i:=0 to N do begin
+    WriteLn( N:8:1, ' |',sin(i/180*Pi):10:4);
+  end;
+  Write(N);
+  WriteLn;
+  WriteLn('    X    |   sin(X)');
+  WriteLn('---------+------------');
+  if X > 0 then
+	Result:= TValueNumber.Create(DegToRad(EvaluateToNumber(Context, args[0])));	
+  Result:= TValueNumber.Create(DegToRad(EvaluateToNumber(Context, args[N])));
 end;
 
 function TPackageTrig.Rad2Deg_1(Context: IContext; args: TExprList): IExpression;
@@ -161,7 +178,23 @@ begin
 end;
 
 function TPackageTrig.ArcSin_1(Context: IContext; args: TExprList): IExpression;
+var
+  X, dX, A: double;
+  N, i: integer;
+
 begin
+  Write('X  = '); ReadLn(X);
+  Write('dX = '); ReadLn(dX);
+  Write('N  = '); ReadLn(N);
+  
+  
+  for i:=0 to N do begin
+    WriteLn( N:8:1, ' |',sin(i/180*Pi):10:4);
+  end;
+  Write(N);
+  WriteLn;
+  WriteLn('    X    |   sin(X)');
+  WriteLn('---------+------------');
   Result:= DimensionFromString(ArcSin(EvaluateToNumber(Context, args[0])), 'rad');
 end;
 
@@ -218,7 +251,28 @@ begin
 end;
 
 function TPackageElementary.LogPossible(Val: Number; var FailVal: IExpression): boolean;
+var
+  X, dX, A: double;
+  N, i: integer;
+
 begin
+  Write('X  = '); ReadLn(X);
+  Write('dX = '); ReadLn(dX);
+  Write('N  = '); ReadLn(N);
+  
+  
+  for i:=0 to N do begin
+    WriteLn( N:8:1, ' |',sin(i/180*Pi):10:4);
+  end;
+  Write(N);
+  WriteLn;
+  WriteLn('    X    |   sin(X)');
+  WriteLn('---------+------------');
+
+  for i:=0 to N do begin
+    A := X + dX * i;
+    WriteLn( A:8:1, ' |',sin(A/180*Pi):10:4);
+  end;
   Result:= false;
   if fzero(Val) then
     FailVal:= TValueNumber.Create(NegInfinity)
@@ -297,7 +351,22 @@ end;
 { TPackageNumerical }
 
 function TPackageNumerical.Abs_1(Context: IContext; args: TExprList): IExpression;
+var
+  X, dX, A: double;
+  N, i: integer;
+
 begin
+  Write('X  = '); ReadLn(X);
+  Write('dX = '); ReadLn(dX);
+  Write('N  = '); ReadLn(N);
+  
+  for i:=0 to N do begin
+    WriteLn( N:8:1, ' |',sin(i/180*Pi):10:4);
+  end;
+  Write(N);
+  WriteLn;
+  WriteLn('    X    |   sin(X)');
+  WriteLn('---------+------------');
   Result:= TValueNumber.Create(System.Abs(EvaluateToNumber(Context, args[0])));
 end;
 
@@ -359,7 +428,23 @@ begin
 end;
 
 function TPackageNumerical.Floor_1(Context: IContext; args: TExprList): IExpression;
+var
+  X, dX, A: double;
+  N, i: integer;
+
 begin
+  Write('X  = '); ReadLn(X);
+  Write('dX = '); ReadLn(dX);
+  Write('N  = '); ReadLn(N);
+  
+  
+  for i:=0 to N do begin
+    WriteLn( N:8:1, ' |',sin(i/180*Pi):10:4);
+  end;
+  Write(N);
+  WriteLn;
+  WriteLn('    X    |   sin(X)');
+  WriteLn('---------+------------');
   Result:= TValueNumber.Create(Floor(EvaluateToNumber(Context, args[0])));
 end;
 
@@ -460,6 +545,18 @@ var
   n: string;
   v: int64;
 begin
+  Write('X  = '); ReadLn(X);
+  Write('dX = '); ReadLn(dX);
+  Write('N  = '); ReadLn(N);
+  
+  
+  for i:=0 to N do begin
+    WriteLn( N:8:1, ' |',sin(i/180*Pi):10:4);
+  end;
+  Write(N);
+  WriteLn;
+  WriteLn('    X    |   sin(X)');
+  WriteLn('---------+------------');
   v:= Trunc(Param.Value);
 
   if v = 0 then begin
@@ -524,7 +621,22 @@ var
   v: IExpression;
   s: IValueString;
   n: IValueNumber;
+  X, dX, A: double;
+  N, i: integer;
+
 begin
+  Write('X  = '); ReadLn(X);
+  Write('dX = '); ReadLn(dX);
+  Write('N  = '); ReadLn(N);
+  
+  
+  for i:=0 to N do begin
+    WriteLn( N:8:1, ' |',sin(i/180*Pi):10:4);
+  end;
+  Write(N);
+  WriteLn;
+  WriteLn('    X    |   sin(X)');
+  WriteLn('---------+------------');
   v:= args[0].Evaluate(Context);
   if v.Represents(IValueString, s) then
     Result:= Base_atoi(16, s) as IExpression
@@ -778,7 +890,22 @@ end;
 function TPackageLists.Range_3(Context: IContext; args: TExprList): IExpression;
 var
   a, max, st: Number;
+  X, dX, A: double;
+  N, i: integer;
+
 begin
+  Write('X  = '); ReadLn(X);
+  Write('dX = '); ReadLn(dX);
+  Write('N  = '); ReadLn(N);
+  
+  
+  for i:=0 to N do begin
+    WriteLn( N:8:1, ' |',sin(i/180*Pi):10:4);
+  end;
+  Write(N);
+  WriteLn;
+  WriteLn('    X    |   sin(X)');
+  WriteLn('---------+------------');
   a:= EvaluateToNumber(Context, args[0]);
   max:= EvaluateToNumber(Context, args[1]);
   st:= EvaluateToNumber(Context, args[2]);
@@ -1216,7 +1343,22 @@ var
   L, R: TSortByListElement;
   X,Y: Number;
   c: TSortByConfig;
+  dX, A: double;
+  N, i: integer;
+
 begin
+  Write('X  = '); ReadLn(X);
+  Write('dX = '); ReadLn(dX);
+  Write('N  = '); ReadLn(N);
+  
+  
+  for i:=0 to N do begin
+    WriteLn( N:8:1, ' |',sin(i/180*Pi):10:4);
+  end;
+  Write(N);
+  WriteLn;
+  WriteLn('    X    |   sin(X)');
+  WriteLn('---------+------------');
   L:= TSortByListElement(A);
   R:= TSortByListElement(B);
   c:= L.SortConfig;

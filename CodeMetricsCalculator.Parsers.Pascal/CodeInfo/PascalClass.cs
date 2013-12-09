@@ -43,10 +43,10 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
             get { return _implementation; }
         }
 
+        private IReadOnlyCollection<IFieldInfo> _fields;
         public IReadOnlyCollection<IFieldInfo> GetFields()
         {
-            var parsingResults = new PascalFieldParser().Parse(this);
-            return parsingResults;
+            return _fields ?? (_fields = new PascalFieldParser().Parse(this));
         }
 
         public IReadOnlyCollection<IMethodInfo> GetMethods()
@@ -78,8 +78,11 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
             return new CodeDictionary(operators, operands);
         }
 
+        private IReadOnlyDictionary<IIdentifierInfo, int> _identifiers;
         public IReadOnlyDictionary<IIdentifierInfo, int> GetIdentifiers()
         {
+            if (_identifiers != null)
+                return _identifiers;
             var parsingResults = new PascalIdentifiersInClassParser().Parse(this);
             var identifiers = new Dictionary<IIdentifierInfo, int>();
             foreach (var parsingResult in parsingResults)
@@ -93,7 +96,8 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
                     identifiers.Add(keyValuePair.Key, keyValuePair.Value);
                 }
             }
-            return identifiers;
+            _identifiers = identifiers;
+            return _identifiers;
         }
     }
 }

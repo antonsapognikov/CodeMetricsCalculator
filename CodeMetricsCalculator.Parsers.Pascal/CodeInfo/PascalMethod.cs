@@ -56,18 +56,26 @@ namespace CodeMetricsCalculator.Parsers.Pascal.CodeInfo
             return parsingResult;
         }
 
+        private IReadOnlyDictionary<IVariableInfo, int> _variables;
+
         public IReadOnlyDictionary<IVariableInfo, int> GetVariables()
         {
+            if (_variables != null)
+                return _variables;
             var parsingResult = new PascalVariablesParser().Parse(this);
-            return
-                parsingResult.ToDictionary<KeyValuePair<PascalVariable, int>, IVariableInfo, int>(
+            _variables = parsingResult.ToDictionary<KeyValuePair<PascalVariable, int>, IVariableInfo, int>(
                     keyValuePair => keyValuePair.Key, keyValuePair => keyValuePair.Value);
+            return _variables;
         }
+
+        private CodeDictionary _codeDictionary;
 
         public CodeDictionary GetMethodDictionary()
         {
-            var codeDictionary = new PascalCodeDictionaryParser().Parse(this);
-            return codeDictionary;
+            if (_codeDictionary != null)
+                return _codeDictionary;
+            _codeDictionary = new PascalCodeDictionaryParser().Parse(this);
+            return _codeDictionary;
         }
     }
 }
