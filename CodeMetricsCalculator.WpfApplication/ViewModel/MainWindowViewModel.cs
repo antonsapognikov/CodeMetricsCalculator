@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CodeMetricsCalculator.Common;
 using CodeMetricsCalculator.Common.UI.ViewModel.Base;
 ﻿using CodeMetricsCalculator.Metrics;
 ﻿using CodeMetricsCalculator.Parsers.CodeInfo;
@@ -19,6 +20,7 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
     public class MainWindowViewModel : UIViewModel
     {
         private MetricType _metricType = MetricType.Holstead;
+        private Language _language = Language.Pascal;
         private string _fileName;
         private StringBuilder _result = new StringBuilder();
         private StringBuilder _log = new StringBuilder();
@@ -26,9 +28,11 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
         private ICommand _openFileCommand;
         private ICommand _evaluateChepinCommand;
         private ICommand _evaluateHolsteadCommand;
-        private ICommand _evalueateSpenCommand;
+        private ICommand _evaluateSpenCommand;
+        private ICommand _evaluatePascalCommand;
+        private ICommand _evaluateJavaCommand;
 
-        private const string JavaSourceFilter = "Pascal source files (*.pas)|*.pas|All files (*.*)|*.*";
+        private const string JavaSourceFilter = "All files (*.*)|*.*";
 
         public MetricType CurrentMetricType
         {
@@ -37,6 +41,16 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             {
                 _metricType = value;
                 OnPropertyChanged(() => CurrentMetricType);
+            }
+        }
+
+        public Language CurrentLanguage
+        {
+            get { return _language; }
+            set
+            {
+                _language = value;
+                OnPropertyChanged(() => CurrentLanguage);
             }
         }
 
@@ -87,7 +101,17 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
 
         public ICommand EvaluateSpenCommand
         {
-            get { return _evalueateSpenCommand ?? (_evalueateSpenCommand = CreateCommand<object>(parameter => OnEvaluateMetric(MetricType.Spen))); }
+            get { return _evaluateSpenCommand ?? (_evaluateSpenCommand = CreateCommand<object>(parameter => OnEvaluateMetric(MetricType.Spen))); }
+        }
+
+        public ICommand EvaluatePascalCommand
+        {
+            get { return _evaluatePascalCommand ?? (_evaluatePascalCommand = CreateCommand<object>(parameter => OnEvaluateLanguage(Language.Pascal))); }
+        }
+
+        public ICommand EvaluateJavaCommand
+        {
+            get { return _evaluateJavaCommand ?? (_evaluateJavaCommand = CreateCommand<object>(parameter => OnEvaluateLanguage(Language.Java))); }
         }
 
         public MainWindowViewModel()
@@ -111,6 +135,7 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
         private void ClearResults()
         {
             _result.Clear();
+            OnPropertyChanged(() => Result);
         }
 
         private void OnCreateFile()
@@ -130,6 +155,12 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             LoadAndParseFileAsync();
         }
 
+        private void OnEvaluateLanguage(Language language)
+        {
+            CurrentLanguage = language;
+            LoadAndParseFileAsync();
+        }
+
         private async void LoadAndParseFileAsync()
         {
             try
@@ -146,9 +177,19 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                 {
                     source =  sr.ReadToEnd();
                 }
-                var code = new PascalCode(source);
-                AppendLineToLog("Parsing classes...");
-                _classes = new PascalClassParser().Parse(code);
+                switch (CurrentLanguage)
+                {
+                    case Language.Pascal :
+                        var pascalCode = new PascalCode(source);
+                        AppendLineToLog("Parsing classes...");
+                        _classes = new PascalClassParser().Parse(pascalCode);
+                        break;
+                    case Language.Java :
+                        var javaCode = new JavaCode(source);
+                        AppendLineToLog("Parsing classes...");
+                        _classes = new JavaClassParser().Parse(javaCode);
+                        break;
+                }             
                 AppendLineToLog(string.Format("Parsed {0} classes.", _classes.Count));
                 AppendLineToLog("Parsing...");
                 foreach (var classInfo in _classes)
@@ -162,6 +203,7 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             }
             catch (Exception e)
             {
+                ClearResults();
                 AppendLineToLog(e.Message);
             }
         }
@@ -171,17 +213,17 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             AppendLineToResult(string.Format("####### класс {0} #######", classInfo.Name));
             var fields = classInfo.GetFields();
             AppendLineToResult("-------------------------------------------------");
-            AppendLineToResult("********* поля  *********");
+           /* AppendLineToResult("********* поля  *********");
             foreach (var field in fields)
             {
-                AppendLineToResult(string.Format("$$$$$$$$$ поле {0} $$$$$$$$$", field.Name));
-            }
+                AppendLineToResult(string.Format("€€€€€€€€€ поле {0} €€€€€€€€€", field.Name));
+            }*/
             var methods = classInfo.GetMethods();
             AppendLineToResult("-------------------------------------------------");
             AppendLineToResult("********* методы  *********");
             foreach (var methodInfo in methods)
             {
-                AppendLineToResult(string.Format("$$$$$$$$$ метод {0} $$$$$$$$$", methodInfo.Name));
+                AppendLineToResult(string.Format("€€€€€€€€€ метод {0} €€€€€€€€€", methodInfo.Name));
             }
             AppendLineToResult("-------------------------------------------------");
             AppendLineToResult("********* информация *********");
@@ -195,11 +237,11 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
             switch (CurrentMetricType)
             {
                 case MetricType.Chepin :
-                    AppendLineToResult("$$$$$$$$$ Метрика Чепина $$$$$$$$$");
+                    AppendLineToResult("€€€€€€€€€ Метрика Чепина €€€€€€€€€");
                     AppendLineToResult(string.Format("Информационная прочность - {0}", ChepinMetricCalculator.Calculate(classInfo)));
                     break;
                 case MetricType.Holstead :
-                    AppendLineToResult("$$$$$$$$$ Метрика Холстеда $$$$$$$$$");
+                    AppendLineToResult("€€€€€€€€€ Метрика Холстеда €€€€€€€€€");
                     var holstead = new HolsteadMetricCalculator(classInfo);
                     AppendLineToResult(string.Format("Словарь программы - {0}", holstead.CalculateProgramDictionary()));
                     AppendLineToResult(string.Format("Объем программы - {0}", holstead.CalculateProgramVolume()));
@@ -212,7 +254,7 @@ namespace CodeMetricsCalculator.WpfApplication.ViewModel
                     AppendLineToResult(string.Format("Интеллектуальное содержание алгоритма - {0}", holstead.CalculateIntelligenceContent()));
                     break;
                 case MetricType.Spen :
-                    AppendLineToResult("$$$$$$$$$ Подсчет спена $$$$$$$$$");
+                    AppendLineToResult("€€€€€€€€€ Подсчет спена €€€€€€€€€");
                     foreach (var identifier in SpenMetricCalculator.Calculate(classInfo))
                     {
                         AppendLineToResult(string.Format("Идентификатор - {0}. Спен - {1}", identifier.Key.Name, identifier.Value));

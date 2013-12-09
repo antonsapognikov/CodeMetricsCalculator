@@ -13,12 +13,21 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="8*" MinHeight="25" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="2*" MinHeight="25" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0"  Style="{StaticResource TextBlockStyle}" Text="Step 1: Select file path." />
-        <Grid Grid.Row="1">
+        <TextBlock Grid.Row="0"  Style="{StaticResource TextBlockStyle}" Text="Step 1: Select language." />
+        <Grid Grid.Row="1" Margin="{StaticResource ControlMargin}">
+            <ItemsControl>
+                <RadioButton GroupName="Languages" Content="Pascal" IsChecked="True" Command="{Binding Path=EvaluatePascalCommand}" />
+                <RadioButton GroupName="Languages" Content="Java" Command="{Binding Path=EvaluateJavaCommand}" />
+            </ItemsControl>
+        </Grid>
+        <TextBlock Grid.Row="2"  Style="{StaticResource TextBlockStyle}" Text="Step 2: Select file path." />
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -26,15 +35,15 @@
             <TextBox Grid.Column="0" Style="{StaticResource TextBoxStyle}" Text="{Binding Path=FileName, Mode=TwoWay}" />
             <Button Grid.Column="1" Style="{StaticResource ButtonStyle}" Content="Open" Command="{Binding Path=OpenFileCommand}"/>
         </Grid>
-        <TextBlock Grid.Row="2"  Style="{StaticResource TextBlockStyle}" Text="Step 2: Select metric." />
-        <Grid Grid.Row="3" Margin="{StaticResource ControlMargin}">
+        <TextBlock Grid.Row="4"  Style="{StaticResource TextBlockStyle}" Text="Step 3: Select metric." />
+        <Grid Grid.Row="5" Margin="{StaticResource ControlMargin}">
             <ItemsControl>
                 <RadioButton GroupName="Metrics" Content="Holstead" IsChecked="True" Command="{Binding Path=EvaluateHolsteadCommand}" />
                 <RadioButton GroupName="Metrics" Content="Spen" Command="{Binding Path=EvaluateSpenCommand}" />
                 <RadioButton GroupName="Metrics" Content="Chepin" Command="{Binding Path=EvaluateChepinCommand}" />
             </ItemsControl>
         </Grid>
-        <ScrollViewer Grid.Row="4" Style="{StaticResource ScrollViewerStyle}">
+        <ScrollViewer Grid.Row="6" Style="{StaticResource ScrollViewerStyle}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -44,8 +53,8 @@
                 <TextBlock Grid.Row="1" Style="{StaticResource MultilineTextBlockStyle}" Text="{Binding Path=Result}" />
             </Grid>
         </ScrollViewer>
-        <GridSplitter Grid.Row="5" Style="{StaticResource GridSplitterStyle}" />
-        <ScrollViewer Grid.Row="6" Style="{StaticResource ScrollViewerStyle}">
+        <GridSplitter Grid.Row="7" Style="{StaticResource GridSplitterStyle}" />
+        <ScrollViewer Grid.Row="8" Style="{StaticResource ScrollViewerStyle}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

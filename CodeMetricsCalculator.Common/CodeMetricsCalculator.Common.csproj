@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEqualityComparer.cs" />
+    <Compile Include="Language.cs" />
     <Compile Include="Utils\CollectionUtils.cs" />
     <Compile Include="Utils\GuidEncoder.cs" />
     <Compile Include="Utils\StringUtils.cs" />

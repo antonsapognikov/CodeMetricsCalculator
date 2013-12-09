@@ -1,5 +1,4 @@
-public class img2html extends Frame 
-{
+public class img2html extends Frame {
 	static Image im = null;
 	static int W = 1, H = 1;
 
